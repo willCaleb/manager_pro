@@ -43,7 +43,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends 
                 .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
     }
 
-    public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository getRepository() {
+    public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository<E, ID> getRepository() {
 
         Class<E> entityClass = (Class) genericTypes[0];
 
