@@ -22,7 +22,7 @@ public class ServicoProfissionalServiceImpl
     @Override
     public ServicoProfissional incluir(ServicoProfissional servicoProfissional) {
         validadorServicoProfissional.validarInsert(servicoProfissional);
-        return (ServicoProfissional) getRepository().save(servicoProfissional);
+        return getRepository().save(servicoProfissional);
     }
 
     @Override
