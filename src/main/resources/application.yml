@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: operador
+    password: smartbrd3s3nv
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+        ddl-auto: update
+        generate-ddl: true
+
+
+gcp:
+  firebase:
+    service-account: classpath:firebase-service-account.json
+
+
+jwt:
+    expiration-in-ms: 86400000
+    token:
+      prefix: Bearer
+      validity: 86400000
+      secret-key: secret-key
+    header:
+      string: Authorization
+    signing:
+      key: secret-key
+    authorities:
+      key:
+
+#logging:
+#  level:
+#    root: 'DEBUG'
+#    org.hibernate.type.descriptor.sql.BasicBinder: 'TRACE'
+#    org.hibernate.type.descriptor.sql.BasicExtractor: 'OFF'
+#    org.springframework.web.servlet.DispatcherServlet: 'DEBUG'
+#    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: 'DEBUG'
+
+imgur:
+  client_id: 35138c7da8a0624
+  refresh_token: ce14a8bf35ab659a40b62de6763a4ba99d12fb8b
+  client_secret: 630097ec8e3ffa13702d539a6164f1974c0a2aba
+  login_url: https://api.imgur.com/oauth2/token
+  base_url_upload: https://api.imgur.com/3/image
+  username: wilsonperepelecia4

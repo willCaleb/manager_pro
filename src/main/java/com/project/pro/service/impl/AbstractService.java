@@ -1,0 +1,70 @@
+package com.project.pro.service.impl;
+
+//import com.project.pro.config.IContext;
+
+import com.project.pro.config.IContext;
+import com.project.pro.exception.CustomException;
+import com.project.pro.model.dto.AbstractDTO;
+import com.project.pro.model.entity.AbstractEntity;
+import com.project.pro.service.IAbstractService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+@Component
+@SuppressWarnings("unchecked")
+public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends AbstractDTO<?, E>, R extends JpaRepository> implements IAbstractService<E, D, R>{
+
+    Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
+    private Class<E> entityClass = (Class<E>) genericTypes[0];
+//    private  Class<D> dtoClass = (Class<D>)genericTypes[1];
+//    private Class<R> repositoryClass = (Class<R>) genericTypes[2];
+
+    public IContext getContext() {
+        return IContext.context();
+    }
+
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    private Repositories repositories;
+
+
+    public <E extends AbstractEntity<?, ?>, ID extends Object>JpaRepository getRepository(Class<E> clazz) {
+        repositories = new Repositories(applicationContext);
+        return (JpaRepository<E, ID>) repositories
+                .getRepositoryFor(clazz)
+                .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
+    }
+
+    public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository getRepository() {
+
+        Class<E> entityClass = (Class) genericTypes[0];
+
+        return getRepository(entityClass);
+    }
+
+    public E findAndValidate(Integer id) {
+        return (E) getRepository()
+                .findById(id).orElseGet(() -> {
+                    throw new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id);
+                });
+    }
+
+    public <S extends AbstractService> S getService(Class<S> clazz) {
+
+        S bean = getContext().getBean(clazz);
+        return bean;
+    }
+
+//    public <S extends AbstractService> S getService() {
+//        return ;
+//    }
+
+}
