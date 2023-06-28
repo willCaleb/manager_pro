@@ -26,7 +26,7 @@ public abstract class  AbstractEnumConverter<T extends Enum<T> & IEnum<E>, E> im
             }
         }
 
-        return null;
+        return null ;
     }
 
 }
