@@ -4,10 +4,12 @@ import com.project.pro.exception.CustomException;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public class ClassUtils {
 
-    public static Method getMethod(String name, Class<?> clazz) {
+    public static Method getGetterMethod(String name, Class<?> clazz) {
         Method method;
         try {
             method = clazz.getMethod("get" + StringUtils.capitalize(name));
@@ -17,7 +19,7 @@ public class ClassUtils {
         return method;
     }
 
-    public static Method setMethod(String name, Class<?> clazz) {
+    public static Method getSetterMethod(String name, Class<?> clazz) {
         Method method;
         try {
             method = clazz.getMethod("set" + StringUtils.capitalize(name));
@@ -48,4 +50,14 @@ public class ClassUtils {
         }
         return returnMethods;
     }
+
+    public static List<Method> getGetterMethodList(Class<?> clazz) {
+        return Arrays.asList(getGetterMethods(clazz));
+    }
+
+    public static List<Method> getSetterMethodList(Class<?> clazz) {
+        return Arrays.asList(getSetterMethods(clazz));
+    }
+
+
 }
