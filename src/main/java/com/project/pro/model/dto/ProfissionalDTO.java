@@ -1,24 +1,28 @@
 package com.project.pro.model.dto;
 
+import com.project.pro.annotation.OnlyField;
 import com.project.pro.model.entity.Profissional;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
-public class ProfissionalDTO extends AbstractDTO<Integer, Profissional>{
+@Getter
+@Setter
+
+public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
 
     private Integer id;
 
-//    @JsonIgnore
+    @OnlyField(fields = {"id", "nome", "enderecos"})
     private PessoaDTO pessoa;
 
     private BigDecimal avaliacao;
 
-    private Integer qndtAvaliacao;
+    private Integer qntdAvaliacao;
 
     private BigDecimal mediaAvaliacao;
 
-    List<CategoriaDTO> categorias;
 }

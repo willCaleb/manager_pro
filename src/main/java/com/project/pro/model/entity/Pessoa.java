@@ -46,7 +46,7 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     private EnumClassificacaoPessoa classificacao;
 
     @JsonManagedReference
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pessoa", fetch = FetchType.LAZY)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pessoa", fetch = FetchType.EAGER)
     private List<Endereco> enderecos;
 
     @JsonManagedReference
