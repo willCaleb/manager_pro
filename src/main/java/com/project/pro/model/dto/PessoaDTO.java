@@ -1,5 +1,6 @@
 package com.project.pro.model.dto;
 
+import com.project.pro.annotation.OnlyField;
 import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.model.entity.Comentario;
 import com.project.pro.model.entity.Endereco;
@@ -28,10 +29,13 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
     private Date dataInclusao;
 
-    private List<ComentarioDTO> comentarios;
-
-    private List<EnderecoDTO> enderecos;
-
     private EnumClassificacaoPessoa classificacao;
+
+//    private List<ComentarioDTO> comentarios;
+
+    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa"})
+    private List<EnderecoDTO> enderecos;
+//
+//    private EnumClassificacaoPessoa classificacao;
 
 }

@@ -30,7 +30,7 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
     public Pessoa incluir(Pessoa pessoa) {
         pessoa.setDataInclusao(Calendar.getInstance().getTime());
         String salt = PasswordUtils.getSalt(30);
-        pessoa.setSenha(PasswordUtils.generateSecurePassword(pessoa.getSenha(), salt));
+//        pessoa.setSenha(PasswordUtils.generateSecurePassword(pessoa.getSenha(), salt));
 
         validadorPessoa.validarInsert(pessoa);
 

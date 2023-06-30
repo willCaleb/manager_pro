@@ -30,6 +30,6 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private Profissional profissional;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PedidoItem> itens;
 }

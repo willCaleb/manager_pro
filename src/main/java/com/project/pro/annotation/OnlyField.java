@@ -8,5 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface OnlyField {
-    String[] fields() default {};
+    String[] fields();
+    int nivel() default 999;
 }
