@@ -23,6 +23,12 @@ public class EnderecoDTO extends AbstractDTO<Integer, Endereco>{
 
     private String localidade;
 
+    private String uf;
+
+    private Double latitude;
+
+    private Double longitude;
+
     @OnlyField(fields = {"id"})
     private PessoaDTO pessoa;
 }
