@@ -33,7 +33,7 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
 //    private List<ComentarioDTO> comentarios;
 
-    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa"})
+//    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa", "latitude", "longitude"})
     private List<EnderecoDTO> enderecos;
 //
 //    private EnumClassificacaoPessoa classificacao;

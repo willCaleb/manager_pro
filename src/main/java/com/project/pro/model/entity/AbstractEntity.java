@@ -58,7 +58,11 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                             if (AbstractDTO.class.isAssignableFrom(aClass)) {
                                 List<AbstractEntity> invokeList = (List<AbstractEntity>) invoke;
                                 if (ListUtils.isNotNullOrEmpty(invokeList)) {
-                                    List<DTO> dtos = invokeList.stream().map(inv -> (DTO) inv.toDto(fieldsToFilter)).collect(Collectors.toList());
+                                    List<DTO> dtos = invokeList
+                                            .stream()
+                                            .map(inv -> (DTO) inv.toDto(fieldsToFilter))
+                                            .collect(Collectors.toList());
+
                                     setterMethod.invoke(dtoReturn, dtos);
                                 }
                             }

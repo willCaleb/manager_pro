@@ -22,6 +22,8 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     private ValidadorPessoa validadorPessoa = new ValidadorPessoa();
 
+    private final EnderecoService enderecoService;
+
     @PostConstruct
     private void setValidadorRepository() {
         validadorPessoa.setPessoaRepository(pessoaRepository);
@@ -31,6 +33,8 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
         pessoa.setDataInclusao(Calendar.getInstance().getTime());
         String salt = PasswordUtils.getSalt(30);
 //        pessoa.setSenha(PasswordUtils.generateSecurePassword(pessoa.getSenha(), salt));
+
+        pessoa.setEnderecos(enderecoService.incluir(pessoa.getEnderecos()));
 
         validadorPessoa.validarInsert(pessoa);
 

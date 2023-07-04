@@ -1,11 +1,14 @@
 package com.project.pro.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.dto.EnderecoDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +37,19 @@ public class Endereco extends AbstractEntity<Integer, EnderecoDTO>{
 
     @Column(name = "localidade")
     private String localidade;
+
+    @JsonProperty("results")
+    @Transient
+    private List<GoogleMaps> googleMaps;
+
+    @Column(name = "uf")
+    private String uf;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
 
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
