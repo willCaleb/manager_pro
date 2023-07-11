@@ -33,7 +33,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
 
     private DTO filter(AbstractEntity entity, Class<DTO> dtoType, List<String> onlyFields) {
         try {
-            List<Field> allFieldsFromDto = Arrays.asList(dtoType.getDeclaredFields());
+            List<Field> allFieldsFromDto = ListUtils.toList(dtoType.getDeclaredFields());
 
             DTO dtoReturn = (DTO) dtoType.newInstance();
 
@@ -86,7 +86,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
         List<String> fieldsToFilter = new ArrayList<>();
         if (field.isAnnotationPresent(OnlyField.class)) {
             OnlyField onlyField = field.getAnnotation(OnlyField.class);
-            fieldsToFilter = Arrays.asList(onlyField.fields());
+            fieldsToFilter = ListUtils.toList(onlyField.fields());
         }
         return fieldsToFilter;
     }

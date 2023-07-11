@@ -1,12 +1,15 @@
 package com.project.pro.model.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.pro.model.entity.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class ImgurReturn {
+public class ImgurReturn implements Serializable{
     @JsonProperty("status")
     private int status;
 

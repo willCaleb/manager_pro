@@ -6,12 +6,15 @@ import com.project.pro.component.TokenSession;
 import com.project.pro.model.beans.ImgurAccountBean;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
+import com.project.pro.model.beans.ImgurReturnList;
 import com.project.pro.service.IImgurService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/imagem")
@@ -48,14 +51,9 @@ public class ImgurController {
         return ResponseEntity.ok(imgurService.getToken());
     }
 
-//    @GetMapping("/cache")
-//    public void chamarCaches() {
-//        imgurService.verCaches();
-//    }
-
-    @GetMapping("qqr")
-    public ResponseEntity<String> qqr() {
-        return ResponseEntity.ok(imgurService.qqr());
+    @GetMapping("account-images/{username}")
+    public ImgurReturnList getAllAccountImages(@PathVariable("username") String username){
+        return imgurService.listAllImages(username);
     }
 
 }

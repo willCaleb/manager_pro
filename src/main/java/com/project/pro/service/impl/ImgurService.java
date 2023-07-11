@@ -1,18 +1,27 @@
 package com.project.pro.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.http.options.Option;
+import com.mashape.unirest.http.options.Options;
+import com.mashape.unirest.request.GetRequest;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
+import com.project.pro.model.beans.ImgurReturnList;
 import com.project.pro.model.entity.Profissional;
 import com.project.pro.model.entity.ProfissionalImagem;
 import com.project.pro.service.IImgurService;
 import com.project.pro.service.ProfissionalImagemService;
 import com.project.pro.utils.DateUtils;
+import com.project.pro.utils.ListUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -25,6 +34,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.ProxySelector;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,16 +57,14 @@ public class ImgurService implements IImgurService {
     @Value("${imgur.client_secret}")
     private String clientSecret;
 
-    @Value("${imgur.login_url}")
-    private String loginUrl;
+    @Value("${imgur.base_url}")
+    private String baseUrl;
 
     @Value("${imgur.base_url_upload}")
     private String uploadUrl;
 
     @Value("${imgur.username}")
     private String username;
-
-    private final CacheManager cacheManager;
 
     private final ProfissionalService profissionalService;
     private final ProfissionalImagemService profissionalImagemService;
@@ -64,6 +73,7 @@ public class ImgurService implements IImgurService {
     public HttpResponse<String> generateToken() {
 
         Unirest.setTimeouts(0, 0);
+        String loginUrl = baseUrl + "/oauth2/token";
         try {
             HttpResponse<String> response = Unirest.post(loginUrl)
                     .field("refresh_token", refreshToken)
@@ -78,15 +88,33 @@ public class ImgurService implements IImgurService {
         }
     }
 
-    @Cacheable("coisa")
-    public String qqr() {
-        return "qualquer coisa";
-    }
-
     @Cacheable("imgur_token")
     public String getToken() {
         ImgurDataBean imgurDataBean = new Gson().fromJson(generateToken().getBody(), ImgurDataBean.class);
         return imgurDataBean.getAccess_token();
+    }
+
+    @Override
+    public ImgurReturnList listAllImages(String imgurUsername) {
+
+        String url = baseUrl + "/3/account/" + imgurUsername + "/images";
+
+        Unirest.setTimeouts(0, 0);
+
+        try {
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            String token = getToken();
+
+            HttpResponse<String> request = Unirest.get(url).header("Authorization", "Bearer " + token).asString();
+
+            return objectMapper.readValue(request.getRawBody(), ImgurReturnList.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        throw new CustomException("Não foi possível obter as imagens do usuario {0}", username);
     }
 
     public HttpResponse<String> getAccountBase() {
