@@ -17,4 +17,10 @@ public class ValidateFieldSize {
         }
     }
 
+    public void  validarTamanhoIgual (String field, Integer tamanho) {
+        if (!NumericUtils.isEquals(field.length(), tamanho)) {
+            throw new CustomException("Campo deve ter tamanho de {0} ", tamanho, field);
+        }
+    }
+
 }

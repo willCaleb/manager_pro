@@ -1,20 +1,19 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.entity.Endereco;
+import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.service.IEnderecoService;
-import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorEndereco;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EnderecoService implements IEnderecoService {
 
     private final EnderecoRepository enderecoRepository;
@@ -30,24 +29,27 @@ public class EnderecoService implements IEnderecoService {
         validadorEndereco.validarInsert(endereco);
 
         Endereco endByCep = cepService.buscarEnderecoPorCep(endereco.getCep());
-        endByCep.setNumero(endereco.getNumero());
-        endByCep.setComplemento(endereco.getComplemento());
+        endereco.setLogradouro(endByCep.getLogradouro());
+        endereco.setBairro(endByCep.getBairro());
+        endereco.setUf(endByCep.getUf());
+        endereco.setLocalidade(endByCep.getLocalidade());
 
-        GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endByCep);
+        GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endereco);
 
-        endByCep.setLatitude(geometria.getLatitude());
-        endByCep.setLongitude(geometria.getLongitude());
+        endereco.setLatitude(geometria.getLatitude());
+        endereco.setLongitude(geometria.getLongitude());
 
-        return endByCep;
+        return endereco;
     }
 
     @Override
-    public List<Endereco> incluir(List<Endereco> enderecos) {
+    public List<Endereco> incluir(List<Endereco> enderecos, Pessoa pessoa) {
 
         List<Endereco> enderecosWithGeolocation = new ArrayList<>();
 
         enderecos.forEach(endereco -> {
             try {
+                endereco.setPessoa(pessoa);
                 enderecosWithGeolocation.add(incluir(endereco));
             } catch (Exception e) {
                 e.printStackTrace();

@@ -18,8 +18,26 @@ public class Data {
     @JsonProperty("deletehash")
     private String deletehash;
 
+    @JsonProperty
+    private String title;
+
+    @JsonProperty
+    private String description;
+
+    private Object vote;
+
+    private Object nsfw;
+
+    private Object section;
+
+    private String account_url;
+
     @JsonProperty("in_gallery")
     private boolean in_gallery;
+
+    private boolean has_sound;
+
+    private String edited;
 
     @JsonProperty("ad_url")
     private String ad_url;
