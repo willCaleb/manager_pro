@@ -21,6 +21,8 @@ public class CepService implements ICepService{
     public Endereco buscarEnderecoPorCep(String cep) throws Exception {
         String urlParaChamada = webService + cep + "/json";
 
+        cep = cep.replaceAll("-", "");
+
         try {
             URL url = new URL(urlParaChamada);
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();

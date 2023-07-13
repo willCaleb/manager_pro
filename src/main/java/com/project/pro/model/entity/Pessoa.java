@@ -5,6 +5,7 @@ import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.model.dto.PessoaDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,14 +33,23 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "imagem_perfil")
+    private String imagemPerfil;
+
     @Column(name = "idade")
     private Integer idade;
 
     @Column(name = "data_inclusao")
     private Date dataInclusao;
 
+    @Column(name = "data_nascimento")
+    private Date dataNascimento;
+
     @Column(name = "senha")
     private String senha;
+
+    @Transient
+    private MultipartFile file;
 
     @Column(name = "classificacao")
     @Convert(converter = EnumClassificacaoPessoa.EnumConverter.class)

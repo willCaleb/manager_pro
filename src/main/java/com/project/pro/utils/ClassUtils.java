@@ -81,6 +81,15 @@ public static Method getGetterMethod(String fieldName, Class<?> javaBeanClass) {
     public static boolean isSetterMethod(Method method, String name) {
         return method.getName().startsWith("set") && method.getName().equalsIgnoreCase("set".concat(name));
     }
+
+    public static <T> T getInstance(Class<T> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        throw new CustomException("Não foi possível criar nova instância de ", clazz.getName());
+    }
 //
 //    public static List<Method> getGetterMethodList(Class<?> clazz) {
 //        return Arrays.asList(getGetterMethods(clazz));
