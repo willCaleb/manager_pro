@@ -57,7 +57,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return toDtoList(getRepository(entityClass).findAll());
     }
 
-    private List<DTO> toDtoList(List<E> list) {
+    public List<DTO> toDtoList(List<E> list) {
         List retorno = new ArrayList();
         if (Utils.isEmpty(list)) return retorno;
         for (E item : list) {

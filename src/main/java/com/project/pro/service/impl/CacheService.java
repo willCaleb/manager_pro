@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.project.pro.model.beans.CacheBean;
 import com.project.pro.service.ICacheService;
 import com.project.pro.utils.Utils;
@@ -63,6 +64,16 @@ public class CacheService implements ICacheService {
 
         if (Utils.isNotEmpty(caffeineCache)) {
             return caffeineCache;
+        }
+        return null;
+    }
+
+    @Override
+    public Cache findNativeCacheByName(String cacheName) {
+
+        CaffeineCache caffeineCache = findCacheByName(cacheName);
+        if (Utils.isNotEmpty(caffeineCache)) {
+            return caffeineCache.getNativeCache();
         }
         return null;
     }

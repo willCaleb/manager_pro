@@ -19,10 +19,10 @@ public class Utils {
         return obj.equals(compareTo);
     }
 
-    public static Object nvl(Object change, Object changeTo) {
-        if (isNotEmpty(changeTo)) {
-            return changeTo;
+    public static <T> T nvl(Object change, T changeTo) {
+        if (isNotEmpty(change)) {
+        return (T)change;
         }
-        return change;
+        return changeTo;
     }
 }

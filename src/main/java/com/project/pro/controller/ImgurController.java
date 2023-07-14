@@ -41,7 +41,7 @@ public class ImgurController {
         return accountBean;
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ImgurReturn sendImage(@RequestBody MultipartFile file) {
         return imgurService.upload(file);
     }

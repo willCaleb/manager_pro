@@ -7,6 +7,7 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.service.IAbstractService;
+import com.project.pro.utils.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;

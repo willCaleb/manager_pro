@@ -1,5 +1,6 @@
 package com.project.pro.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.project.pro.model.beans.CacheBean;
 import org.springframework.cache.caffeine.CaffeineCache;
 
@@ -14,5 +15,7 @@ public interface ICacheService {
     void clearCache(String cacheName);
 
     CaffeineCache findCacheByName(String cacheName);
+
+    Cache findNativeCacheByName(String cacheName);
 
 }

@@ -1,16 +1,10 @@
 package com.project.pro.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.http.options.Option;
-import com.mashape.unirest.http.options.Options;
-import com.mashape.unirest.request.GetRequest;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.ImgurDataBean;
@@ -21,7 +15,7 @@ import com.project.pro.model.entity.ProfissionalImagem;
 import com.project.pro.service.IImgurService;
 import com.project.pro.service.ProfissionalImagemService;
 import com.project.pro.utils.DateUtils;
-import com.project.pro.utils.ListUtils;
+import com.project.pro.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -32,9 +26,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.ProxySelector;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,8 +58,9 @@ public class ImgurService implements IImgurService {
     @Value("${imgur.username}")
     private String username;
 
-    private final ProfissionalService profissionalService;
+//    private final ProfissionalService profissionalService;
     private final ProfissionalImagemService profissionalImagemService;
+    private final CacheService cacheService;
 
     @Override
     public HttpResponse<String> generateToken() {
@@ -75,6 +68,12 @@ public class ImgurService implements IImgurService {
         Unirest.setTimeouts(0, 0);
         String loginUrl = baseUrl + "/oauth2/token";
         try {
+
+            CaffeineCache cacheToken = cacheService.findCacheByName("imgur_token");
+            if (Utils.isNotEmpty(cacheToken)) {
+                if (Utils.isNotEmpty(cacheToken.get(0)));
+            }
+
             HttpResponse<String> response = Unirest.post(loginUrl)
                     .field("refresh_token", refreshToken)
                     .field("client_id", clientId)
@@ -152,14 +151,13 @@ public class ImgurService implements IImgurService {
             responseString = EntityUtils.toString(response.getEntity());
             imgurReturn = new Gson().fromJson(responseString, ImgurReturn.class);
 
-            if (imgurReturn.isSuccess()) {
-                ProfissionalImagem imagem = new ProfissionalImagem();
-                imagem.setDataInclusao(DateUtils.getDate());
-                Profissional profissional = profissionalService.findAndValidate(1);
-                imagem.setProfissional(profissional);
-                imagem.setUrl(imgurReturn.getData().getLink());
-                profissionalImagemService.incluir(imagem);
-            }
+//            if (imgurReturn.isSuccess()) {
+//                ProfissionalImagem imagem = new ProfissionalImagem();
+//                imagem.setDataInclusao(DateUtils.getDate());
+//                imagem.setProfissional(profissional);
+//                imagem.setUrl(imgurReturn.getData().getLink());
+//                profissionalImagemService.incluir(imagem);
+//            }
         } catch (IOException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD, e.getMessage());
         }
