@@ -16,4 +16,6 @@ public interface IEnderecoService extends IAbstractService<Endereco, EnderecoDTO
 
     List<Endereco> findAllWithoutCoordenate();
 
+    double calcularDistancia(Integer idEndA, Integer idEndB);
+
 }

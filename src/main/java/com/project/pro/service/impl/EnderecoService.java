@@ -7,6 +7,7 @@ import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.service.IEnderecoService;
+import com.project.pro.utils.DistanceUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorEndereco;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
     private final ValidadorEndereco validadorEndereco = new ValidadorEndereco();
 
     private final CepService cepService;
+
+    private final DistanceUtil distanceUtil;
 
     public Endereco incluir(Endereco endereco) throws Exception {
 
@@ -79,6 +82,15 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
         return enderecoRepository.findAllWithoutCoordenate();
     }
 
+    @Override
+    public double calcularDistancia(Integer idEndA, Integer idEndB) {
+
+        Endereco enderecoA = findAndValidate(idEndA);
+        Endereco enderecoB = findAndValidate(idEndB);
+
+        return distanceUtil.calcularDistanciaKm(enderecoA, enderecoB);
+    }
+
     @Scheduled(fixedDelay = 1000 * 3600 * 24)
     private void atualizarEnderecos() {
         List<Endereco> enderecosSemCoordenada = findAllWithoutCoordenate();
@@ -91,8 +103,10 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
                 endereco.setLocalidade(enderecoByCep.getLocalidade());
                 endereco.setUf(enderecoByCep.getUf());
                 GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endereco);
-                endereco.setLatitude(geometria.getLatitude());
-                endereco.setLongitude(geometria.getLongitude());
+                if (Utils.isNotEmpty(geometria)) {
+                    endereco.setLatitude(geometria.getLatitude());
+                    endereco.setLongitude(geometria.getLongitude());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

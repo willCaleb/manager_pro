@@ -4,10 +4,8 @@ import com.project.pro.model.dto.EnderecoDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.IEnderecoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +19,11 @@ public class EnderecoController extends AbstractController<Endereco, EnderecoDTO
     @GetMapping
     public List<EnderecoDTO> findAllWithoutCoordenates() {
         return toDtoList(enderecoService.findAllWithoutCoordenate());
+    }
+
+    @GetMapping("distancia/{idEndA}/{idEndB}")
+    public Double getDistancia(@PathVariable("idEndA") Integer idEndA, @PathVariable("idEndB") Integer idEndB) {
+        return enderecoService.calcularDistancia(idEndA, idEndB);
     }
 
 }
