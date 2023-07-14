@@ -8,12 +8,16 @@ import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.service.IEnderecoService;
 import com.project.pro.utils.DistanceUtil;
+import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorEndereco;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +35,18 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
 
     private final DistanceUtil distanceUtil;
 
+    @PostConstruct
+    private void setValidadorEnderecoRepository() {
+        validadorEndereco.setEnderecoRepository(enderecoRepository);
+    }
+
     public Endereco incluir(Endereco endereco) throws Exception {
 
         validadorEndereco.validarInsert(endereco);
 
         Endereco endByCep = cepService.buscarEnderecoPorCep(endereco.getCep());
-        endereco.setLogradouro(endByCep.getLogradouro());
-        endereco.setBairro(endByCep.getBairro());
+        endereco.setLogradouro(Utils.nvl(endByCep.getLogradouro(), "Sem endereço"));
+        endereco.setBairro(Utils.nvl(endByCep.getBairro(), "Sem bairro"));
         endereco.setUf(endByCep.getUf());
         endereco.setLocalidade(endByCep.getLocalidade());
 
@@ -45,8 +54,21 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
 
         endereco.setLatitude(geometria.getLatitude());
         endereco.setLongitude(geometria.getLongitude());
+        validadorEndereco.validarEnderecoJaPertenceAPessoa(endereco);
+        definirPrincipal(endereco);
+
+        if (endereco.getPessoa().hasId()) {
+            return enderecoRepository.save(endereco);
+        }
 
         return endereco;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Endereco incluir(Endereco endereco, Pessoa pessoa) throws Exception {
+        endereco.setPessoa(pessoa);
+        return incluir(endereco);
     }
 
     @Override
@@ -91,8 +113,29 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
         return distanceUtil.calcularDistanciaKm(enderecoA, enderecoB);
     }
 
+    @Override
+    public Endereco findEnderecoPrincipal(Pessoa pessoa) {
+        return enderecoRepository.findByPessoaAndPrincipalTrue(pessoa);
+    }
+
+    private void definirPrincipal(Endereco endereco) {
+        Pessoa pessoa = endereco.getPessoa();
+        List<Endereco> enderecos = enderecoRepository.findAllByPessoa(pessoa);
+        if (ListUtils.isNullOrEmpty(enderecos)) {
+            endereco.setPrincipal(Boolean.TRUE);
+            return;
+        }
+        if (endereco.isPrincipal()) {
+            enderecos.stream()
+                    .filter(Endereco::isPrincipal)
+                    .findFirst()
+                    .ifPresent(end -> end.setPrincipal(Boolean.FALSE));
+        }
+        enderecoRepository.saveAll(enderecos);
+    }
+
     @Scheduled(fixedDelay = 1000 * 3600 * 24)
-    private void atualizarEnderecos() {
+    protected void atualizarEnderecos() {
         List<Endereco> enderecosSemCoordenada = findAllWithoutCoordenate();
 
         enderecosSemCoordenada.forEach(endereco -> {

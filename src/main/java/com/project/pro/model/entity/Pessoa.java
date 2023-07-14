@@ -2,6 +2,7 @@ package com.project.pro.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.pro.enums.EnumClassificacaoPessoa;
+import com.project.pro.enums.EnumTipoPessoa;
 import com.project.pro.model.dto.PessoaDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,9 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     @Column(name = "senha")
     private String senha;
 
+    @Column(name = "tipo")
+    private EnumTipoPessoa tipoPessoa;
+
     @Transient
     private MultipartFile file;
 
@@ -56,7 +60,7 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     private EnumClassificacaoPessoa classificacao;
 
     @JsonManagedReference
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pessoa", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoa", fetch = FetchType.EAGER)
     private List<Endereco> enderecos;
 
     @JsonManagedReference

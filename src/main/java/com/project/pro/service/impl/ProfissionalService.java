@@ -18,6 +18,8 @@ import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorProfissional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -45,9 +47,12 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Profissional incluir(Profissional profissional) {
 
         validadorProfissional.validarInsert(profissional);
+
+        profissional.setPessoa(pessoaService.incluir(profissional.getPessoa()));
 
         return profissionalRepository.save(profissional);
     }

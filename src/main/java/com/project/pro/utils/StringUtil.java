@@ -28,7 +28,7 @@ public class StringUtil {
     }
 
     public static String normalize(String field) {
-        field.replaceAll("^\\p{L}\\p{N}", "").replaceAll("-", "");
+        field = field.replaceAll("^\\p{L}\\p{N}", "").replaceAll("-", "");
 //        StringUtils.
         return Normalizer.normalize(field, Normalizer.Form.NFD);
     }
