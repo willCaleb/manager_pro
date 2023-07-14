@@ -1,6 +1,5 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
@@ -13,6 +12,7 @@ import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.NumericUtils;
 import com.project.pro.utils.PasswordUtils;
 import com.project.pro.utils.Utils;
+import com.project.pro.validator.ValidadorEndereco;
 import com.project.pro.validator.ValidadorPessoa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,6 +38,8 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     private final IImgurService imgurService;
 
+    private ValidadorEndereco validadorEndereco = new ValidadorEndereco();
+
     @PostConstruct
     private void setValidadorRepository() {
         validadorPessoa.setPessoaRepository(pessoaRepository);
@@ -59,33 +61,30 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
         pessoaRepository.save(pessoa);
 
-        resolverPrincipal(pessoa);
+        resolverEnderecoPrincipal(pessoa);
 
         pessoa.setEnderecos(enderecoService.incluir(enderecos, pessoa));
 
         return pessoa;
     }
 
-    private void resolverPrincipal(Pessoa pessoa) {
+    private void resolverEnderecoPrincipal(Pessoa pessoa) {
         if (ListUtils.isNotNullOrEmpty(pessoa.getEnderecos())) {
-
-            if (NumericUtils.isGreater(getPrincipais(pessoa).size(), 1)) {
-                throw new CustomException("Apenas um endereço deve ser marcado como principal.");
-            }
-            if (NumericUtils.isSmaller(getPrincipais(pessoa).size(), 1)) {
-                definirPrimeiroPrincipal(pessoa.getEnderecos());
+            validadorEndereco.validarUnicoPrincipal(pessoa.getEnderecos());
+            if (NumericUtils.isSmaller(getEnderecoPrincipais(pessoa).size(), 1)) {
+                definirPrimeiroEnderecoPrincipal(pessoa.getEnderecos());
             }
         }
     }
 
-    private List<Endereco> getPrincipais(Pessoa pessoa) {
+    private List<Endereco> getEnderecoPrincipais(Pessoa pessoa) {
         return pessoa.getEnderecos()
                 .stream()
                 .filter(Endereco::isPrincipal)
                 .collect(Collectors.toList());
     }
 
-    private void definirPrimeiroPrincipal(List<Endereco> enderecos) {
+    private void definirPrimeiroEnderecoPrincipal(List<Endereco> enderecos) {
         enderecos.stream()
                 .findFirst()
                 .ifPresent(endereco -> endereco.setPrincipal(Boolean.TRUE));

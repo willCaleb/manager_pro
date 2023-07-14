@@ -6,7 +6,6 @@ import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.PessoaRepository;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
-import lombok.Data;
 import lombok.Setter;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class ValidadorPessoa implements IValidador<Pessoa>{
     public void validarInsert(Pessoa pessoa) {
 //        validarCamposObrigatorios(pessoa);
 //        validarTamanhoCampo(pessoa);
-//        validarCpfDuplicado(pessoa);
+        validarCpfDuplicado(pessoa);
 //        validarCpf(pessoa);
     }
 }
