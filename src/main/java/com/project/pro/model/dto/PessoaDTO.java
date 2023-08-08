@@ -1,5 +1,6 @@
 package com.project.pro.model.dto;
 
+import com.project.pro.annotation.OnlyField;
 import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.model.entity.Pessoa;
 import lombok.Data;
@@ -37,7 +38,7 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
 //    private List<ComentarioDTO> comentarios;
 
-//    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa", "latitude", "longitude"})
+    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa", "latitude", "longitude"})
     private List<EnderecoDTO> enderecos;
 //
 //    private EnumClassificacaoPessoa classificacao;

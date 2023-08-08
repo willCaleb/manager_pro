@@ -1,6 +1,7 @@
 package com.project.pro.service.impl;
 
 import com.project.pro.exception.CustomException;
+import com.project.pro.model.dto.ComentarioDTO;
 import com.project.pro.model.entity.Comentario;
 import com.project.pro.repository.ComentarioRepository;
 import com.project.pro.service.IComentarioService;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ComentarioService implements IComentarioService{
+public class ComentarioService extends AbstractService<Comentario, ComentarioDTO, ComentarioRepository> implements IComentarioService{
 
     private final ComentarioRepository comentarioRepository;
 

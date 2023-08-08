@@ -21,7 +21,7 @@ public class Utils {
 
     public static <T> T nvl(Object change, T changeTo) {
         if (isNotEmpty(change)) {
-        return (T)change;
+            return (T) change;
         }
         return changeTo;
     }

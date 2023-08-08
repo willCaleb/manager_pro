@@ -37,7 +37,7 @@ public class ClassUtils {
 //        return null;
 //    }
 
-//    public static Method[] getSetterMethods(Class<?> clazz) {
+    //    public static Method[] getSetterMethods(Class<?> clazz) {
 //        Method[] declaredMethods = clazz.getDeclaredMethods();
 //        Method[] returnMethods = new Method[declaredMethods.length];
 //        for (int i = 0; i < declaredMethods.length; i++) {
@@ -58,12 +58,12 @@ public class ClassUtils {
 //        }
 //        return returnMethods;
 //    }
-public static Method getGetterMethod(String fieldName, Class<?> javaBeanClass) {
-    return Stream.of(javaBeanClass.getDeclaredMethods())
-            .filter(method -> isGetterMethod(method, fieldName))
-            .findFirst()
-            .orElse(null);
-}
+    public static Method getGetterMethod(String fieldName, Class<?> javaBeanClass) {
+        return Stream.of(javaBeanClass.getDeclaredMethods())
+                .filter(method -> isGetterMethod(method, fieldName))
+                .findFirst()
+                .orElse(null);
+    }
 
     private static boolean isGetterMethod(Method method, String name) {
         return method.getParameterCount() == 0
@@ -71,7 +71,7 @@ public static Method getGetterMethod(String fieldName, Class<?> javaBeanClass) {
                 && (method.getName().equalsIgnoreCase("get" + name) || method.getName().equalsIgnoreCase("is" + name));
     }
 
-    public static Method getSetterMethod(String fieldName, Class<?> clazz){
+    public static Method getSetterMethod(String fieldName, Class<?> clazz) {
         return Stream.of(clazz.getDeclaredMethods())
                 .filter(method -> isSetterMethod(method, fieldName))
                 .findFirst()

@@ -5,11 +5,12 @@ import com.project.pro.model.entity.Comentario;
 import com.project.pro.service.IComentarioService;
 import com.project.pro.service.impl.ComentarioService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comentario")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ComentarioController extends AbstractController<Comentario, ComentarioDTO> {
 
     private final IComentarioService comentarioService;
