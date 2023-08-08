@@ -2,14 +2,14 @@ package com.project.pro.enums;
 
 import javax.persistence.Converter;
 
-public enum EnumTipoCobranca implements IEnum<String> {
-    TEMPO("TEMPO", "Tempo"),
-    EMPREITA("EMPREITA", "Empreita");
+public enum EnumTipoPessoa implements IEnum<String> {
+    FISICA("F", "Física"),
+    JURIDICA("J", "Jurídica")
+    ;
 
     private final String key;
     private final String value;
-
-    EnumTipoCobranca(String key, String value) {
+    EnumTipoPessoa(String key, String value) {
         this.key = key;
         this.value = value;
     }
@@ -24,6 +24,6 @@ public enum EnumTipoCobranca implements IEnum<String> {
         return value;
     }
     @Converter
-    public static class EnumConverter extends AbstractEnumConverter<EnumTipoCobranca, String> {
+    public static class EnumConverter extends AbstractEnumConverter<EnumTipoPessoa, String> {
     }
 }

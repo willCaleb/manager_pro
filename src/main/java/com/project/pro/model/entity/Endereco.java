@@ -51,8 +51,11 @@ public class Endereco extends AbstractEntity<Integer, EnderecoDTO>{
     @Column(name = "longitude")
     private Double longitude;
 
+    @Column(name = "principal")
+    private boolean principal;
+
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
     private Pessoa pessoa;
 }

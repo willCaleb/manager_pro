@@ -13,6 +13,8 @@ public class PedidoDTO extends AbstractDTO<Integer, Pedido> {
 
     private ClienteDTO cliente;
 
-    private Profissional profissional;
+    private ProfissionalDTO profissional;
+
+    private double distancia;
 
 }

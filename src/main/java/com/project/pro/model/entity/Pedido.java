@@ -32,4 +32,7 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
 
     @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PedidoItem> itens;
+
+    @Column(name = "distancia")
+    private double distancia;
 }

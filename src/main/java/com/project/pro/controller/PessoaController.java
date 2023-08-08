@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PessoaController extends AbstractController<Pessoa, PessoaDTO>{
 
-    static final String PATH = "/pessoa";
+    public static final String PATH = "/pessoa";
     private final PessoaService pessoaService;
 
     @PostMapping

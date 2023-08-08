@@ -8,17 +8,23 @@ import com.project.pro.repository.PessoaRepository;
 import com.project.pro.service.IEnderecoService;
 import com.project.pro.service.IImgurService;
 import com.project.pro.service.IPessoaService;
+import com.project.pro.utils.ListUtils;
+import com.project.pro.utils.NumericUtils;
 import com.project.pro.utils.PasswordUtils;
 import com.project.pro.utils.Utils;
+import com.project.pro.validator.ValidadorEndereco;
 import com.project.pro.validator.ValidadorPessoa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +38,14 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     private final IImgurService imgurService;
 
+    private ValidadorEndereco validadorEndereco = new ValidadorEndereco();
+
     @PostConstruct
     private void setValidadorRepository() {
         validadorPessoa.setPessoaRepository(pessoaRepository);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pessoa incluir(Pessoa pessoa) {
         pessoa.setDataInclusao(Calendar.getInstance().getTime());
         String salt = PasswordUtils.getSalt(30);
@@ -47,11 +55,44 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
         validadorPessoa.validarInsert(pessoa);
 
+        List<Endereco> enderecos = pessoa.getEnderecos();
+
+        pessoa.setEnderecos(new ArrayList<>());
+
         pessoaRepository.save(pessoa);
 
-        pessoa.setEnderecos(enderecoService.incluir(pessoa.getEnderecos(), pessoa));
+        resolverEnderecoPrincipal(pessoa);
+
+        pessoa.setEnderecos(enderecoService.incluir(enderecos, pessoa));
 
         return pessoa;
+    }
+
+    private void resolverEnderecoPrincipal(Pessoa pessoa) {
+        if (ListUtils.isNotNullOrEmpty(pessoa.getEnderecos())) {
+            validadorEndereco.validarUnicoPrincipal(pessoa.getEnderecos());
+            if (NumericUtils.isSmaller(getEnderecoPrincipais(pessoa).size(), 1)) {
+                definirPrimeiroEnderecoPrincipal(pessoa.getEnderecos());
+            }
+        }
+    }
+
+    private List<Endereco> getEnderecoPrincipais(Pessoa pessoa) {
+        return pessoa.getEnderecos()
+                .stream()
+                .filter(Endereco::isPrincipal)
+                .collect(Collectors.toList());
+    }
+
+    private void definirPrimeiroEnderecoPrincipal(List<Endereco> enderecos) {
+        enderecos.stream()
+                .findFirst()
+                .ifPresent(endereco -> endereco.setPrincipal(Boolean.TRUE));
+    }
+
+    @Override
+    public List<Pessoa> findAll() {
+        return pessoaRepository.findAll();
     }
 
     private void incluirImagemPerfil(Pessoa pessoa) {

@@ -10,6 +10,8 @@ import java.util.List;
 public interface IEnderecoService extends IAbstractService<Endereco, EnderecoDTO, EnderecoRepository> {
     Endereco incluir(Endereco endereco) throws Exception;
 
+    Endereco incluir(Endereco endereco, Pessoa pessoa) throws Exception;
+
     List<Endereco> incluir(List<Endereco> enderecos, Pessoa pessoa);
 
     void incluirCoordenadas(Endereco endereco);
@@ -17,5 +19,8 @@ public interface IEnderecoService extends IAbstractService<Endereco, EnderecoDTO
     List<Endereco> findAllWithoutCoordenate();
 
     double calcularDistancia(Integer idEndA, Integer idEndB);
+
+    Endereco findEnderecoPrincipal(Pessoa pessoa);
+
 
 }

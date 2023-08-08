@@ -38,7 +38,7 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Categoria> categorias;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private List<ServicoProfissional> servicos;
 

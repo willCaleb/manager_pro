@@ -22,4 +22,8 @@ public class ListUtils {
     public static <T> List<T> toList(T... args) {
         return Arrays.asList(args);
     }
+
+    public static int size(Collection<?> list) {
+        return isNullOrEmpty(list) ? 0 : list.size();
+    }
 }

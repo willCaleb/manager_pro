@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 public class MessageExceptionHandler {
 
     public static String getMessage(String message, Object argument) {
-        return message.concat(argument.toString());
+        return StringUtil.formatMessage(message, argument.toString());
     }
 
     public static String getMessage(String message, Object... arguments) {

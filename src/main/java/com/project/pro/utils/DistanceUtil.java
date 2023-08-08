@@ -4,14 +4,9 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.ICepService;
-import com.project.pro.service.IEnderecoService;
 import com.project.pro.service.IGoogleMapsService;
-import com.project.pro.service.impl.EnderecoService;
-import com.project.pro.service.impl.GoogleMapsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
@@ -35,8 +30,10 @@ public class DistanceUtil {
         if (Utils.isEmpty(endereco.getLogradouro())) {
             try {
                 Endereco enderecoByCep = cepService.buscarEnderecoPorCep(endereco.getCep());
-                endereco.setLogradouro(Utils.nvl(enderecoByCep.getLogradouro(), "Sem endereço"));
-                endereco.setBairro(Utils.nvl(enderecoByCep.getBairro(), "Sem bairro"));
+                if (Utils.isNotEmpty(enderecoByCep)) {
+                    endereco.setLogradouro(Utils.nvl(enderecoByCep.getLogradouro(), "Sem endereço"));
+                    endereco.setBairro(Utils.nvl(enderecoByCep.getBairro(), "Sem bairro"));
+                }
             } catch (Exception e) {
                 throw new CustomException("Não foi possível encontrar o CEP ", endereco.getCep());
             }
