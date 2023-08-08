@@ -5,11 +5,13 @@ import com.project.pro.model.entity.Categoria;
 import com.project.pro.model.entity.Servico;
 import com.project.pro.model.entity.ServicoProfissional;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ServicoDTO extends AbstractDTO<Integer, Servico>{
 
     private Integer id;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ListUtils {
 
@@ -25,5 +26,9 @@ public class ListUtils {
 
     public static int size(Collection<?> list) {
         return isNullOrEmpty(list) ? 0 : list.size();
+    }
+
+    public static Stream stream(Collection<String> list) {
+        return list.stream();
     }
 }

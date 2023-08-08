@@ -4,8 +4,10 @@ import com.project.pro.enums.EnumTipoCobranca;
 import com.project.pro.model.entity.Pedido;
 import com.project.pro.model.entity.Profissional;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PedidoDTO extends AbstractDTO<Integer, Pedido> {
     private Integer id;
 
