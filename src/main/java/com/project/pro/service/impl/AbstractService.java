@@ -11,6 +11,7 @@ import com.project.pro.utils.ClassUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,18 @@ public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends 
         return (JpaRepository<E, ID>) repositories
                 .getRepositoryFor(clazz)
                 .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
+    }
+
+    public <E extends AbstractEntity<?, ?>>JpaSpecificationExecutor<E> getSpecificationRepository(Class<E> clazz) {
+        repositories = new Repositories(applicationContext);
+        return (JpaSpecificationExecutor<E>) repositories
+                .getRepositoryFor(clazz)
+                .orElseThrow(() -> new CustomException("Specification repository não encontrado."));
+    }
+
+    public <E extends AbstractEntity<?,?>> JpaSpecificationExecutor<E> getSpecificationRepository() {
+        Class<E> entityClass = (Class) genericTypes[0];
+        return getSpecificationRepository(entityClass);
     }
 
     public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository<E, ID> getRepository() {

@@ -1,14 +1,13 @@
 package com.project.pro.model.dto;
 
-import com.project.pro.model.entity.Cliente;
+import com.project.pro.model.entity.Produto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ClienteDTO extends AbstractDTO<Integer, Cliente>{
+public class ProdutoDTO extends AbstractDTO<Integer, Produto>{
 
     private Integer id;
 
-    private PessoaDTO pessoa;
 }
