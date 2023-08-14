@@ -1,11 +1,12 @@
 package com.project.pro.model.entity;
 
-import com.project.pro.enums.EnumTipoCobranca;
+import com.project.pro.enums.EnumStatusPedido;
 import com.project.pro.model.dto.PedidoDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,21 +19,29 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "tipo_cobranca")
-    @Convert(converter = EnumTipoCobranca.EnumConverter.class)
-    private EnumTipoCobranca tipoCobranca;
+    @Column(name = "data_inclusao")
+    private Date dataInclusao;
 
-    @ManyToOne
+    @Column(name = "data_alteracao")
+    private Date dataAlteracao;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
 
-    @ManyToOne
+    @Column(name = "status_pedido")
+    @Convert(converter = EnumStatusPedido.EnumConverter.class)
+    private EnumStatusPedido statusPedido;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private Profissional profissional;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PedidoItem> itens;
 
-    @Column(name = "distancia")
+    @Transient
     private double distancia;
+
 }

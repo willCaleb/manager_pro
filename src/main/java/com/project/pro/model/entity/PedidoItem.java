@@ -1,5 +1,6 @@
 package com.project.pro.model.entity;
 
+import com.project.pro.enums.EnumStatusPedido;
 import com.project.pro.model.dto.PedidoItemDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +33,15 @@ public class PedidoItem extends AbstractEntity<Integer, PedidoItemDTO>{
     @Column(name = "ordem")
     private Integer ordem;
 
-    @ManyToOne
+    @Column
+    @Convert(converter = EnumStatusPedido.EnumConverter.class)
+    private EnumStatusPedido status;
+
+    @OneToOne
+    @JoinColumn(name = "id_servico_profissional", referencedColumnName = "id")
+    private ServicoProfissional servicoProfissional;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_pedido", referencedColumnName = "id")
     private Pedido pedido;
 }

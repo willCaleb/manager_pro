@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -22,4 +23,7 @@ public class Produto extends AbstractEntity<Integer, ProdutoDTO>{
 
     @Column(name = "preco")
     private BigDecimal preco;
+
+    @Column(name = "data_inclusao")
+    private Date dataIncusao;
 }
