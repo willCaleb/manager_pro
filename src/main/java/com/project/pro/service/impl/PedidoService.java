@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumStatusPedido;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.PedidoDTO;
@@ -7,6 +8,7 @@ import com.project.pro.model.entity.*;
 import com.project.pro.repository.PedidoRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
+import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorPedido;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +72,20 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
     @Override
     public void editar(Integer idPedido, Pedido pedido) {
+        Pedido pedidoManaged = findAndValidate(idPedido);
 
+        validadorPedido.validarTemObservacao(pedido);
+        validadorPedido.validarFinalizadoOuCancelado(pedidoManaged);
+
+        if (EnumStatusPedido.ABERTO.equals(pedidoManaged.getStatusPedido()) || EnumStatusPedido.CANCELADO.equals(pedido.getStatusPedido())) {
+            pedidoManaged.setStatusPedido(pedido.getStatusPedido());
+            pedidoManaged.setDataAlteracao(DateUtils.getDate());
+            pedidoManaged.setObservacao(pedido.getObservacao());
+        } else if (EnumStatusPedido.CONFIRMADO.equals(pedidoManaged.getStatusPedido()) && EnumStatusPedido.ABERTO.equals(pedido.getStatusPedido())){
+            //TODO implementar edição de pedido confirmado ou aberto
+        }
+
+        getRepository().save(pedidoManaged);
     }
 
     @Override
@@ -79,12 +94,12 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         List<PedidoItem> allByPedido = pedidoItemService.findAllByPedido(pedido);
 
         if (EnumStatusPedido.FINALIZADO.equals(pedido.getStatusPedido())) {
-            throw new CustomException("Pedido já finalizado");
+            throw new CustomException(EnumCustomException.PEDIDO_FINALIZADO);
         }
 
         for (PedidoItem pedidoItem : allByPedido) {
             if (!Utils.equals(EnumStatusPedido.FINALIZADO, pedidoItem.getStatus())) {
-                throw new CustomException("O pedido não pode ser finalizados pois contém itens não finalizados!");
+                throw new CustomException(EnumCustomException.PEDIDO_NAO_E_POSSIVEL_FINALIZAR);
             }
         }
         pedido.setStatusPedido(EnumStatusPedido.FINALIZADO);

@@ -1,11 +1,15 @@
 package com.project.pro.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.MessageFormat;
 import java.text.Normalizer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.ToIntBiFunction;
+
 
 public class StringUtil {
+
 
     public static boolean isNullOrEmpty(String field) {
         return field == null || field.equals("") || field.isEmpty();
@@ -32,4 +36,15 @@ public class StringUtil {
 //        StringUtils.
         return Normalizer.normalize(field, Normalizer.Form.NFD);
     }
+
+    public static Function<String, Integer> trimmedLength = str -> str.trim().length();
+
+    public static Function<String, String> removeSpaces = str -> str.replaceAll(" ", "");
+
+    public static Predicate<String> isNotEmpty = str -> str.replaceAll(" ", "").trim().length() > 0;
+
+    public static Consumer<String> print = System.out::println;
+
+    public static ToIntBiFunction<String, String> somarTamanhos = (str1, str2) -> str1.length() + str2.length();
 }
+
