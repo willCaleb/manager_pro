@@ -1,6 +1,5 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.ComentarioDTO;
 import com.project.pro.model.entity.Comentario;
 import com.project.pro.repository.ComentarioRepository;
@@ -25,9 +24,9 @@ public class ComentarioService extends AbstractService<Comentario, ComentarioDTO
     }
 
     public void excluir(Integer idComentario) {
-        Comentario comentario = comentarioRepository
-                .findById(idComentario)
-                .orElseThrow(() -> new CustomException("Comentário não encontrado"));
+
+        Comentario comentario = findAndValidate(idComentario);
+
         comentarioRepository.delete(comentario);
     }
 }

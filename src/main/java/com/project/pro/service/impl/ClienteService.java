@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.model.dto.ClienteDTO;
 import com.project.pro.model.entity.Cliente;
 import com.project.pro.repository.ClienteRepository;
 import com.project.pro.service.IClienteService;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ClienteService implements IClienteService{
+public class ClienteService extends AbstractService<Cliente, ClienteDTO, ClienteRepository> implements IClienteService{
 
     private final ClienteRepository clienteRepository;
 

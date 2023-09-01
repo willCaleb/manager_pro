@@ -110,4 +110,17 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
         pessoaRepository.delete(pessoa);
     }
 
+    @Override
+    public Endereco getEnderecoPrincipal(Pessoa pessoa) {
+        return pessoa.getEnderecos()
+                .stream()
+                .filter(Endereco::isPrincipal)
+                .findFirst()
+                .orElse(
+                        pessoa.getEnderecos()
+                                .stream()
+                                .findFirst()
+                                .orElse(null));
+    }
+
 }

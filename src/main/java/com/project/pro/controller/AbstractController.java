@@ -8,6 +8,7 @@ import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.pattern.OperationsQueryParam;
 import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
+import com.project.pro.utils.ClassUtils;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
 import io.netty.util.internal.StringUtil;
@@ -27,6 +28,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -116,6 +118,10 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
                 if (valor != null) {
                     if (String.class.equals(root.get(chave).getJavaType())) {
                         predicates.add(criteriaBuilder.like(root.get(chave), "%" + valor + "%"));
+                    } else if (root.get(chave).getJavaType().isEnum()) {
+                        Class<Enum> enumType = (Class<Enum>) root.get(chave).getJavaType();
+                        Enum enumValue = Enum.valueOf(enumType, valor.toString());
+                        predicates.add(criteriaBuilder.equal(root.get(chave), enumValue));
                     } else {
                         predicates.add(criteriaBuilder.equal(root.get(chave), valor));
                     }
@@ -170,19 +176,6 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return new PageImpl<>(dtoList, pageable, page.getTotalElements());
     }
 
-    private String[] getOrder(String value) {
-        if (value.contains("::")) {
-            return value.split("::");
-        }
-        return new String[]{value};
-    }
-
-    private Sort.Direction getDirection(String direction) {
-        if (StringUtil.isNullOrEmpty(direction) || "asc".equals(direction)) {
-            return Sort.Direction.ASC;
-        }
-        return Sort.Direction.DESC;
-    }
 
 }
 

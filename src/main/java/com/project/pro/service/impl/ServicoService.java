@@ -21,7 +21,7 @@ public class ServicoService extends AbstractService<Servico, ServicoDTO, Servico
     @Override
     public Servico incluir(Servico servico) {
         onPrepareInsert(servico);
-        return (Servico) getRepository().save(servico);
+        return getRepository().save(servico);
     }
 
     @Override

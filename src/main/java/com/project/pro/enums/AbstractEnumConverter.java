@@ -3,7 +3,7 @@ package com.project.pro.enums;
 import javax.persistence.AttributeConverter;
 import java.lang.reflect.ParameterizedType;
 
-public abstract class  AbstractEnumConverter<T extends Enum<T> & IEnum<E>, E> implements AttributeConverter<T, E> {
+public abstract class AbstractEnumConverter<T extends Enum<T> & IEnum<E>, E> implements AttributeConverter<T, E> {
 
     private final Class<T> clazz;
 

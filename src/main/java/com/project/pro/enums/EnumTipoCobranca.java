@@ -23,6 +23,7 @@ public enum EnumTipoCobranca implements IEnum<String> {
     public String getValue() {
         return value;
     }
+
     @Converter
     public static class EnumConverter extends AbstractEnumConverter<EnumTipoCobranca, String> {
     }

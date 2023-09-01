@@ -63,6 +63,9 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoa", fetch = FetchType.EAGER)
     private List<Endereco> enderecos;
 
+    @Transient
+    private Endereco enderecoPrincipal;
+
     @JsonManagedReference
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "remetente", fetch = FetchType.LAZY)
     private List<Comentario> comentarios;
@@ -71,4 +74,8 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
         return this.id != null;
     }
 
+    @PostLoad
+    void setEndereco() {
+
+    }
 }

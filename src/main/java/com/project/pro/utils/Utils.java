@@ -2,6 +2,8 @@ package com.project.pro.utils;
 
 import org.springframework.util.ObjectUtils;
 
+import java.util.function.BiFunction;
+
 public class Utils {
 
     public static boolean isEmpty(Object object) {
@@ -24,5 +26,12 @@ public class Utils {
             return (T) change;
         }
         return changeTo;
+    }
+
+    @FunctionalInterface
+    public interface BinaryFunctio<T> extends BiFunction<Object, Object, T> {
+        default boolean test(Object obj1, Object obj2) {
+            return isNotEmpty(obj1) && isNotEmpty(obj2);
+        }
     }
 }

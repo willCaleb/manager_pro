@@ -6,7 +6,11 @@ public enum EnumCustomException {
     IMGUR_IMPOSSIVEL_GERAR_TOKEN("Não foi possível gerar um Token em Imgur: {0}"),
     IMGUR_IMPOSSIVEL_RECUPERAR_CONTA("Não foi possível recuoerar os dados da conta: {0}"),
     IMGUR_IMPOSSIVEL_FAZER_UPLOAD("Não foi possível fazer o upload da imagem: {0}"),
-    IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO("Não foi possível converter o arquivo: {0}");
+    IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO("Não foi possível converter o arquivo: {0}"),
+
+    PEDIDO_NAO_E_POSSIVEL_FINALIZAR("O pedido não pode ser finalizados pois contém itens não finalizados!"),
+    PEDIDO_FINALIZADO("Pedido já finalizado")
+    ;
 
     private final String message;
 

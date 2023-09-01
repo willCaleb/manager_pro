@@ -1,5 +1,6 @@
 package com.project.pro.model.dto;
 
+import com.project.pro.annotation.DtoFieldIgnore;
 import com.project.pro.annotation.OnlyField;
 import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.model.entity.Pessoa;
@@ -24,6 +25,7 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
     private String email;
 
+    @DtoFieldIgnore
     private String senha;
 
     private Integer idade;
@@ -38,9 +40,12 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
     private MultipartFile file;
 
+    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa", "latitude", "longitude"})
+    private EnderecoDTO enderecoPrincipal;
+
 //    private List<ComentarioDTO> comentarios;
 
-    @OnlyField(fields = {"id", "logradouro", "bairro", "pessoa", "latitude", "longitude"})
+    @DtoFieldIgnore
     private List<EnderecoDTO> enderecos;
 //
 //    private EnumClassificacaoPessoa classificacao;

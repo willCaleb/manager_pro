@@ -1,5 +1,6 @@
 package com.project.pro.model.dto;
 
+import com.project.pro.annotation.OnlyField;
 import com.project.pro.enums.EnumTipoCobranca;
 import com.project.pro.model.entity.ServicoProfissional;
 import lombok.Data;
