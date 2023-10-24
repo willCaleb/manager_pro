@@ -9,6 +9,7 @@ import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.service.IEnderecoService;
 import com.project.pro.utils.DistanceUtil;
 import com.project.pro.utils.ListUtils;
+import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorEndereco;
 import lombok.RequiredArgsConstructor;
@@ -116,6 +117,11 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
     @Override
     public Endereco findEnderecoPrincipal(Pessoa pessoa) {
         return enderecoRepository.findByPessoaAndPrincipalTrue(pessoa);
+    }
+
+    @Override
+    public Endereco findByCoordenadas(Double latitude, Double longitude) {
+        return null;
     }
 
     private void definirPrincipal(Endereco endereco) {

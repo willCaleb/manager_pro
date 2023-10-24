@@ -8,7 +8,8 @@ public enum EnumCategoriaPrincipal implements IEnum<String> {
     TRANSPORTE("TRANSPORTE", "Transporte"),
     ALIMENTACAO("ALIMENTACAO", "Alimentação"),
     SAUDE("SAUDE", "Saúde"),
-    BELEZA("BELEZA", "Beleza");
+    BELEZA("BELEZA", "Beleza"),
+    MANUTENCAO_AUTOMOTIVA("MANUTENCAO_AUTOMOTIVA", "Manutenção automotiva");
 
 
     private final String key;

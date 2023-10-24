@@ -2,40 +2,29 @@ package com.project.pro.controller;
 
 import com.project.pro.exception.CustomException;
 import com.project.pro.exception.ErrorResponse;
-import com.project.pro.model.beans.PageableBean;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.pattern.OperationsQueryParam;
 import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
-import com.project.pro.utils.ClassUtils;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
-import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RestController

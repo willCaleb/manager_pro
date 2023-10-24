@@ -33,7 +33,6 @@ public class StringUtil {
 
     public static String normalize(String field) {
         field = field.replaceAll("^\\p{L}\\p{N}", "").replaceAll("-", "");
-//        StringUtils.
         return Normalizer.normalize(field, Normalizer.Form.NFD);
     }
 
