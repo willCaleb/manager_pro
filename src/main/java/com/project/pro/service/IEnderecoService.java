@@ -22,5 +22,6 @@ public interface IEnderecoService extends IAbstractService<Endereco, EnderecoDTO
 
     Endereco findEnderecoPrincipal(Pessoa pessoa);
 
+    Endereco findByCoordenadas(Double latitude, Double longitude);
 
 }

@@ -26,4 +26,7 @@ public class Produto extends AbstractEntity<Integer, ProdutoDTO>{
 
     @Column(name = "data_inclusao")
     private Date dataIncusao;
+
+    @Column(name = "data_alteracao")
+    private Date dataAlteracao;
 }

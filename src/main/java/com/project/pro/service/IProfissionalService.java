@@ -4,6 +4,8 @@ import com.project.pro.model.dto.ProfissionalDTO;
 import com.project.pro.model.entity.Profissional;
 import com.project.pro.repository.ProfissionalRepository;
 
+import java.util.List;
+
 public interface IProfissionalService extends IAbstractService<Profissional, ProfissionalDTO, ProfissionalRepository>{
 
     Profissional incluir(Profissional profissional);
@@ -11,4 +13,6 @@ public interface IProfissionalService extends IAbstractService<Profissional, Pro
     void editar(Integer idProfissional, Profissional profissional);
 
     Profissional incluirServico(Integer idServico, Integer idProfissional);
+
+    List<Profissional> findAllByNome(String nome);
 }

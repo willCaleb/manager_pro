@@ -17,12 +17,14 @@ import com.project.pro.utils.NumericUtils;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorProfissional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +57,12 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         profissional.setPessoa(pessoaService.incluir(profissional.getPessoa()));
 
         return profissionalRepository.save(profissional);
+    }
+
+    @Override
+    @Cacheable("profissional_por_nome")
+    public List<Profissional> findAllByNome(String nome) {
+        return profissionalRepository.findAllByNome("%" + nome + "%");
     }
 
     @Override

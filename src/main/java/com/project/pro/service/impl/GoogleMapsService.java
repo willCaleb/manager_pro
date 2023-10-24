@@ -34,7 +34,7 @@ public class GoogleMapsService implements IGoogleMapsService{
 
         String geocode = enderecoToGeocode(endereco);
 
-        final URI googleUri = getPath(apiUrl, apiKey, geocode);
+        final URI googleUri = getPathAddress(apiUrl, apiKey, geocode);
 
         final ResponseEntity<Endereco> responseEntity = restTemplate.getForEntity(googleUri, Endereco.class);
 
@@ -64,7 +64,7 @@ public class GoogleMapsService implements IGoogleMapsService{
                 .toString();
     }
 
-    private URI getPath(String path, String... arguments){
+    private URI getPathAddress(String path, String... arguments){
         return URI.create(StringUtil.formatMessage(path, arguments));
     }
 

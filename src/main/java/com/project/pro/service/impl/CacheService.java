@@ -1,7 +1,8 @@
 package com.project.pro.service.impl;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.project.pro.model.beans.CacheBean;
+import com.project.pro.model.beans.CacheBeanDTO;
+import com.project.pro.model.entity.CacheBean;
 import com.project.pro.service.ICacheService;
 import com.project.pro.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,8 @@ public class CacheService implements ICacheService {
 
     @Override
     public void clearAllCaches() {
-        List<CacheBean> cacheBeans = listAllCaches();
-        cacheBeans.forEach(cache -> clearCache(cache.getName()));
+        List<CacheBean> cacheBean = listAllCaches();
+        cacheBean.forEach(cache -> clearCache(cache.getName()));
     }
 
     @Override
