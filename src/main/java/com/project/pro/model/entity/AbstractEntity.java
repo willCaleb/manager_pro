@@ -69,7 +69,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                                     }
                                 }
                             } else {
-                                setterMethod.invoke(dtoReturn, getterMethod.invoke(entity));
+                                setterMethod.invoke(dtoReturn, invoke);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

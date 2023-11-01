@@ -10,24 +10,24 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
-import com.project.pro.model.entity.Profissional;
-import com.project.pro.model.entity.ProfissionalImagem;
 import com.project.pro.service.IImgurService;
-import com.project.pro.service.ProfissionalImagemService;
-import com.project.pro.utils.DateUtils;
 import com.project.pro.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCache;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,8 +58,6 @@ public class ImgurService implements IImgurService {
     @Value("${imgur.username}")
     private String username;
 
-//    private final ProfissionalService profissionalService;
-    private final ProfissionalImagemService profissionalImagemService;
     private final CacheService cacheService;
 
     @Override
@@ -71,7 +69,7 @@ public class ImgurService implements IImgurService {
 
             CaffeineCache cacheToken = cacheService.findCacheByName("imgur_token");
             if (Utils.isNotEmpty(cacheToken)) {
-                if (Utils.isNotEmpty(cacheToken.get(0)));
+                if (Utils.isNotEmpty(cacheToken.get(0))) ;
             }
 
             HttpResponse<String> response = Unirest.post(loginUrl)
@@ -137,12 +135,9 @@ public class ImgurService implements IImgurService {
 
         ImgurReturn imgurReturn;
 
-        HttpPost httpPost = new HttpPost(uploadUrl);
-        httpPost.setHeader("Authorization", "Client-ID " + clientId);
-        httpPost.setEntity(entityBuilder.build());
+        HttpPost httpPost = getHttpPost(entityBuilder);
 
-        CloseableHttpClient closeable = HttpClients.custom()
-                .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault())).build();
+        CloseableHttpClient closeable = getCloseableHttpClient();
 
         String responseString;
         try {
@@ -151,17 +146,22 @@ public class ImgurService implements IImgurService {
             responseString = EntityUtils.toString(response.getEntity());
             imgurReturn = new Gson().fromJson(responseString, ImgurReturn.class);
 
-//            if (imgurReturn.isSuccess()) {
-//                ProfissionalImagem imagem = new ProfissionalImagem();
-//                imagem.setDataInclusao(DateUtils.getDate());
-//                imagem.setProfissional(profissional);
-//                imagem.setUrl(imgurReturn.getData().getLink());
-//                profissionalImagemService.incluir(imagem);
-//            }
         } catch (IOException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD, e.getMessage());
         }
         return imgurReturn;
+    }
+
+    private CloseableHttpClient getCloseableHttpClient() {
+        return HttpClients.custom()
+                .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault())).build();
+    }
+
+    private HttpPost getHttpPost(MultipartEntityBuilder entityBuilder) {
+        HttpPost httpPost = new HttpPost(uploadUrl);
+        httpPost.setHeader("Authorization", "Client-ID " + clientId);
+        httpPost.setEntity(entityBuilder.build());
+        return httpPost;
     }
 
     private File convertToFile(MultipartFile multipartFile) {
@@ -174,5 +174,22 @@ public class ImgurService implements IImgurService {
         } catch (IOException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO, e.getMessage());
         }
+    }
+
+    @Override
+    public void delete(String hash) {
+        try {
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpHeaders headers = new HttpHeaders();
+            String url = uploadUrl + "/" + hash;
+            HttpDelete httpDelete = new HttpDelete(url);
+            httpDelete.addHeader("Authorization", getToken());
+            org.apache.http.HttpResponse execute = httpClient.execute(httpDelete);
+
+            System.out.println(execute);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

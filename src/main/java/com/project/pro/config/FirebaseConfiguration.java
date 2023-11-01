@@ -42,7 +42,6 @@ public class FirebaseConfiguration {
                     return GoogleCredentials.fromStream(is);
                 }
             } else {
-                // Use standard credentials chain. Useful when running inside GKE
                 return GoogleCredentials.getApplicationDefault();
             }
         } catch (IOException ioe) {

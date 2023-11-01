@@ -36,6 +36,10 @@ public class StringUtil {
         return Normalizer.normalize(field, Normalizer.Form.NFD);
     }
 
+    public static String toString(Object obj) {
+        return obj.toString();
+    }
+
     public static Function<String, Integer> trimmedLength = str -> str.trim().length();
 
     public static Function<String, String> removeSpaces = str -> str.replaceAll(" ", "");

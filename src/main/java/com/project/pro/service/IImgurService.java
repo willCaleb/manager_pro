@@ -20,4 +20,6 @@ public interface IImgurService {
 
     ImgurReturnList listAllImages(String imgurUsername);
 
+    void delete(String hash);
+
 }

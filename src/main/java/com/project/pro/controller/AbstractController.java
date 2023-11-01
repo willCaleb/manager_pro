@@ -83,13 +83,21 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     }
 
 
-    public List<DTO> toDtoList(List<E> list) {
+    public List<DTO> toDtoList(List<E> entityList) {
         List retorno = new ArrayList();
-        if (Utils.isEmpty(list)) return retorno;
-        for (E item : list) {
+        if (Utils.isEmpty(entityList)) return retorno;
+        for (E item : entityList) {
             retorno.add(((AbstractEntity) item).toDto());
         }
         return retorno;
+    }
+
+    public <I extends AbstractEntity, T extends AbstractDTO> List<T> toDtoList(List<I> entityList, Class<?> clazz) {
+        List<T> dtoList = new ArrayList<>();
+        entityList.forEach(entity -> {
+            dtoList.add((T) entity.toDto());
+        });
+        return dtoList;
     }
 
     private List<E> findAllEntity() {
