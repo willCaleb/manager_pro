@@ -7,6 +7,7 @@ import com.project.pro.model.beans.ImgurAccountBean;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
+import com.project.pro.pattern.OperationsPath;
 import com.project.pro.service.IImgurService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
@@ -54,6 +55,11 @@ public class ImgurController {
     @GetMapping("account-images/{username}")
     public ImgurReturnList getAllAccountImages(@PathVariable("username") String username){
         return imgurService.listAllImages(username);
+    }
+
+    @DeleteMapping("/{imgHash}")
+    public void excluirImagem(@PathVariable("imgHash") String hash){
+        imgurService.delete(hash);
     }
 
 }

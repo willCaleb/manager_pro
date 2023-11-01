@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -121,6 +122,17 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
                                 .stream()
                                 .findFirst()
                                 .orElse(null));
+    }
+
+    @Override
+    public Pessoa incluirImagem(Integer idPessoa, MultipartFile file) {
+
+        Pessoa pessoa = findAndValidate(idPessoa);
+
+        ImgurReturn imgurReturn = imgurService.upload(file);
+        String link = imgurReturn.getData().getLink();
+        pessoa.setImagemPerfil(link);
+        return pessoaRepository.save(pessoa);
     }
 
 }
