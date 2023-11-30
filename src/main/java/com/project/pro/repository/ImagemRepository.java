@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ImagemRepository extends JpaRepository<Imagem, Integer>, JpaSpecificationExecutor<Imagem>{
 
-    List<Imagem> findAllByEntityNameAndEntityIdAndAtivoIsTrue(String entityName, Integer entityId);
+    List<Imagem> findAllByEntityNameAndEntityIdAndAtivoIsTrueAndDeletedIsFalse(String entityName, Integer entityId);
 
 }

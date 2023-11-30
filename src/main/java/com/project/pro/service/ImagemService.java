@@ -16,4 +16,6 @@ public interface ImagemService extends IAbstractService<Imagem, ImagemDTO, Image
 
     <E extends AbstractEntity> List<Imagem> findAllByEntity(E entity);
 
+    void excluir(Integer imageId);
+
 }

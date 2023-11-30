@@ -52,4 +52,7 @@ public class Imagem extends AbstractEntity<Integer, ImagemDTO> {
 
     @Column(name = "principal")
     private boolean principal;
+
+    @Column(name = "deleted")
+    private boolean deleted;
 }

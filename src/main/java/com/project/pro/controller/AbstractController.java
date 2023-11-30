@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.criteria.Predicate;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -28,19 +29,16 @@ import java.util.Map;
 
 @Component
 @RestController
-//@RequiredArgsConstructor
 @SuppressWarnings("unchecked")
 public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>> extends AbstractService<E, DTO, JpaRepository> {
 
     @Autowired
     private GenericRepository<E> genericRepository;
 
+    @PostConstruct
     private void setGenericRepositoryEntityClass() {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<E> entityClass = (Class) genericTypes[0];
-        genericRepository.setEntityClass(entityClass);
+        genericRepository.setEntityClass(getEntityClass());
     }
-
 
     @ExceptionHandler(value = CustomException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -61,11 +59,9 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     @GetMapping("/{id}")
     @ResponseBody
     public DTO findById(@PathVariable("id") Integer id) {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<E> entityClass = (Class) genericTypes[0];
 
-        E retorno = (E) getRepository(entityClass).findById(id).orElseGet(() -> {
-            throw new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id);
+        E retorno = (E) getRepository(getEntityClass()).findById(id).orElseGet(() -> {
+            throw new CustomException("Não foi encontrado " + getEntityClass().getSimpleName() + " com o id " + id);
         });
         return retorno.toDto();
     }
@@ -82,7 +78,6 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return (Class) genericTypes[0];
     }
 
-
     public List<DTO> toDtoList(List<E> entityList) {
         List retorno = new ArrayList();
         if (Utils.isEmpty(entityList)) return retorno;
@@ -94,9 +89,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
 
     public <I extends AbstractEntity, T extends AbstractDTO> List<T> toDtoList(List<I> entityList, Class<?> clazz) {
         List<T> dtoList = new ArrayList<>();
-        entityList.forEach(entity -> {
-            dtoList.add((T) entity.toDto());
-        });
+        entityList.forEach(entity -> dtoList.add((T) entity.toDto()));
         return dtoList;
     }
 
@@ -104,7 +97,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return getRepository(getEntityClass()).findAll();
     }
 
-    public Specification<E> getSpecificationEqualOrLike(Map<String, Object> filters) {
+    private Specification<E> getSpecificationEqualOrLike(Map<String, Object> filters) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -142,14 +135,14 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     }
 
     private boolean onlyPageableFilters(Map<String, Object> filters) {
-        final List<String> filterOpertaions = new ArrayList<>();
+        final List<String> filterOperations = new ArrayList<>();
 
         ListUtils.stream(OperationsQueryParam.OPERATIONS)
                 .filter(filters::containsKey)
-                .forEach(operation -> filterOpertaions.add(operation.toString()));
+                .forEach(operation -> filterOperations.add(operation.toString()));
 
-        return ListUtils.isNotNullOrEmpty(filterOpertaions)
-                && Utils.equals(filters.size(), filterOpertaions.size());
+        return ListUtils.isNotNullOrEmpty(filterOperations)
+                && Utils.equals(filters.size(), filterOperations.size());
     }
 
     private Page<E> getAllPagedAndFiltered(@RequestParam(required = false) Map<String, Object> filters, Pageable pageable) {
@@ -163,8 +156,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         });
 
         return getSpecificationRepository(getEntityClass())
-                .findAll(
-                        getSpecificationEqualOrLike(filters), pageable);
+                .findAll(getSpecificationEqualOrLike(filters), pageable);
     }
 
     private Page<DTO> fromPagedEntityToPagedDTO(Page<E> page, Pageable pageable) {
