@@ -1,0 +1,18 @@
+package com.project.pro.model.entity;
+
+import com.project.pro.model.dto.CategoriaDTO;
+
+import javax.persistence.*;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "pro_table")
+public class entityName extends AbstractEntity<Integer, abstractDTO> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+
+}

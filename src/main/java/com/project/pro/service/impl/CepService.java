@@ -6,6 +6,7 @@ import com.project.pro.model.beans.EnderecoByCepBean;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.ICepService;
 import com.project.pro.utils.CepUtil;
+import com.project.pro.utils.JsonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ public class CepService implements ICepService{
                 throw new CustomException("HTTP error code : " + conexao.getResponseCode());
 
             BufferedReader resposta = new BufferedReader(new InputStreamReader((conexao.getInputStream())));
-            String jsonEmString = CepUtil.converteJsonEmString(resposta);
+            String jsonEmString = JsonUtil.converteJsonEmString(resposta);
 
             Gson gson = new Gson();
             EnderecoByCepBean enderecoByCep = gson.fromJson(jsonEmString, EnderecoByCepBean.class);

@@ -26,6 +26,10 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
         return filter(this, dtoClass, null);
     }
 
+    public DTO toDto(AbstractEntity entity, Class<DTO> clazz) {
+        return filter(entity, clazz, null);
+    }
+
     private DTO toDto(List<String> onlyFields) {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
         Class<DTO> dtoClass = (Class) genericTypes[1];

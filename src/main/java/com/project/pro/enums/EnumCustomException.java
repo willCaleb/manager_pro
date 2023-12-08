@@ -9,8 +9,8 @@ public enum EnumCustomException {
     IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO("Não foi possível converter o arquivo: {0}"),
 
     PEDIDO_NAO_E_POSSIVEL_FINALIZAR("O pedido não pode ser finalizados pois contém itens não finalizados!"),
-    PEDIDO_FINALIZADO("Pedido já finalizado")
-    ;
+    PEDIDO_FINALIZADO("Pedido já finalizado"),
+    OBJETOS_CLASSES_DIFERENTES("Objetos de classes diferentes!");
 
     private final String message;
 

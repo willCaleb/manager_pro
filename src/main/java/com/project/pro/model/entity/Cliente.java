@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "cliente")
+@Table(name = "pro_cliente")
 public class Cliente extends AbstractEntity<Integer, ClienteDTO>{
 
     @Id
@@ -20,5 +20,8 @@ public class Cliente extends AbstractEntity<Integer, ClienteDTO>{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
     private Pessoa pessoa;
+
+    @Column(name = "imagem")
+    private String imagem;
 
 }

@@ -25,7 +25,7 @@ public class Produto extends AbstractEntity<Integer, ProdutoDTO>{
     private BigDecimal preco;
 
     @Column(name = "data_inclusao")
-    private Date dataIncusao;
+    private Date dataInclusao;
 
     @Column(name = "data_alteracao")
     private Date dataAlteracao;

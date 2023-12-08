@@ -5,15 +5,12 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.ProfissionalDTO;
+import com.project.pro.model.entity.Imagem;
 import com.project.pro.model.entity.Profissional;
 import com.project.pro.model.entity.Servico;
 import com.project.pro.model.entity.ServicoProfissional;
 import com.project.pro.repository.ProfissionalRepository;
-import com.project.pro.service.IPessoaService;
-import com.project.pro.service.IProfissionalService;
-import com.project.pro.service.IServicoProfissionalService;
-import com.project.pro.service.IServicoService;
-import com.project.pro.utils.NumericUtils;
+import com.project.pro.service.*;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorProfissional;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +18,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -34,6 +31,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     private final IServicoService servicoService;
     private final IServicoProfissionalService servicoProfissionalService;
     private final ProfissionalRepository profissionalRepository;
+    private final ImagemService imagemService;
     private final ValidadorProfissional validadorProfissional = new ValidadorProfissional();
 
     private final FirebaseMessaging firebaseMessaging;
@@ -107,5 +105,20 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         return profissionalRepository.save(profissional);
     }
 
+    @Override
+    public Imagem incluirImagem(MultipartFile file, Integer idProfissional) {
 
+        Profissional profissional = findAndValidate(idProfissional);
+
+        return imagemService.incluir(file, Profissional.class, profissional.getId());
+
+    }
+
+    @Override
+    public List<Imagem> listarImagens(Integer idProfissional) {
+
+        Profissional profissional = findAndValidate(idProfissional);
+
+        return imagemService.findAllByEntity(profissional);
+    }
 }

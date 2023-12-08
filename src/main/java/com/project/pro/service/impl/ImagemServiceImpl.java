@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.Data;
 import com.project.pro.model.beans.ImgurReturn;
@@ -51,7 +52,7 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
 
             return imagemRepository.save(imagem);
         }
-        throw new CustomException("Não foi possível enviar a imagem para o servidor");
+        throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD);
     }
 
     @Override

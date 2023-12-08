@@ -42,6 +42,9 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private List<ServicoProfissional> servicos;
 
+    @Transient
+    private List<Imagem> imagens;
+
     @PostLoad
     private void setMediaAvaliacao() {
         avaliacao = NumericUtils.notNullable(avaliacao);

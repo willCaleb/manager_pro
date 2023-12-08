@@ -40,6 +40,21 @@ public class StringUtil {
         return obj.toString();
     }
 
+    public static String capitalize(String field) {
+        return field.substring(0, 1).toUpperCase().concat(field.substring(1));
+    }
+
+    public static String capitalizeAllPhrase(String phrase) {
+        String[] words = phrase.split(" ");
+        String capitalizedPhrase = "";
+        for (int i = 0; i < words.length; i++) {
+            words[i] = capitalize(words[i]);
+            capitalizedPhrase = capitalizedPhrase.concat(words[i]).concat(" ");
+        }
+        return capitalizedPhrase;
+    }
+
+
     public static Function<String, Integer> trimmedLength = str -> str.trim().length();
 
     public static Function<String, String> removeSpaces = str -> str.replaceAll(" ", "");

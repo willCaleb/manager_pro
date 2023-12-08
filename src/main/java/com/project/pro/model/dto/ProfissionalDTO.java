@@ -25,4 +25,7 @@ public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
 
     private BigDecimal mediaAvaliacao;
 
+    @OnlyField(fields = {"id", "filename", "filesize", "imgLink"})
+    private List<ImagemDTO> imagens;
+
 }

@@ -9,6 +9,7 @@ import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -56,6 +57,15 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return retorno;
     }
 
+    public <D extends AbstractDTO, T extends AbstractEntity> List<T> toEntityList(List<D> dtoList, Class<T> clazz) {
+        List<T> entityList = new ArrayList<>();
+
+        for (D dto : dtoList) {
+            entityList.add(new ModelMapper().map( dto,clazz));
+        }
+        return entityList;
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public DTO findById(@PathVariable("id") Integer id) {
@@ -69,8 +79,12 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     @GetMapping("/list")
     @ResponseBody
     public List<DTO> findAll() {
-
         return toDtoList(findAllEntity());
+    }
+
+    @PutMapping("/{id}/edit")
+    public void editar(@RequestBody DTO abstractDto, @PathVariable("id") Integer id) {
+        super.editar(abstractDto.toEntity(), id);
     }
 
     public Class<E> getEntityClass() {
