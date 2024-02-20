@@ -7,6 +7,7 @@ public abstract class AbstractEnumConverter<T extends Enum<T> & IEnum<E>, E> imp
 
     private final Class<T> clazz;
 
+    @SuppressWarnings("unchecked")
     public AbstractEnumConverter() {
         this.clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }

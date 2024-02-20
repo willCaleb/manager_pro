@@ -40,7 +40,7 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private Profissional profissional;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", orphanRemoval = true)
     private List<PedidoItem> itens;
 
     @Transient

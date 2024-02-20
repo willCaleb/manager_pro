@@ -87,25 +87,6 @@ public class ClassUtils {
                 .collect(Collectors.toList());
     }
 
-    public static void main(String[] args) {
-
-        Profissional profissional = new Profissional();
-
-        Profissional profissional1 = new Profissional();
-
-        profissional.setId(3);
-        profissional.setMediaAvaliacao(BigDecimal.valueOf(8));
-        profissional.setQntdAvaliacao(7);
-
-        profissional1.setId(2);
-        profissional1.setMediaAvaliacao(BigDecimal.valueOf(5));
-        profissional1.setQntdAvaliacao(7);
-
-        Map<String, Map<String, Object>> differences = ObjectUtils.getDifferences(profissional, profissional1);
-
-        differences
-                .forEach((key, value) -> System.out.println("campo: " + key + " | Valor: " + value));
-    }
 
     public static <T> boolean isSameClass(T objectA, Object objectB) {
         Class<?> aClass = objectA.getClass();

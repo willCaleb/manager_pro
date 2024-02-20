@@ -32,6 +32,8 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
     private final IProfissionalService profissionalService;
 
+    private final IChangeLogService changeLogService;
+
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pedido incluir(Pedido pedido) {
@@ -59,13 +61,16 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         Profissional profissional = profissionalService.findAndValidate(pedido.getProfissional().getId());
         Cliente cliente = clienteService.findAndValidate(pedido.getCliente().getId());
 
-        Pessoa pessoaCliente = cliente.getPessoa();
+        pedido.setCliente(cliente);
+        pedido.setProfissional(profissional);
 
-        Pessoa pessoaProfissional = profissional.getPessoa();
+//        Pessoa pessoaCliente = cliente.getPessoa();
+//
+//        Pessoa pessoaProfissional = profissional.getPessoa();
 
-        Endereco enderecoPrincipalCliente = enderecoService.findEnderecoPrincipal(pessoaCliente);
-        Endereco enderecoPrincipalProfissional = enderecoService.findEnderecoPrincipal(pessoaProfissional);
-        pedido.setDistancia(enderecoService.calcularDistancia(enderecoPrincipalCliente.getId(), enderecoPrincipalProfissional.getId()));
+//        Endereco enderecoPrincipalCliente = enderecoService.findEnderecoPrincipal(pessoaCliente);
+//        Endereco enderecoPrincipalProfissional = enderecoService.findEnderecoPrincipal(pessoaProfissional);
+//        pedido.setDistancia(enderecoService.calcularDistancia(enderecoPrincipalCliente.getId(), enderecoPrincipalProfissional.getId()));
 
         resolverStatus(pedido);
     }
@@ -75,12 +80,15 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         Pedido pedidoManaged = findAndValidate(idPedido);
 
         validadorPedido.validarTemObservacao(pedido);
-        validadorPedido.validarFinalizadoOuCancelado(pedidoManaged);
+        validadorPedido.validarPedidoCancelado(pedidoManaged);
 
-        if (EnumStatusPedido.ABERTO.equals(pedidoManaged.getStatusPedido()) || EnumStatusPedido.CANCELADO.equals(pedido.getStatusPedido())) {
+        changeLogService.incluir(pedidoManaged, pedido);
+
+        if (EnumStatusPedido.ABERTO.equals(pedidoManaged.getStatusPedido())) {
             pedidoManaged.setStatusPedido(pedido.getStatusPedido());
             pedidoManaged.setDataAlteracao(DateUtils.getDate());
             pedidoManaged.setObservacao(pedido.getObservacao());
+            pedidoManaged.setItens(pedido.getItens());
         } else if (EnumStatusPedido.CONFIRMADO.equals(pedidoManaged.getStatusPedido()) && EnumStatusPedido.ABERTO.equals(pedido.getStatusPedido())){
             //TODO implementar edição de pedido confirmado ou aberto
         }

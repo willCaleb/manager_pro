@@ -4,6 +4,9 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.exception.ErrorResponse;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
+import com.project.pro.pattern.Constants;
+import com.project.pro.pattern.OperationsParam;
+import com.project.pro.pattern.OperationsPath;
 import com.project.pro.pattern.OperationsQueryParam;
 import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
@@ -11,9 +14,7 @@ import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,10 @@ import javax.persistence.criteria.Predicate;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RestController
@@ -61,12 +64,12 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         List<T> entityList = new ArrayList<>();
 
         for (D dto : dtoList) {
-            entityList.add(new ModelMapper().map( dto,clazz));
+            entityList.add(new ModelMapper().map(dto, clazz));
         }
         return entityList;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(OperationsPath.ID)
     @ResponseBody
     public DTO findById(@PathVariable("id") Integer id) {
 
@@ -82,8 +85,15 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         return toDtoList(findAllEntity());
     }
 
-    @PutMapping("/{id}/edit")
-    public void editar(@RequestBody DTO abstractDto, @PathVariable("id") Integer id) {
+    private Sort sortById(String ordem) {
+        if (Constants.ASC.equalsIgnoreCase(ordem)) {
+            return Sort.by(Sort.Direction.ASC, OperationsParam.ID);
+        }
+        return Sort.by(Sort.Direction.DESC, OperationsParam.ID);
+    }
+
+    @PutMapping(OperationsPath.ID + "/edit")
+    public void editar(@RequestBody DTO abstractDto, @PathVariable(OperationsParam.ID) Integer id) {
         super.editar(abstractDto.toEntity(), id);
     }
 
@@ -108,7 +118,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     }
 
     private List<E> findAllEntity() {
-        return getRepository(getEntityClass()).findAll();
+        return getRepository(getEntityClass()).findAll(sortById(null));
     }
 
     private Specification<E> getSpecificationEqualOrLike(Map<String, Object> filters) {
@@ -135,11 +145,25 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         };
     }
 
+    private void resolverSort(Map<String, Object> filters) {
+        Sort sort;
+        if (filters.containsKey(Constants.SORT)) {
+            sort = sortById(filters.get(Constants.SORT).toString());
+        } else {
+            sort = sortById(null);
+        }
+        filters.put(Constants.SORT, sort);
+    }
+
     @GetMapping("/filter")
     public Page<DTO> getFiltered(@RequestParam(required = false) Map<String, Object> filters, Pageable pageable) {
         if (onlyPageableFilters(filters)) {
-            return fromPagedEntityToPagedDTO(getAllPaged(pageable), pageable);
+            Sort sort = sortById(Utils.nvl(filters.get(Constants.SORT).toString(), null));
+
+            Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            return fromPagedEntityToPagedDTO(getAllPaged(pageableWithSort), pageableWithSort);
         }
+        resolverSort(filters);
         Page<E> allPagedAndFiltered = getAllPagedAndFiltered(filters, pageable);
         return fromPagedEntityToPagedDTO(allPagedAndFiltered, pageable);
     }
@@ -178,7 +202,6 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         List<DTO> dtoList = toDtoList(content);
         return new PageImpl<>(dtoList, pageable, page.getTotalElements());
     }
-
 
 }
 

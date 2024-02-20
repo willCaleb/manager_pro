@@ -77,14 +77,14 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
 
         List<Endereco> enderecosWithGeolocation = new ArrayList<>();
 
-        enderecos.forEach(endereco -> {
-            try {
-                endereco.setPessoa(pessoa);
-                enderecosWithGeolocation.add(incluir(endereco));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+//        enderecos.forEach(endereco -> {
+//            try {
+//                endereco.setPessoa(pessoa);
+//                enderecosWithGeolocation.add(incluir(endereco));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
         return enderecosWithGeolocation;
     }
 
@@ -140,7 +140,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
         enderecoRepository.saveAll(enderecos);
     }
 
-    @Scheduled(fixedDelay = 1000 * 3600 * 24)
+//    @Scheduled(fixedDelay = 1000 * 3600 * 24)
     protected void atualizarEnderecos() {
         List<Endereco> enderecosSemCoordenada = findAllWithoutCoordenate();
 

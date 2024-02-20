@@ -45,9 +45,7 @@ public class PessoaDTO extends AbstractDTO<Integer, Pessoa>{
 
 //    private List<ComentarioDTO> comentarios;
 
-    @DtoFieldIgnore
+    @OnlyField(fields = {"logradouro", "localidade", "numero"})
     private List<EnderecoDTO> enderecos;
-//
-//    private EnumClassificacaoPessoa classificacao;
 
 }

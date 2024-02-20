@@ -1,12 +1,12 @@
 package com.project.pro.model.dto;
 
-import com.project.pro.model.entity.ChangeLogs;
+import com.project.pro.model.entity.ChangeLog;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class ChangeLogsDTO extends AbstractDTO<Integer, ChangeLogs>{
+public class ChangeLogDTO extends AbstractDTO<Integer, ChangeLog>{
 
     private Integer id;
 

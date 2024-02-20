@@ -7,7 +7,7 @@ public class JsonUtil {
     public static String converteJsonEmString(BufferedReader buffereReader) throws IOException {
         String resposta, jsonEmString = "";
         while ((resposta = buffereReader.readLine()) != null) {
-            jsonEmString += resposta;
+            jsonEmString = jsonEmString.concat(resposta);
         }
         return jsonEmString;
     }

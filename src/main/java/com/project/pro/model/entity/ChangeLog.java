@@ -1,6 +1,6 @@
 package com.project.pro.model.entity;
 
-import com.project.pro.model.dto.ChangeLogsDTO;
+import com.project.pro.model.dto.ChangeLogDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "pro_change_logs")
-public class ChangeLogs extends AbstractEntity<Integer, ChangeLogsDTO>{
+public class ChangeLog extends AbstractEntity<Integer, ChangeLogDTO>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

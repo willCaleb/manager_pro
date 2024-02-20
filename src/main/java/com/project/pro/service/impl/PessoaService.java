@@ -5,13 +5,11 @@ import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.PessoaRepository;
+import com.project.pro.service.IChangeLogService;
 import com.project.pro.service.IEnderecoService;
 import com.project.pro.service.IImgurService;
 import com.project.pro.service.IPessoaService;
-import com.project.pro.utils.ListUtils;
-import com.project.pro.utils.NumericUtils;
-import com.project.pro.utils.PasswordUtils;
-import com.project.pro.utils.Utils;
+import com.project.pro.utils.*;
 import com.project.pro.validator.ValidadorEndereco;
 import com.project.pro.validator.ValidadorPessoa;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +39,8 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     private ValidadorEndereco validadorEndereco = new ValidadorEndereco();
 
+    private final IChangeLogService changeLogService;
+
     @PostConstruct
     private void setValidadorRepository() {
         validadorPessoa.setPessoaRepository(pessoaRepository);
@@ -48,7 +48,7 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pessoa incluir(Pessoa pessoa) {
-        pessoa.setDataInclusao(Calendar.getInstance().getTime());
+        pessoa.setDataInclusao(DateUtils.getDate());
         String salt = PasswordUtils.getSalt(30);
 //        pessoa.setSenha(PasswordUtils.generateSecurePassword(pessoa.getSenha(), salt));
 
@@ -67,6 +67,20 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
         pessoa.setEnderecos(enderecoService.incluir(enderecos, pessoa));
 
         return pessoa;
+    }
+
+    @Override
+    public void editar(Integer idPessoa, Pessoa pessoa) {
+        Pessoa pessoaManaged = findAndValidate(idPessoa);
+
+        changeLogService.incluir(pessoaManaged, pessoa);
+
+        pessoaManaged.setNome(Utils.nvl(pessoa.getNome(), pessoaManaged.getNome()));
+        pessoaManaged.setDataNascimento(Utils.nvl(pessoa.getDataNascimento(), pessoaManaged.getDataNascimento()));
+        pessoaManaged.setTelefone(Utils.nvl(pessoa.getTelefone(), pessoaManaged.getTelefone()));
+        pessoaManaged.setClassificacao(pessoa.getClassificacao());
+
+        pessoaRepository.save(pessoaManaged);
     }
 
     private void resolverEnderecoPrincipal(Pessoa pessoa) {

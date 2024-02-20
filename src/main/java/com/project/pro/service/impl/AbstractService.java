@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -45,7 +48,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
 
     public void editar(E abstractEntity, Integer idEntityManaged) {
         E entityManaged = findAndValidate(idEntityManaged);
-        ObjectUtils.copyAllValues(abstractEntity, entityManaged);
+        ObjectUtils.copyAllValuesWithoutId(abstractEntity, entityManaged);
         getRepository().save(entityManaged);
     }
 
@@ -62,9 +65,6 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository<E, ID> getRepository() {
-
-        Class<E> entityClass = (Class) genericTypes[0];
-
         return getRepository(entityClass);
     }
 
@@ -76,9 +76,11 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {
+        return getContext().getBean(clazz);
+    }
 
-        S bean = getContext().getBean(clazz);
-        return bean;
+    public static <E extends AbstractEntity> List<E> reverseEntityList(List<E> list) {
+        return list.stream().sorted(Comparator.comparing(E::getId).reversed()).collect(Collectors.toList());
     }
 
 //    public <S extends AbstractService> S getService() {

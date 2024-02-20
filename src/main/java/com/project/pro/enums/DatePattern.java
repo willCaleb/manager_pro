@@ -1,8 +1,5 @@
 package com.project.pro.enums;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public enum DatePattern {
 
     ddMMyyyy("dd/MM/yyyy"),
