@@ -18,6 +18,7 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
     public Cliente incluir(Cliente cliente) {
 
 //        pessoaService.incluir(cliente.getPessoa());
+        getService(ProfissionalService.class).findAndValidate(1);
         return clienteRepository.save(cliente);
     }
 }

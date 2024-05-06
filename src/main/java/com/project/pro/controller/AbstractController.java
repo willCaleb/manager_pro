@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -81,6 +82,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
 
     @GetMapping("/list")
     @ResponseBody
+    @Transactional
     public List<DTO> findAll() {
         return toDtoList(findAllEntity());
     }
