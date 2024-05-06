@@ -16,22 +16,6 @@ public class RequestUtils {
         return subdominio;
     }
 
-    public static void main(String[] args) {
-        String url = "www.meu/teste.com.br";
-
-        String subdominio = getSubdomain(url);
-
-        System.out.println(subdominio);
-
-        Character firstSpecialCharacter = getFirstSpecialCharacter(subdominio);
-
-        System.out.println(firstSpecialCharacter);
-
-        if (Utils.isNotEmpty(firstSpecialCharacter)) {
-            throw new CustomException("Não pode conter caracteres especiais: " + firstSpecialCharacter);
-        }
-    }
-
     public static boolean containsSpecialCharacters(String input) {
         // Defina a expressão regular para corresponder a caracteres especiais
         String regex = "[/\\.&%#@]";
