@@ -7,6 +7,7 @@ import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.ICepService;
 import com.project.pro.utils.CepUtil;
 import com.project.pro.utils.JsonUtil;
+import com.project.pro.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,10 @@ import java.net.URL;
 
 @Component
 public class CepService implements ICepService{
-    static String webService = "http://viacep.com.br/ws/";
+    private static final String WEB_SERVICE = "http://viacep.com.br/ws/";
 
     public Endereco buscarEnderecoPorCep(String cep) throws Exception {
-        String urlParaChamada = webService + cep + "/json";
+        String urlParaChamada = WEB_SERVICE + cep + "/json";
 
         cep = cep.replaceAll("-", "");
 
@@ -28,7 +29,7 @@ public class CepService implements ICepService{
             URL url = new URL(urlParaChamada);
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
-            if (conexao.getResponseCode() != HttpStatus.OK.value())
+            if (!Utils.equals(HttpStatus.OK.value(), conexao.getResponseCode()))
                 throw new CustomException("HTTP error code : " + conexao.getResponseCode());
 
             BufferedReader resposta = new BufferedReader(new InputStreamReader((conexao.getInputStream())));
@@ -37,17 +38,20 @@ public class CepService implements ICepService{
             Gson gson = new Gson();
             EnderecoByCepBean enderecoByCep = gson.fromJson(jsonEmString, EnderecoByCepBean.class);
 
-            Endereco endereco = new Endereco();
-
-            endereco.setBairro(enderecoByCep.getBairro());
-            endereco.setCep(cep);
-            endereco.setLocalidade(enderecoByCep.getLocalidade());
-            endereco.setLogradouro(enderecoByCep.getLogradouro());
-            endereco.setUf(enderecoByCep.getUf());
-
-            return endereco;
+            return getEndereco(cep, enderecoByCep);
         } catch (Exception e) {
             throw new CustomException("ERRO: " + e);
         }
+    }
+
+    private Endereco getEndereco(String cep, EnderecoByCepBean enderecoByCep) {
+        Endereco endereco = new Endereco();
+
+        endereco.setBairro(enderecoByCep.getBairro());
+        endereco.setCep(cep);
+        endereco.setLocalidade(enderecoByCep.getLocalidade());
+        endereco.setLogradouro(enderecoByCep.getLogradouro());
+        endereco.setUf(enderecoByCep.getUf());
+        return endereco;
     }
 }

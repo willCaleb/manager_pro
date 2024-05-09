@@ -4,12 +4,13 @@ import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.Data;
 import com.project.pro.model.beans.ImgurReturn;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.ImagemDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.Imagem;
 import com.project.pro.repository.ImagemRepository;
 import com.project.pro.service.IImgurService;
-import com.project.pro.service.ImagemService;
+import com.project.pro.service.IImagemService;
 import com.project.pro.utils.DateUtils;
 import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
@@ -22,14 +23,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, ImagemRepository> implements ImagemService{
+public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, ImagemRepository> implements IImagemService {
 
     private final IImgurService imgurService;
 
     private final ImagemRepository imagemRepository;
 
     @Override
-    public Imagem incluir(MultipartFile file, Class clazz, Integer idEntidade) {
+    public Imagem incluir(FileUploadDTO file, Class clazz, Integer idEntidade) {
 
         ImgurReturn upload = imgurService.upload(file);
 
@@ -48,7 +49,7 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
             imagem.setType(data.getType());
             imagem.setDeleteHash(data.getDeletehash());
             imagem.setIdImgur(data.getId());
-            imagem.setFilename(file.getOriginalFilename());
+            imagem.setFilename(file.getFilename());
 
             return imagemRepository.save(imagem);
         }
@@ -70,16 +71,23 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
     }
 
     @Override
-    public void excluir(Integer imageId) {
+    public void excluir(Integer imageId, boolean excluir) {
         Imagem imagem = findAndValidate(imageId);
 
         String idImgur = imagem.getIdImgur();
 
         Response response = imgurService.delete(idImgur);
 
-        if (response.isSuccessful()) {
+        if (response.isSuccessful() && !excluir) {
             imagem.setDeleted(Boolean.TRUE);
             imagemRepository.save(imagem);
+            return;
         }
+        imagemRepository.delete(imagem);
+    }
+
+    @Override
+    public void excluir(Integer imageId) {
+        excluir(imageId, false);
     }
 }

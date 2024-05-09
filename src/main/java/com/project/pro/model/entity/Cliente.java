@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,5 +24,9 @@ public class Cliente extends AbstractEntity<Integer, ClienteDTO>{
 
     @Column(name = "imagem")
     private String imagem;
+
+    @OneToMany(mappedBy = "cliente",cascade={CascadeType.ALL},orphanRemoval=true)
+    private List<ProfissionalAvaliacao> avaliacoes;
+
 
 }

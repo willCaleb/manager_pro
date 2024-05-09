@@ -7,6 +7,7 @@ import com.project.pro.model.beans.ImgurAccountBean;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.pattern.OperationsPath;
 import com.project.pro.service.IImgurService;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class ImgurController {
     }
 
     @PostMapping
-    public ImgurReturn sendImage(@RequestBody MultipartFile file) {
+    public ImgurReturn sendImage(@RequestBody FileUploadDTO file) {
         return imgurService.upload(file);
     }
 

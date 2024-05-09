@@ -3,6 +3,7 @@ package com.project.pro.service;
 import com.mashape.unirest.http.HttpResponse;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.entity.Profissional;
 import okhttp3.Response;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,7 @@ public interface IImgurService {
 
     HttpResponse<String> getAccountBase();
 
-    ImgurReturn upload(MultipartFile file);
+    ImgurReturn upload(FileUploadDTO file);
 
     String getToken();
 
