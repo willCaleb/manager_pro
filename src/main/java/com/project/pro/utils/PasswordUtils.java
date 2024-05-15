@@ -35,25 +35,14 @@ public class PasswordUtils {
         }
     }
     public static String generateSecurePassword(String password, String salt) {
-        String returnValue = null;
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
 
-        returnValue = Base64.getEncoder().encodeToString(securePassword);
-
-        return returnValue;
+        return Base64.getEncoder().encodeToString(securePassword);
     }
 
     public static boolean verifyUserPassword(String providedPassword,
-                                             String securedPassword, String salt)
-    {
-        boolean returnValue = false;
+                                             String securedPassword, String salt) {
+        return generateSecurePassword(providedPassword, salt).equalsIgnoreCase(securedPassword);
 
-        // Generate New secure password with the same salt
-        String newSecurePassword = generateSecurePassword(providedPassword, salt);
-
-        // Check if two passwords are equal
-        returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
-
-        return returnValue;
     }
 }

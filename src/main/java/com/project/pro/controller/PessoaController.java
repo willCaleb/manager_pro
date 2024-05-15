@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(PessoaController.PATH)
 @AllArgsConstructor
@@ -34,6 +32,12 @@ public class PessoaController extends AbstractController<Pessoa, PessoaDTO>{
     public PessoaDTO incluirImagem(@PathVariable(OperationsParam.ID) Integer idPessoa,
                                    @RequestBody MultipartFile file){
         return pessoaService.incluirImagem(idPessoa, file).toDto();
+    }
+
+    @PutMapping(OperationsPath.ID)
+    public void editar(@PathVariable(OperationsParam.ID) Integer idPessoa,
+                       @RequestBody PessoaDTO clienteDTO) {
+        pessoaService.editar(idPessoa, clienteDTO.toEntity());
     }
 
 }

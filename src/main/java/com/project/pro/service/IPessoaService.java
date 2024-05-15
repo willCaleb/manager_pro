@@ -14,6 +14,8 @@ public interface IPessoaService extends IAbstractService<Pessoa, PessoaDTO, Pess
 
     List<Pessoa> findAll();
 
+    void editar(Integer idPessoa, Pessoa pessoa);
+
     Endereco getEnderecoPrincipal(Pessoa pessoa);
 
     Pessoa incluirImagem(Integer idPessoa, MultipartFile file);

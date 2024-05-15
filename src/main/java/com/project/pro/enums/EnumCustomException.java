@@ -9,8 +9,12 @@ public enum EnumCustomException {
     IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO("Não foi possível converter o arquivo: {0}"),
 
     PEDIDO_NAO_E_POSSIVEL_FINALIZAR("O pedido não pode ser finalizados pois contém itens não finalizados!"),
-    PEDIDO_FINALIZADO("Pedido já finalizado")
-    ;
+    PEDIDO_FINALIZADO("Pedido já finalizado"),
+    OBJETOS_CLASSES_DIFERENTES("Objetos de classes diferentes!"),
+    PEDIDO_CANCELADO_OU_FINALIZADO_SEM_PERMISSAO_ALTERAR("O pedido foi cancelado ou finalizado e não permite alteraçã0."),
+    TITULO_CANCELADO_NAO_PERMITE_ALTERACAO("Esse título não permite alteração pois seu status é CANCELADO"),
+    TITULO_LIQUIDADO_NAO_PERMITE_ALTERACAO("Esse título não permite alteração pois seu status é LIQUIDADO"),
+    TITULO_PARCIALMENTE_LIQUIDADO_SEM_OBSERVACAO("O título {0} está parcialmente liquidado e é obrigatória uma observação");
 
     private final String message;
 

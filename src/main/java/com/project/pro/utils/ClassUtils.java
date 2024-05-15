@@ -1,63 +1,19 @@
 package com.project.pro.utils;
 
 import com.project.pro.exception.CustomException;
-import org.springframework.util.StringUtils;
+import com.project.pro.model.entity.Profissional;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ClassUtils {
 
-//    public static Method getGetterMethod(String name, Class<?> clazz) {
-//        Method method;
-//        try {
-//            method = clazz.getMethod("get" + StringUtils.capitalize(name));
-//        } catch (NoSuchMethodException e) {
-//            throw new CustomException(e.getMessage());
-//        }
-//        return method;
-//    }
-//
-//    public static Method getSetterMethod(String name, Class<?> clazz) {
-//        List<Method> setterMethodList = getSetterMethodList(clazz);
-//        final String finalName = "set" + StringUtils.capitalize(name);
-//        return setterMethodList.stream().filter(method -> finalName.equalsIgnoreCase(method.getName())).findFirst().orElse(null);
-
-
-//        try {
-//
-//            method = clazz.getMethod(name);
-//            return method;
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
-    //    public static Method[] getSetterMethods(Class<?> clazz) {
-//        Method[] declaredMethods = clazz.getDeclaredMethods();
-//        Method[] returnMethods = new Method[declaredMethods.length];
-//        for (int i = 0; i < declaredMethods.length; i++) {
-//            if (declaredMethods[i].getName().startsWith("set")) {
-//                returnMethods[i] = declaredMethods[i];
-//            }
-//        }
-//        return returnMethods;
-//    }
-//
-//    public static Method[] getGetterMethods(Class<?> clazz) {
-//        Method[] declaredMethods = clazz.getDeclaredMethods();
-//        Method[] returnMethods = {};
-//        for (int i = 0; i < declaredMethods.length; i++) {
-//            if (declaredMethods[i].getName().startsWith("get")) {
-//                returnMethods[i] = declaredMethods[i];
-//            }
-//        }
-//        return returnMethods;
-//    }
     public static Method getGetterMethod(String fieldName, Class<?> javaBeanClass) {
         return Stream.of(javaBeanClass.getDeclaredMethods())
                 .filter(method -> isGetterMethod(method, fieldName))
@@ -71,6 +27,16 @@ public class ClassUtils {
                 && (method.getName().equalsIgnoreCase("get" + name) || method.getName().equalsIgnoreCase("is" + name));
     }
 
+    private static boolean isGetterMethod(Method method) {
+        return method.getParameterCount() == 0
+                && !Modifier.isStatic(method.getModifiers())
+                && (method.getName().startsWith("get") || method.getName().startsWith("is"));
+    }
+
+    private static boolean isSetterMethod(Method method) {
+        return method.getName().startsWith("set");
+    }
+
     public static Method getSetterMethod(String fieldName, Class<?> clazz) {
         return Stream.of(clazz.getDeclaredMethods())
                 .filter(method -> isSetterMethod(method, fieldName))
@@ -82,22 +48,52 @@ public class ClassUtils {
         return method.getName().startsWith("set") && method.getName().equalsIgnoreCase("set".concat(name));
     }
 
-    public static <T> T getInstance(Class<T> clazz) {
+    public static <T> T newInstance(Class<T> clazz) {
         try {
-            return clazz.newInstance();
+
+            Constructor<T> constructor = org.springframework.util.ClassUtils.getConstructorIfAvailable(clazz);
+
+            if (Utils.isNotEmpty(constructor)) {
+                return constructor.newInstance();
+            } else {
+                throw new CustomException("Não foi possível criar nova instância de " + clazz.getName());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         throw new CustomException("Não foi possível criar nova instância de ", clazz.getName());
     }
-//
-//    public static List<Method> getGetterMethodList(Class<?> clazz) {
-//        return Arrays.asList(getGetterMethods(clazz));
-//    }
-//
-//    public static List<Method> getSetterMethodList(Class<?> clazz) {
-//        return Arrays.asList(getSetterMethods(clazz));
-//    }
+
+    public static List<Field> getFieldsAsList(Class<?> clazz) {
+        return Arrays.asList(clazz.getDeclaredFields());
+    }
+
+    public static List<Method> getMethodsAsList(Class<?> clazz) {
+        return Arrays.asList(clazz.getDeclaredMethods());
+    }
+
+    public static List<Method> getGetterMethodsAsList(Class<?> clazz) {
+        return getMethodsAsList(clazz)
+                .stream()
+                .filter(ClassUtils::isGetterMethod)
+                .collect(Collectors.toList());
+    }
+
+    public static List<Method> getSetterMethodsAsList(Class<?> clazz) {
+        return getMethodsAsList(clazz)
+                .stream()
+                .filter(ClassUtils::isSetterMethod)
+                .collect(Collectors.toList());
+    }
+
+
+    public static <T> boolean isSameClass(T objectA, Object objectB) {
+        Class<?> aClass = objectA.getClass();
+
+        return objectB.getClass().isAssignableFrom(aClass);
+    }
+
 
 
 }

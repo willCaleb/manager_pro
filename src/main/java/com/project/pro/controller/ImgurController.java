@@ -26,7 +26,7 @@ public class ImgurController {
     private final IImgurService imgurService;
 
     @GetMapping("/token")
-    Object gerarToken() {
+    public Object gerarToken() {
         HttpResponse<String> stringHttpResponse = imgurService.generateToken();
         ImgurDataBean imgurDataBean = new Gson().fromJson(stringHttpResponse.getBody(), ImgurDataBean.class);
 

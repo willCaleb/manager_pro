@@ -34,5 +34,5 @@ public class ImagemDTO extends AbstractDTO<Integer, Imagem>{
 
     private boolean principal;
 
-
+    private boolean deleted;
 }

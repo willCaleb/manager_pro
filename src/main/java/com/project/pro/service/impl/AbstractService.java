@@ -7,7 +7,7 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.service.IAbstractService;
-import com.project.pro.utils.ClassUtils;
+import com.project.pro.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,15 +17,16 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings("unchecked")
-public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends AbstractDTO<?, E>, R extends JpaRepository> implements IAbstractService<E, D, R>{
+public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>, R extends JpaRepository> implements IAbstractService<E, DTO, R>{
 
     Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
     private Class<E> entityClass = (Class<E>) genericTypes[0];
-//    private  Class<D> dtoClass = (Class<D>)genericTypes[1];
-//    private Class<R> repositoryClass = (Class<R>) genericTypes[2];
 
     public IContext getContext() {
         return IContext.context();
@@ -38,11 +39,17 @@ public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends 
     private Repositories repositories;
 
 
-    public <E extends AbstractEntity<?, ?>, ID extends Object>JpaRepository getRepository(Class<E> clazz) {
+    public <E extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<E> clazz) {
         repositories = new Repositories(applicationContext);
         return (JpaRepository<E, ID>) repositories
                 .getRepositoryFor(clazz)
                 .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
+    }
+
+    public void editar(E abstractEntity, Integer idEntityManaged) {
+        E entityManaged = findAndValidate(idEntityManaged);
+        ObjectUtils.copyAllValuesWithoutId(abstractEntity, entityManaged);
+        getRepository().save(entityManaged);
     }
 
     public <E extends AbstractEntity<?, ?>>JpaSpecificationExecutor<E> getSpecificationRepository(Class<E> clazz) {
@@ -58,9 +65,6 @@ public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends 
     }
 
     public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository<E, ID> getRepository() {
-
-        Class<E> entityClass = (Class) genericTypes[0];
-
         return getRepository(entityClass);
     }
 
@@ -72,9 +76,11 @@ public abstract class AbstractService<E extends AbstractEntity<?, D>, D extends 
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {
+        return getContext().getBean(clazz);
+    }
 
-        S bean = getContext().getBean(clazz);
-        return bean;
+    public static <E extends AbstractEntity> List<E> reverseEntityList(List<E> list) {
+        return list.stream().sorted(Comparator.comparing(E::getId).reversed()).collect(Collectors.toList());
     }
 
 //    public <S extends AbstractService> S getService() {

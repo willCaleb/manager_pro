@@ -13,6 +13,7 @@ import com.project.pro.model.beans.ImgurReturnList;
 import com.project.pro.service.IImgurService;
 import com.project.pro.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import okhttp3.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -177,19 +178,21 @@ public class ImgurService implements IImgurService {
     }
 
     @Override
-    public void delete(String hash) {
+    public Response delete(String hash) {
         try {
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpHeaders headers = new HttpHeaders();
-            String url = uploadUrl + "/" + hash;
-            HttpDelete httpDelete = new HttpDelete(url);
-            httpDelete.addHeader("Authorization", getToken());
-            org.apache.http.HttpResponse execute = httpClient.execute(httpDelete);
 
-            System.out.println(execute);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, "{}");
+            Request request = new Request.Builder()
+                    .url( uploadUrl + "/" + hash)
+                    .method("DELETE", body)
+                    .addHeader("Authorization", "Bearer " + getToken())
+                    .build();
+            return client.newCall(request).execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CustomException("Não foi possível excluir a imagem");
         }
-
     }
 }

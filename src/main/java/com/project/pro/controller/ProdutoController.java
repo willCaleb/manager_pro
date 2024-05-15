@@ -47,4 +47,9 @@ public class ProdutoController extends AbstractController<Produto, ProdutoDTO>{
         Produto produto = produtoService.findAndValidate(idProduto);
         return toDtoList(imagemService.findAllByEntity(produto), ImagemDTO.class);
     }
+
+    @DeleteMapping(OperationsPath.ID + "/imagem/{idImagem}")
+    public void excluirImagem(@PathVariable("idImagem") Integer idImagem){
+        imagemService.excluir(idImagem);
+    }
 }

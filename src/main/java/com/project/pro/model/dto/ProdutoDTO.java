@@ -17,6 +17,8 @@ public class ProdutoDTO extends AbstractDTO<Integer, Produto>{
 
     private BigDecimal preco;
 
-    private Date dataIncusao;
+    private Date dataInclusao;
+
+    private Date dataAlteracao;
 
 }
