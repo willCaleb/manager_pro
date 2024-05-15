@@ -14,7 +14,12 @@ public enum EnumCustomException {
     PEDIDO_CANCELADO_OU_FINALIZADO_SEM_PERMISSAO_ALTERAR("O pedido foi cancelado ou finalizado e não permite alteraçã0."),
     TITULO_CANCELADO_NAO_PERMITE_ALTERACAO("Esse título não permite alteração pois seu status é CANCELADO"),
     TITULO_LIQUIDADO_NAO_PERMITE_ALTERACAO("Esse título não permite alteração pois seu status é LIQUIDADO"),
-    TITULO_PARCIALMENTE_LIQUIDADO_SEM_OBSERVACAO("O título {0} está parcialmente liquidado e é obrigatória uma observação");
+    TITULO_PARCIALMENTE_LIQUIDADO_SEM_OBSERVACAO("O título {0} está parcialmente liquidado e é obrigatória uma observação"),
+    PROFISSIONAL_CPF_JA_CADASTRADO("O CPF {0} já está cadastrado no sistema."),
+    PROFISSIONAL_JA_CADASTRADO_PESSOA("Já existe um profissional cadastrado para a pessoa {0}"),
+    PESSOA_CPF_JA_CADASTRADO("CPF {0} já cadastrado."),
+    AVALIACAO_PROFISSIONAL_JA_AVALIADO("Você já avaliou esse profissional, deseja atualizar a avaliação?"),
+    IMGUR_NAO_FOI_POSSIVEL_EXCUIR("Não foi possível excluir a imagem");
 
     private final String message;
 

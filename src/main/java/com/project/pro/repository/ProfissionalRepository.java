@@ -17,4 +17,6 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
             "select pro from Profissional pro " +
             "where pro.pessoa.nome like :nome ")
     List<Profissional> findAllByNome(@Param("nome") String nome);
+
+    Profissional findByCpf(String cpf);
 }

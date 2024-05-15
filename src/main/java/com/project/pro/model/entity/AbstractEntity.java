@@ -35,6 +35,10 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
         Class<DTO> dtoClass = (Class) genericTypes[1];
         return filter(this, dtoClass, onlyFields);
     }
+//    TODO implementar toDto para listas
+//    public List<DTO> toDtoList() {
+//
+//    }
 
     private DTO filter(AbstractEntity entity, Class<DTO> dtoType, List<String> onlyFields) {
         try {

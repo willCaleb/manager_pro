@@ -1,16 +1,12 @@
 package com.project.pro.service.impl;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
 import com.project.pro.exception.CustomException;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.ProfissionalDTO;
-import com.project.pro.model.entity.Imagem;
-import com.project.pro.model.entity.Profissional;
-import com.project.pro.model.entity.Servico;
-import com.project.pro.model.entity.ServicoProfissional;
+import com.project.pro.model.entity.*;
 import com.project.pro.repository.ProfissionalRepository;
 import com.project.pro.service.*;
+import com.project.pro.utils.DateUtils;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorProfissional;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +27,10 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     private final IServicoService servicoService;
     private final IServicoProfissionalService servicoProfissionalService;
     private final ProfissionalRepository profissionalRepository;
-    private final ImagemService imagemService;
+    private final IImagemService imagemService;
+    private final IEmailService emailService;
     private final ValidadorProfissional validadorProfissional = new ValidadorProfissional();
 
-    private final FirebaseMessaging firebaseMessaging;
 
     @PostConstruct
     private void setProfissionalRepository() {
@@ -54,7 +50,29 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         profissional.setPessoa(pessoaService.incluir(profissional.getPessoa()));
 
+        enviarEmail(profissional);
+
         return profissionalRepository.save(profissional);
+    }
+
+    private void enviarEmail(Profissional profissional) {
+        SendEmail sendEmail = new SendEmail();
+        sendEmail.setFrom("pro@gmail.com");
+        sendEmail.setSubject("Bem vindo ao ProApp");
+        sendEmail.setTo("wilsonperepelecia@gmail.com");
+        sendEmail.setText(getEmailText(profissional));
+        sendEmail.setSendDate(DateUtils.getDate());
+
+        emailService.sendEmail(sendEmail);
+    }
+
+    private String getEmailText(Profissional profissional) {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Seja bem vindo(a) ")
+                .append(profissional.getPessoa().getNome());
+
+        return builder.toString();
     }
 
     @Override
@@ -66,19 +84,18 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     @Override
     public void editar(Integer idProfissional, Profissional profissional) {
 
+        Profissional profissionalManaged = findAndValidate(idProfissional);
+
         profissional.setId(idProfissional);
 
-        Message msg = Message.builder()
-                .setTopic("topico")
-                .putData("nome", "nome criado")
-                .build();
+        validadorProfissional.validarCamposObrigatorios(profissional);
 
-        try {
-            String id = firebaseMessaging.send(msg);
-            System.out.println(id);
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+        if (!Utils.equals(profissionalManaged.getCpf(), profissional.getCpf())) {
+            validadorProfissional.validarCpfJaCadastrado(profissional);
         }
+
+        profissionalRepository.save(profissional);
+
     }
 
     @Override
@@ -106,7 +123,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     }
 
     @Override
-    public Imagem incluirImagem(MultipartFile file, Integer idProfissional) {
+    public Imagem incluirImagem(FileUploadDTO file, Integer idProfissional) {
 
         Profissional profissional = findAndValidate(idProfissional);
 

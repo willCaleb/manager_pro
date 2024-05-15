@@ -49,7 +49,7 @@ public class ValidadorPessoa implements IValidador<Pessoa>{
         List<Pessoa> pessoasDuplicadas = pessoaRepository.findAllByCpfCnpj(pessoa.getCpfCnpj());
 
         if (ListUtils.isNotNullOrEmpty(pessoasDuplicadas)) {
-            throw new CustomException("CPF {0} já cadastrado.", pessoa.getCpfCnpj());
+            throw new CustomException(EnumCustomException.PESSOA_CPF_JA_CADASTRADO, pessoa.getCpfCnpj());
         }
     }
 

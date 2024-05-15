@@ -28,4 +28,11 @@ public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
     @OnlyField(fields = {"id", "filename", "filesize", "imgLink"})
     private List<ImagemDTO> imagens;
 
+    private String email;
+
+    private String cpf;
+
+    @OnlyField(fields = {"nota", "descricao", "files", "dataInclusao"})
+    private List<ProfissionalAvaliacaoDTO> avaliacoes;
+
 }

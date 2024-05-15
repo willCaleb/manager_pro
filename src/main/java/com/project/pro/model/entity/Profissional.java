@@ -2,14 +2,12 @@ package com.project.pro.model.entity;
 
 import com.project.pro.model.dto.ProfissionalDTO;
 import com.project.pro.utils.NumericUtils;
-import com.project.pro.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.List;
 
 @Setter
@@ -22,11 +20,17 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "avaliacao")
-    private BigDecimal avaliacao;
-
-    @Column(name = "qntd_avaliacao")
+    @Transient
     private Integer qntdAvaliacao;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "cpf")
+    private String cpf;
+
+    @OneToMany(mappedBy = "profissional")
+    private List<ProfissionalAvaliacao> avaliacoes;
 
     @OneToOne
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
@@ -46,15 +50,23 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     private List<Imagem> imagens;
 
     @PostLoad
+    private void postLoad() {
+        setMediaAvaliacao();
+        setQntdAvaliacao();
+    }
+
+    private void setQntdAvaliacao() {
+        this.qntdAvaliacao = avaliacoes.size() > 0 ? avaliacoes.size() : 0;
+    }
+
     private void setMediaAvaliacao() {
-        avaliacao = NumericUtils.notNullable(avaliacao);
+        this.mediaAvaliacao = NumericUtils.notNullable(mediaAvaliacao);
 
-        if (NumericUtils.isGreater(avaliacao, 0) && Utils.isNotEmpty(qntdAvaliacao)) {
-            mediaAvaliacao = BigDecimal.ZERO;
-            mediaAvaliacao = avaliacao.divide(BigDecimal.valueOf(qntdAvaliacao), RoundingMode.FLOOR);
-
-            DecimalFormat format = new DecimalFormat("#,###.00");
-            String av = format.format(mediaAvaliacao);
-        }
+//        if (NumericUtils.isGreater(avaliacoes.size(), 0)) {
+//             mediaAvaliacao = avaliacoes.stream()
+//                     .map(ProfissionalAvaliacao::getNota)
+//                     .reduce(BigDecimal.ZERO, BigDecimal::add)
+//                     .divide(BigDecimal.valueOf(avaliacoes.size()), RoundingMode.FLOOR);
+//        }
     }
 }
