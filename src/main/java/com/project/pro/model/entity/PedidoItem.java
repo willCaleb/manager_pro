@@ -37,11 +37,20 @@ public class PedidoItem extends AbstractEntity<Integer, PedidoItemDTO>{
     @Convert(converter = EnumStatusPedido.EnumConverter.class)
     private EnumStatusPedido status;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_servico_profissional", referencedColumnName = "id")
     private ServicoProfissional servicoProfissional;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_pedido", referencedColumnName = "id")
     private Pedido pedido;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_produto", referencedColumnName = "id")
+    private Produto produto;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_agenda", referencedColumnName = "id")
+    private Agenda agenda;
+
 }

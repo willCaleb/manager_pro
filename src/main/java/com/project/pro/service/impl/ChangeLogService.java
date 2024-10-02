@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.model.dto.ChangeLogDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.ChangeLog;
 import com.project.pro.pattern.Constants;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class ChangeLogService implements IChangeLogService{
+public class ChangeLogService extends AbstractService<ChangeLog, ChangeLogDTO, ChangeLogRepository> implements IChangeLogService{
 
     private final ChangeLogRepository changeLogRepository;
 

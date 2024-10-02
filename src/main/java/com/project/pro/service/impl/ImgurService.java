@@ -28,12 +28,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.ProxySelector;
-import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -108,19 +106,17 @@ public class ImgurService implements IImgurService {
             return objectMapper.readValue(request.getRawBody(), ImgurReturnList.class);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException("Não foi possível obter as imagens do usuario {0}", username);
         }
-        throw new CustomException("Não foi possível obter as files do usuario {0}", username);
     }
 
     public HttpResponse<String> getAccountBase() {
 
         Unirest.setTimeouts(0, 0);
         try {
-            HttpResponse<String> response = Unirest.get("https://api.imgur.com/3/account/" + username)
+            return Unirest.get("https://api.imgur.com/3/account/" + username)
                     .header("Authorization", "Client-ID " + clientId)
                     .asString();
-            return response;
         } catch (UnirestException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_RECUPERAR_CONTA, e.getMessage());
         }

@@ -19,7 +19,12 @@ public enum EnumCustomException {
     PROFISSIONAL_JA_CADASTRADO_PESSOA("Já existe um profissional cadastrado para a pessoa {0}"),
     PESSOA_CPF_JA_CADASTRADO("CPF {0} já cadastrado."),
     AVALIACAO_PROFISSIONAL_JA_AVALIADO("Você já avaliou esse profissional, deseja atualizar a avaliação?"),
-    IMGUR_NAO_FOI_POSSIVEL_EXCUIR("Não foi possível excluir a imagem");
+    IMGUR_NAO_FOI_POSSIVEL_EXCUIR("Não foi possível excluir a imagem"),
+    USUARIO_NAO_ENCONTRADO("Usuário não encontrado"),
+    EMAIL_JA_CADASTRADO("Já existe um registro de usuário com esse email."),
+    EMAIL_INVALIDO("O e-mail informado não é válido."),
+    PROFISSIONAL_NAO_ENCONTRADO("Não foi encontrado profissional com o e-mail informado."),
+    CLIENTE_NAO_CADASTRADO("Não foi possível localizar registro de cliente com o e-mail informado.");
 
     private final String message;
 

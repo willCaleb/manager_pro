@@ -19,8 +19,6 @@ public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
     @OnlyField(fields = {"id", "nome", "enderecos"})
     private PessoaDTO pessoa;
 
-    private BigDecimal avaliacao;
-
     private Integer qntdAvaliacao;
 
     private BigDecimal mediaAvaliacao;
@@ -31,6 +29,8 @@ public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
     private String email;
 
     private String cpf;
+
+    private Boolean multiploAgendamento;
 
     @OnlyField(fields = {"nota", "descricao", "files", "dataInclusao"})
     private List<ProfissionalAvaliacaoDTO> avaliacoes;

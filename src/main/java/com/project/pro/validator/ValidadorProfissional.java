@@ -45,14 +45,14 @@ public class ValidadorProfissional implements IValidador<Profissional> {
     @Override
     public void validarCamposObrigatorios(Profissional profissional) {
         ValidateFields validate = new ValidateFields();
-        validate.add(profissional.getPessoa(), "Pessoa");
+//        validate.add(profissional.getPessoa(), "Pessoa");
         validate.add(profissional.getCpf(), "CPF");
         validate.add(profissional.getEmail(), "E-mail");
         validate.validate();
     }
 
     private void validarPessoaJaCadastradaEmProfissional(Profissional profissional) {
-        if (profissional.getPessoa().hasId()) {
+        if (Utils.isNotEmpty(profissional.getPessoa()) && profissional.getPessoa().hasId()) {
             Pessoa pessoa = pessoaService.findAndValidate(profissional.getPessoa().getId());
             List<Profissional> validateList = profissionalRepository.findAllByPessoa(pessoa);
 
