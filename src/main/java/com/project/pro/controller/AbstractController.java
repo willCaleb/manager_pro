@@ -26,10 +26,8 @@ import javax.persistence.criteria.Predicate;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RestController
@@ -103,12 +101,12 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     }
 
     public List<DTO> toDtoList(List<E> entityList) {
-        List retorno = new ArrayList();
-        if (Utils.isEmpty(entityList)) return retorno;
+        List dtoList = new ArrayList();
+        if (Utils.isEmpty(entityList)) return dtoList;
         for (E item : entityList) {
-            retorno.add(((AbstractEntity) item).toDto());
+            dtoList.add(((AbstractEntity) item).toDto());
         }
-        return retorno;
+        return dtoList;
     }
 
     public <I extends AbstractEntity, T extends AbstractDTO> List<T> toDtoList(List<I> entityList, Class<?> clazz) {

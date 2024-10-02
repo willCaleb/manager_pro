@@ -21,7 +21,7 @@ public class PedidoItemDTO extends AbstractDTO<Integer, PedidoItem> {
 
     private Integer quantidade;
 
-    private EnumStatusPedido statusPedido;
+    private EnumStatusPedido status;
 
     private ServicoProfissionalDTO servicoProfissional;
 

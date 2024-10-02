@@ -36,6 +36,10 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
     private Pessoa pessoa;
 
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
+    private Usuario usuario;
+
     @Transient
     private BigDecimal mediaAvaliacao;
 
@@ -45,6 +49,17 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private List<ServicoProfissional> servicos;
+
+    @Column(name = "multiplo_agendamento")
+    private boolean multiploAgendamento;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "pro_profissional_cliente",
+            joinColumns = @JoinColumn(name = "id_profissional"),
+            inverseJoinColumns = @JoinColumn(name = "id_cliente")
+    )
+    private List<Cliente> clientes;
 
     @Transient
     private List<Imagem> imagens;

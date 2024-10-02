@@ -28,5 +28,8 @@ public class Cliente extends AbstractEntity<Integer, ClienteDTO>{
     @OneToMany(mappedBy = "cliente",cascade={CascadeType.ALL},orphanRemoval=true)
     private List<ProfissionalAvaliacao> avaliacoes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
+    private Usuario usuario;
 
 }

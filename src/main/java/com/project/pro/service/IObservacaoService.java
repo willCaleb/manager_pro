@@ -1,11 +1,13 @@
 package com.project.pro.service;
 
+import com.project.pro.model.dto.ObservacaoDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.Observacao;
+import com.project.pro.repository.ObservacaoRepository;
 
 import java.util.List;
 
-public interface IObservacaoService {
+public interface IObservacaoService extends IAbstractService<Observacao, ObservacaoDTO, ObservacaoRepository>{
 
     Observacao incluir(Observacao observacao);
 

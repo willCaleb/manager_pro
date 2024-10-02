@@ -3,9 +3,15 @@ package com.project.pro.service.impl;
 //import com.project.pro.config.IContext;
 
 import com.project.pro.config.IContext;
+import com.project.pro.context.Context;
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
+import com.project.pro.model.entity.Cliente;
+import com.project.pro.model.entity.Usuario;
+import com.project.pro.repository.ClienteRepository;
+import com.project.pro.repository.UsuarioRepository;
 import com.project.pro.service.IAbstractService;
 import com.project.pro.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.support.Repositories;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,12 +34,29 @@ import java.util.stream.Collectors;
 public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>, R extends JpaRepository> implements IAbstractService<E, DTO, R>{
 
     Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-    private Class<E> entityClass = (Class<E>) genericTypes[0];
+    private final Class<E> entityClass = (Class<E>) genericTypes[0];
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public IContext getContext() {
         return IContext.context();
     }
 
+    public Cliente getCliente() {
+        return clienteRepository.findByUsuario(getUsuario());
+    }
+
+    public Usuario getUsuario() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return usuarioRepository.findByUsername(((UserDetails) principal).getUsername());
+        }
+        throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
+    }
 
     @Autowired
     private ApplicationContext applicationContext;
