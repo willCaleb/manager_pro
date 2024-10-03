@@ -2,20 +2,15 @@ package com.project.pro.controller;
 
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
-import com.project.pro.component.TokenSession;
-import com.project.pro.model.beans.ImgurAccountBean;
+import com.project.pro.component.ImgurTokenSession;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
-import com.project.pro.pattern.OperationsPath;
 import com.project.pro.service.IImgurService;
 import lombok.RequiredArgsConstructor;
-import okhttp3.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/imagem")
@@ -30,7 +25,7 @@ public class ImgurController {
         HttpResponse<String> stringHttpResponse = imgurService.generateToken();
         ImgurDataBean imgurDataBean = new Gson().fromJson(stringHttpResponse.getBody(), ImgurDataBean.class);
 
-        TokenSession.setImgurToken(imgurDataBean.getAccess_token());
+        ImgurTokenSession.setImgurToken(imgurDataBean.getAccess_token());
         return imgurDataBean;
     }
 
