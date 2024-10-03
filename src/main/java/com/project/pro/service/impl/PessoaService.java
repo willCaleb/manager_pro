@@ -1,6 +1,7 @@
 package com.project.pro.service.impl;
 
 import com.project.pro.model.beans.ImgurReturn;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
@@ -49,8 +50,6 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pessoa incluir(Pessoa pessoa) {
         pessoa.setDataInclusao(DateUtils.getDate());
-        String salt = PasswordUtils.getSalt(30);
-//        pessoa.setSenha(PasswordUtils.generateSecurePassword(pessoa.getSenha(), salt));
 
         incluirImagemPerfil(pessoa);
 
@@ -139,7 +138,7 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
     }
 
     @Override
-    public Pessoa incluirImagem(Integer idPessoa, MultipartFile file) {
+    public Pessoa incluirImagem(Integer idPessoa, FileUploadDTO file) {
 
         Pessoa pessoa = findAndValidate(idPessoa);
 

@@ -2,6 +2,7 @@ package com.project.pro.model.entity;
 
 import com.project.pro.annotation.DtoFieldIgnore;
 import com.project.pro.annotation.OnlyField;
+import com.project.pro.exception.CustomException;
 import com.project.pro.model.IIdentificador;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.utils.ClassUtils;
@@ -35,6 +36,10 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
         Class<DTO> dtoClass = (Class) genericTypes[1];
         return filter(this, dtoClass, onlyFields);
     }
+//    TODO implementar toDto para listas
+//    public List<DTO> toDtoList() {
+//
+//    }
 
     private DTO filter(AbstractEntity entity, Class<DTO> dtoType, List<String> onlyFields) {
         try {
@@ -47,6 +52,9 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                     if (Utils.isEmpty(onlyFields) || onlyFields.contains(field.getName())) {
                         try {
                             Method getterMethod = ClassUtils.getGetterMethod(field.getName(), entity.getClass());
+                            if (Utils.isEmpty(getterMethod)) {
+                                throw new CustomException("O campo não reconhecido: " + field.getName() + entity.getClass().getSimpleName());
+                            }
                             Method setterMethod = ClassUtils.getSetterMethod(field.getName(), dtoReturn.getClass());
                             Object invoke = getterMethod.invoke(entity);
 
@@ -75,8 +83,8 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                             } else {
                                 setterMethod.invoke(dtoReturn, invoke);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (Exception e ) {
+                            System.out.println(e.getMessage() + " " + entity.getClass().getSimpleName() + " " + field.getName());
                         }
                     }
                 }

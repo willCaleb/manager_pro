@@ -10,7 +10,7 @@ import com.project.pro.service.IImgurService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import com.project.pro.model.dto.FileUploadDTO;
 
 @RestController
 @RequestMapping("/imagem")
@@ -38,7 +38,7 @@ public class ImgurController {
     }
 
     @PostMapping
-    public ImgurReturn sendImage(@RequestBody MultipartFile file) {
+    public ImgurReturn sendImage(@RequestBody FileUploadDTO file) {
         return imgurService.upload(file);
     }
 

@@ -12,6 +12,8 @@ import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorPedido;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,12 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
     public Pedido incluir(Pedido pedido) {
 
         pedido.setDataInclusao(DateUtils.getDate());
+        pedido.setCliente(getCliente());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object principal = authentication.getPrincipal();
+
         onPrepareInsert(pedido);
         validadorPedido.validarInsert(pedido);
         final Pedido pedidoRetorno = getRepository().save(pedido);

@@ -3,6 +3,7 @@ package com.project.pro.model.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.enums.EnumTipoPessoa;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,7 +54,7 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     private EnumTipoPessoa tipoPessoa;
 
     @Transient
-    private MultipartFile file;
+    private FileUploadDTO file;
 
     @Column(name = "classificacao")
     @Convert(converter = EnumClassificacaoPessoa.EnumConverter.class)

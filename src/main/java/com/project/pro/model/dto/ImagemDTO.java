@@ -30,9 +30,9 @@ public class ImagemDTO extends AbstractDTO<Integer, Imagem>{
 
     private String type;
 
-    private boolean privateImage;
+    private Boolean privateImage;
 
-    private boolean principal;
+    private Boolean principal;
 
-    private boolean deleted;
+    private Boolean deleted;
 }

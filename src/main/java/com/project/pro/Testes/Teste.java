@@ -2,19 +2,14 @@ package com.project.pro.Testes;
 
 import com.project.pro.utils.NumericUtils;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class Teste {
 
-    public static void main(String[] args) {
-//        desenharTrianguloInvertido();
 
-//        desenharFibonacci(10);
 
-//        desenharTrianguloDuplo();
-
-//        desenharQuadrado(8);
+    private static void gerarTabelas() {
 
     }
 
