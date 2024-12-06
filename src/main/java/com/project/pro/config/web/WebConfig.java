@@ -1,4 +1,4 @@
-package com.project.pro.config;
+package com.project.pro.config.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

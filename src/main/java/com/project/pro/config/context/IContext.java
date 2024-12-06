@@ -1,4 +1,4 @@
-package com.project.pro.config;
+package com.project.pro.config.context;
 
 
 import org.springframework.data.repository.NoRepositoryBean;

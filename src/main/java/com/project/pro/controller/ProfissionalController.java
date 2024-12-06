@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(ProfissionalController.PATH)
@@ -46,6 +47,13 @@ public class ProfissionalController extends AbstractController<Profissional,Prof
     public List<ProfissionalDTO> findAllByNome(@PathParam("nome") String nome) {
         return toDtoList(profissionalService.findAllByNome(nome));
     }
+
+//    @PostMapping(OperationsPath.ID + "/imagem")
+//    public ImagemDTO incluirImagem(@RequestBody FileUploadDTO file,
+//                                          @PathVariable(OperationsParam.ID) Integer idProfissional) {
+//
+//        return profissionalService.incluirImagem(file, idProfissional).toDto();
+//    }
 
     @PostMapping(OperationsPath.ID + "/imagem")
     public ImagemDTO incluirImagem(@RequestBody FileUploadDTO file,

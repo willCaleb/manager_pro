@@ -3,6 +3,7 @@ package com.project.pro.model.entity;
 import com.project.pro.model.dto.UsuarioDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Audited
 @Table(name = "usuario")
 public class Usuario extends AbstractEntity<Integer, UsuarioDTO> {
 

@@ -1,6 +1,7 @@
 package com.project.pro.service.impl;
 
 import com.project.pro.config.security.JwtTokenProvider;
+import com.project.pro.context.Context;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.Role;
 import com.project.pro.exception.CustomException;
@@ -29,10 +30,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -162,8 +163,10 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         Profissional profissional = findAndValidate(idProfissional);
 
-        return imagemService.incluir(file, Profissional.class, profissional.getId());
-
+        if (file.isPublicImg()) {
+            return imagemService.incluirImgur(file, Profissional.class, profissional.getId());
+        }
+        return imagemService.incluirCloudinary(file, Profissional.class, profissional.getId());
     }
 
     @Override
@@ -193,6 +196,9 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenProvider.generateToken(authentication, Role.PROFISSIONAL);
+            if(Utils.isNotEmpty(profissional)) {
+                Context.setCurrentProfissional(profissional);
+            }
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");

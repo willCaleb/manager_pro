@@ -61,8 +61,10 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     public <D extends AbstractDTO, T extends AbstractEntity> List<T> toEntityList(List<D> dtoList, Class<T> clazz) {
         List<T> entityList = new ArrayList<>();
 
+        ModelMapper modelMapper = new ModelMapper();
+
         for (D dto : dtoList) {
-            entityList.add(new ModelMapper().map(dto, clazz));
+            entityList.add(modelMapper.map(dto, clazz));
         }
         return entityList;
     }

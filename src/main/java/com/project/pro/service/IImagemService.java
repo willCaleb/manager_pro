@@ -4,14 +4,15 @@ import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.ImagemDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.Imagem;
+import com.project.pro.model.entity.Profissional;
 import com.project.pro.repository.ImagemRepository;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IImagemService extends IAbstractService<Imagem, ImagemDTO, ImagemRepository> {
 
-    Imagem incluir(FileUploadDTO file, Class clazz, Integer idEntidade);
+    Imagem incluirImgur(FileUploadDTO file, Class<?> clazz, Integer idEntidade);
 
     void editar(Integer idImagem, Imagem imagem);
 
@@ -21,4 +22,5 @@ public interface IImagemService extends IAbstractService<Imagem, ImagemDTO, Imag
 
     void excluir(Integer imageId);
 
+    Imagem incluirCloudinary(FileUploadDTO file, Class<?> clazz, Integer id);
 }
