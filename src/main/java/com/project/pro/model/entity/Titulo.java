@@ -5,6 +5,8 @@ import com.project.pro.enums.EnumStatusTitulo;
 import com.project.pro.model.dto.TituloDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "pro_titulo")
 public class Titulo extends AbstractEntity<Integer, TituloDTO>{
 
@@ -24,10 +27,12 @@ public class Titulo extends AbstractEntity<Integer, TituloDTO>{
     @Column(name = "valor")
     private BigDecimal valor;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private Profissional profissional;
 
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;

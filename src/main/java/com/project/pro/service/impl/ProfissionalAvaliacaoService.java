@@ -92,7 +92,7 @@ public class ProfissionalAvaliacaoService
 
     private void incluirImagens(ProfissionalAvaliacao avaliacao) {
         if (ListUtils.isNotNullOrEmpty(avaliacao.getFiles())) {
-            avaliacao.getFiles().forEach(imagem -> imagemService.incluir(imagem, ProfissionalAvaliacao.class, avaliacao.getId()));
+            avaliacao.getFiles().forEach(imagem -> imagemService.incluirImgur(imagem, ProfissionalAvaliacao.class, avaliacao.getId()));
         }
     }
 

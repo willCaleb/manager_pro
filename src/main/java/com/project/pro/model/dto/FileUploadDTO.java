@@ -12,6 +12,7 @@ import java.util.Base64;
 public class FileUploadDTO implements Serializable {
     private String filename;
     private String content;
+    private boolean publicImg;
 
     public byte[] getBytes() {
         if (StringUtil.isNotNullOrEmpty(content)) {

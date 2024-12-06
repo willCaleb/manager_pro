@@ -10,7 +10,6 @@ import com.project.pro.service.IProdutoService;
 import com.project.pro.service.IImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class ProdutoController extends AbstractController<Produto, ProdutoDTO>{
     public ImagemDTO incluirImagem(@RequestBody FileUploadDTO file,
                                    @PathVariable(OperationsParam.ID) Integer idProduto) {
         produtoService.findAndValidate(idProduto);
-        return imagemService.incluir(file, Produto.class, idProduto).toDto();
+        return imagemService.incluirImgur(file, Produto.class, idProduto).toDto();
     }
 
     @GetMapping(OperationsPath.ID + "/imagem")

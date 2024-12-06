@@ -2,6 +2,7 @@ package com.project.pro.utils;
 
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.entity.Profissional;
+import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.*;
 import java.math.BigDecimal;
@@ -42,6 +43,17 @@ public class ClassUtils {
                 .filter(method -> isSetterMethod(method, fieldName))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public static <T> T copyEntity(T entity, Class<T> clazz) {
+        try {
+            Object newInstance = entity.getClass().newInstance();
+            BeanUtils.copyProperties(newInstance, entity);
+            return clazz.cast(newInstance);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException("Não foi possível copiar o objeto.");
+        }
     }
 
     public static boolean isSetterMethod(Method method, String name) {

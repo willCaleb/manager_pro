@@ -11,6 +11,7 @@ import com.project.pro.repository.ProfissionalRepository;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IProfissionalService extends IAbstractService<Profissional, ProfissionalDTO, ProfissionalRepository>{
 

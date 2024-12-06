@@ -1,14 +1,15 @@
 package com.project.pro.service.impl;
 
-//import com.project.pro.config.IContext;
+//import com.project.pro.config.context.IContext;
 
-import com.project.pro.config.IContext;
+import com.project.pro.config.context.IContext;
 import com.project.pro.context.Context;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.Cliente;
+import com.project.pro.model.entity.Profissional;
 import com.project.pro.model.entity.Usuario;
 import com.project.pro.repository.ClienteRepository;
 import com.project.pro.repository.UsuarioRepository;
@@ -42,6 +43,11 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    private Repositories repositories;
+
     public IContext getContext() {
         return IContext.context();
     }
@@ -58,15 +64,13 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
         throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
     }
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    public Profissional getProfissional() {
+        return Context.CURRENT_PROFISSIONAL.get();
+    }
 
-    private Repositories repositories;
-
-
-    public <E extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<E> clazz) {
+    public <R extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<R> clazz) {
         repositories = new Repositories(applicationContext);
-        return (JpaRepository<E, ID>) repositories
+        return (JpaRepository<R, ID>) repositories
                 .getRepositoryFor(clazz)
                 .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
     }
@@ -95,9 +99,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
 
     public E findAndValidate(Integer id) {
         return (E) getRepository()
-                .findById(id).orElseGet(() -> {
-                    throw new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id);
-                });
+                .findById(id).orElseThrow(() -> new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id));
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {
@@ -105,11 +107,11 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public static <E extends AbstractEntity> List<E> reverseEntityList(List<E> list) {
-        return list.stream().sorted(Comparator.comparing(E::getId).reversed()).collect(Collectors.toList());
+        return list
+                .stream()
+                .sorted(Comparator.comparing(E::getId).reversed())
+                .collect(Collectors.toList());
     }
 
-//    public <S extends AbstractService> S getService() {
-//        return ;
-//    }
 
 }

@@ -29,6 +29,9 @@ public class Imagem extends AbstractEntity<Integer, ImagemDTO> {
     @Column(name = "img_link")
     private String imgLink;
 
+    @Column(name = "img_secure_link")
+    private String secureLink;
+
     @Column(name = "filename")
     private String filename;
 
@@ -38,8 +41,8 @@ public class Imagem extends AbstractEntity<Integer, ImagemDTO> {
     @Column(name = "ativo")
     private Boolean ativo;
 
-    @Column(name = "id_imgur")
-    private String idImgur;
+    @Column(name = "id_cloud")
+    private String idCloud;
 
     @Column(name = "delete_hash")
     private String deleteHash;
@@ -55,4 +58,10 @@ public class Imagem extends AbstractEntity<Integer, ImagemDTO> {
 
     @Column(name = "deleted")
     private boolean deleted;
+
+    @Column(name = "cloud")
+    private String cloud;
+
+    @Column(name = "folder")
+    private String folder;
 }

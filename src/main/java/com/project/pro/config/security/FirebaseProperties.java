@@ -1,4 +1,4 @@
-package com.project.pro.config;
+package com.project.pro.config.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TokenSession {
+public class ImgurTokenSession {
 
     private static String imgurToken;
 
@@ -14,6 +14,6 @@ public class TokenSession {
     }
 
     public static void setImgurToken(String imgurToken) {
-        TokenSession.imgurToken = imgurToken;
+        ImgurTokenSession.imgurToken = imgurToken;
     }
 }

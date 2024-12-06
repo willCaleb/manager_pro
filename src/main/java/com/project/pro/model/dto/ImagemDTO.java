@@ -35,4 +35,8 @@ public class ImagemDTO extends AbstractDTO<Integer, Imagem>{
     private Boolean principal;
 
     private Boolean deleted;
+
+    private String cloud;
+
+    private String folder;
 }

@@ -1,4 +1,4 @@
-package com.project.pro.config;
+package com.project.pro.config.security;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
