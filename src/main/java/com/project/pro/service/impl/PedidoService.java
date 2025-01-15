@@ -8,16 +8,19 @@ import com.project.pro.model.entity.*;
 import com.project.pro.repository.PedidoRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
+import com.project.pro.utils.PDFUtils;
 import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorPedido;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
@@ -120,5 +123,10 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         }
         pedido.setStatusPedido(EnumStatusPedido.FINALIZADO);
         getRepository().save(pedido);
+    }
+
+    @Override
+    public ResponseEntity<byte[]> gerarOrcamento() {
+        return PDFUtils.generatePdf();
     }
 }
