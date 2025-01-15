@@ -32,9 +32,7 @@ public class ProfissionalAvaliacaoService
 
     private final IImagemService imagemService;
 
-    private final IClienteService clienteService;
-
-    private ValidadorProfissionalAvaliacao validadorProfissionalAvaliacao = new ValidadorProfissionalAvaliacao();
+    private final ValidadorProfissionalAvaliacao validadorProfissionalAvaliacao = new ValidadorProfissionalAvaliacao();
 
     @PostConstruct
     private void setProfissionalAvaliacaoRepository() {
@@ -46,7 +44,7 @@ public class ProfissionalAvaliacaoService
 
         Profissional profissionalManaged = profissionalService.findAndValidate(idProfissional);
 
-        Cliente cliente = clienteService.findAndValidate(avaliacao.getCliente().getId());
+        Cliente cliente = getCliente();
 
         avaliacao.setProfissional(profissionalManaged);
 

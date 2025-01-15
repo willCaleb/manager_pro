@@ -14,8 +14,6 @@ public class ServicoProfissionalDTO extends AbstractDTO<Integer, ServicoProfissi
 
     private Integer id;
 
-    private ProfissionalDTO profissional;
-
     private ServicoDTO servico;
 
     private BigDecimal valor;

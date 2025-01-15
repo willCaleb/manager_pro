@@ -19,7 +19,7 @@ public class PdfPageEvent extends PdfPageEventHelper {
     public void onStartPage(PdfWriter writer, Document document) {
         ColumnText.showTextAligned(writer.getDirectContent(),
                 Element.ALIGN_CENTER,
-                new Phrase("Cabeçalho  ", headerFont ), 297.5f, 806, 0);
+                new Phrase("Cabeçalho  ", headerFont ), 297.5f, 812, 0);
     }
 
     @Override

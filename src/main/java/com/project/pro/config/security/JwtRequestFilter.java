@@ -1,5 +1,15 @@
 package com.project.pro.config.security;
 
+import com.project.pro.config.context.ContextImpl;
+import com.project.pro.config.context.IContext;
+import com.project.pro.context.Context;
+import com.project.pro.exception.CustomException;
+import com.project.pro.pattern.Constants;
+import com.project.pro.service.IClienteService;
+import com.project.pro.service.IProfissionalService;
+import com.project.pro.service.impl.ClienteService;
+import com.project.pro.service.impl.ProfissionalService;
+import com.project.pro.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,15 +42,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String username = jwtTokenProvider.getUsernameFromJWT(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                resolverAuthentication(request, userDetails);
 
-//                if ()
+                String claim = jwtTokenProvider.getTypeClaim(token, "userType");
+
+                if (Utils.isEmpty(claim)) throw new CustomException("Formato do token inválido");
+
+                if (Constants.LOGIN_TYPE_PROFESSIONAL.equals(claim)) {
+                    Context.setCurrentProfissional(ContextImpl.getBean(ProfissionalService.class).findByEmail(username));
+                }else if(Constants.LOGIN_TYPE_CLIENT.equals(claim)) {
+                    Context.setCurrentCliente(ContextImpl.getBean(ClienteService.class).buscarPorUsuario(username));
+                }
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private static void resolverAuthentication(HttpServletRequest request, UserDetails userDetails) {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {

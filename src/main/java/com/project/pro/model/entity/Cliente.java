@@ -32,4 +32,6 @@ public class Cliente extends AbstractEntity<Integer, ClienteDTO>{
     @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "email")
+    private String email;
 }

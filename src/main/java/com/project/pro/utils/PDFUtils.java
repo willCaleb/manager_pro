@@ -31,17 +31,15 @@ public class PDFUtils {
 
             document.open();
 
-
             PdfPTable table = new PdfPTable(3);
 
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
 
-
             table.addCell(new PdfPCell(new Phrase("Coluna 1")));
-            table.addCell(new PdfPCell(new Phrase("Coluna 1")));
-            table.addCell(new PdfPCell(new Phrase("Coluna 1")));
+            table.addCell(new PdfPCell(new Phrase("Coluna 2")));
+            table.addCell(new PdfPCell(new Phrase("Coluna 3")));
 
             document.add(table);
 

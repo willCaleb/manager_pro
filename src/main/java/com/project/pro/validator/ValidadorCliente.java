@@ -15,9 +15,4 @@ public class ValidadorCliente implements IValidador<Cliente>{
         validate.validate();
     }
 
-    public void validarClienteCadastrado(Cliente cliente) {
-        if (Utils.isEmpty(cliente)) {
-            throw new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO);
-        }
-    }
 }

@@ -16,18 +16,27 @@ public class JwtTokenProvider {
     private String jwtSecret;
     private int jwtExpirationInMs = 604800000; // 7 dias
 
-    public String generateToken(Authentication authentication, Role role) {
+    public String generateToken(Authentication authentication, Role role, String userType) {
         User userPrincipal = (User) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
+                .claim("userType", userType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .setAudience(role.getKey())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+
+    public String getTypeClaim(String token, String claimKey) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .get(claimKey, String.class);
     }
 
     public String getUsernameFromJWT(String token) {

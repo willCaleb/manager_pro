@@ -9,6 +9,7 @@ import com.project.pro.model.beans.LoginRequest;
 import com.project.pro.model.dto.ClienteDTO;
 import com.project.pro.model.entity.Cliente;
 import com.project.pro.model.entity.Usuario;
+import com.project.pro.pattern.Constants;
 import com.project.pro.repository.ClienteRepository;
 import com.project.pro.service.IClienteService;
 import com.project.pro.service.IPessoaService;
@@ -74,24 +75,21 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication, Role.CLIENTE);
+            String token = tokenProvider.generateToken(authentication, Role.CLIENTE, Constants.LOGIN_TYPE_CLIENT);
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
     }
 
-    private Cliente buscarPorUsuario(String username) {
+    @Override
+    public Cliente buscarPorUsuario(String username) {
         Usuario usuario = usuarioService.findByUsername(username);
 
         if (Utils.isEmpty(usuario)) {
             throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
         }
 
-        Cliente cliente = clienteRepository.findByUsuario(usuario);
-
-        validadorCliente.validarClienteCadastrado(cliente);
-
-        return cliente;
+        Cliente cliente = clienteRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));        return cliente;
     }
 }

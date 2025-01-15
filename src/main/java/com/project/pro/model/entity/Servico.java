@@ -27,9 +27,6 @@ public class Servico extends AbstractEntity<Integer, ServicoDTO> {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "tempo_execucao")
-    private Integer tempoExecucao;
-
     @Column(name = "servico")
     private boolean servico;
 
@@ -46,9 +43,5 @@ public class Servico extends AbstractEntity<Integer, ServicoDTO> {
     @ManyToOne
     @JoinColumn(name = "id_categoria", referencedColumnName = "id")
     private Categoria categoria;
-
-    @OneToMany
-    @JoinColumn(name = "id_servico", referencedColumnName = "id")
-    private List<ServicoProfissional> servicoProfissionais;
 
 }

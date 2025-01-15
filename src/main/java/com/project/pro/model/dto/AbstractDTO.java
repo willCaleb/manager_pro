@@ -24,11 +24,13 @@ public abstract class AbstractDTO<I extends Number, E extends AbstractEntity> im
         List<Field> fields = Arrays.asList(entityClass.getDeclaredFields());
 
         fields.forEach(field -> {
-            if (field.getClass().isAssignableFrom(List.class) && field.getGenericType() instanceof AbstractEntity) {
-                try {
-                    toEntity((List<E>)field.get(field.getName()));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+            if (List.class.isAssignableFrom(field.getType())) {
+                if (field.getGenericType() instanceof AbstractEntity) {
+                    try {
+                        toEntity((List<E>) field.get(field.getName()));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -36,15 +38,16 @@ public abstract class AbstractDTO<I extends Number, E extends AbstractEntity> im
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.addConverter(context -> context.getSource() != null ?
-                modelMapper.map(context.getSource(), new TypeToken<List<E>>() {}.getType()) : null);
+                modelMapper.map(context.getSource(), new TypeToken<List<E>>() {
+                }.getType()) : null);
 
-        return  modelMapper.map(this, entityClass);
+        return modelMapper.map(this, entityClass);
     }
 
     private Class<E> getEntityClass() {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
 
-        return (Class) genericTypes[1];
+        return (Class<E>) genericTypes[1];
     }
 
     public List<E> toEntity(List<E> dtoList) {

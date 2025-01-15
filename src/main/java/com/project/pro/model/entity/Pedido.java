@@ -43,6 +43,9 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
     @OneToMany(mappedBy = "pedido", orphanRemoval = true)
     private List<PedidoItem> itens;
 
+    @Column(name = "orcamento")
+    private boolean orcamento;
+
     @Transient
     private double distancia;
 

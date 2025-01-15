@@ -104,7 +104,7 @@ public class PDFGeneratorController {
                 headerCell.setBorder(Rectangle.NO_BORDER);
                 header.addCell(headerCell);
                 header.setTotalWidth(527);
-                header.writeSelectedRows(0, -1, 36, 806, writer.getDirectContent());
+                header.writeSelectedRows(0, -1, 36, 812, writer.getDirectContent());
 
                 // Adicionar rodapé
                 PdfPCell footerCell = new PdfPCell(new Phrase("Página " + writer.getPageNumber()));

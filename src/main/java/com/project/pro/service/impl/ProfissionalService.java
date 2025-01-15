@@ -12,6 +12,7 @@ import com.project.pro.model.beans.LoginRequest;
 import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.ProfissionalDTO;
 import com.project.pro.model.entity.*;
+import com.project.pro.pattern.Constants;
 import com.project.pro.repository.ProfissionalRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
@@ -135,9 +136,10 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     }
 
     @Override
-    public Profissional incluirServico(Integer idServico, Integer idProfissional) {
+    @Transactional
+    public Profissional incluirServico(Integer idServico) {
 
-        Profissional profissional = findAndValidate(idProfissional);
+        Profissional profissional = findAndValidate(getProfissional().getId());
 
         Servico servico = servicoService.findAndValidate(idServico);
 
@@ -152,6 +154,8 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         servicoProfissional.setProfissional(profissional);
 
         servicoProfissional.setServico(servico);
+
+        servicoProfissionalService.incluir(servicoProfissional);
 
         profissional.getServicos().add(servicoProfissional);
 
@@ -195,7 +199,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication, Role.PROFISSIONAL);
+            String token = tokenProvider.generateToken(authentication, Role.PROFISSIONAL, Constants.LOGIN_TYPE_PROFESSIONAL);
             if(Utils.isNotEmpty(profissional)) {
                 Context.setCurrentProfissional(profissional);
             }
@@ -212,5 +216,9 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
             throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
         }
         return profissionalRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
+    }
+
+    public Profissional findByEmail(String email) {
+        return profissionalRepository.findByEmail(email).orElseThrow(() -> new CustomException("Profissional com o email {0} não encontrado!", email));
     }
 }

@@ -21,20 +21,21 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> implements IIdentificador, Serializable {
 
-    public DTO toDto() {
+    private Class<DTO> getDtoClass() {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<DTO> dtoClass = (Class) genericTypes[1];
-        return filter(this, dtoClass, null);
+        return  (Class<DTO>) genericTypes[1];
     }
 
-    public DTO toDto(AbstractEntity entity, Class<DTO> clazz) {
+    public DTO toDto() {
+        return filter(this, getDtoClass(), null);
+    }
+
+    public DTO toDto(AbstractEntity<Integer, DTO> entity, Class<DTO> clazz) {
         return filter(entity, clazz, null);
     }
 
     private DTO toDto(List<String> onlyFields) {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<DTO> dtoClass = (Class) genericTypes[1];
-        return filter(this, dtoClass, onlyFields);
+        return filter(this, getDtoClass(), onlyFields);
     }
 //    TODO implementar toDto para listas
 //    public List<DTO> toDtoList() {
@@ -103,6 +104,10 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
             fieldsToFilter = ListUtils.toList(onlyField.fields());
         }
         return fieldsToFilter;
+    }
+
+    public boolean hasId() {
+        return this.getId() != null;
     }
 
     @Override
