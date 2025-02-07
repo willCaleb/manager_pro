@@ -37,4 +37,5 @@ public class ProdutoService extends AbstractService<Produto,ProdutoDTO, ProdutoR
 
         produtoRepository.save(produtoManaged);
     }
+
 }

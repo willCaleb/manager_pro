@@ -46,7 +46,7 @@ public class AuthController extends AbstractController<Usuario, UsuarioDTO>{
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication, Role.ADMIN);
+            String token = tokenProvider.generateToken(authentication, Role.ADMIN, "");
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");

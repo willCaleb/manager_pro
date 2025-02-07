@@ -1,6 +1,5 @@
 package com.project.pro.service;
 
-import com.project.pro.model.beans.JwtAuthenticationResponse;
 import com.project.pro.model.beans.LoginRequest;
 import com.project.pro.model.dto.ClienteDTO;
 import com.project.pro.model.entity.Cliente;
@@ -12,4 +11,6 @@ public interface IClienteService extends IAbstractService<Cliente, ClienteDTO, C
     Cliente incluir(Cliente cliente);
 
     ResponseEntity<?> loginCliente(LoginRequest loginRequest);
+
+    Cliente buscarPorUsuario(String username);
 }

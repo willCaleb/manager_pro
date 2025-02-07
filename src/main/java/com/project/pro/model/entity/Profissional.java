@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -45,7 +46,7 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Categoria> categorias;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private List<ServicoProfissional> servicos;
 

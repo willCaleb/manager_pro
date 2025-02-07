@@ -1,9 +1,7 @@
 package com.project.pro.service.impl;
 
-//import com.project.pro.config.context.IContext;
-
+import com.project.pro.config.context.ContextImpl;
 import com.project.pro.config.context.IContext;
-import com.project.pro.context.Context;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
@@ -12,6 +10,7 @@ import com.project.pro.model.entity.Cliente;
 import com.project.pro.model.entity.Profissional;
 import com.project.pro.model.entity.Usuario;
 import com.project.pro.repository.ClienteRepository;
+import com.project.pro.repository.ProfissionalRepository;
 import com.project.pro.repository.UsuarioRepository;
 import com.project.pro.service.IAbstractService;
 import com.project.pro.utils.ObjectUtils;
@@ -46,6 +45,9 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
+
     private Repositories repositories;
 
     public IContext getContext() {
@@ -53,7 +55,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public Cliente getCliente() {
-        return clienteRepository.findByUsuario(getUsuario());
+        return clienteRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
     }
 
     public Usuario getUsuario() {
@@ -65,7 +67,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public Profissional getProfissional() {
-        return Context.CURRENT_PROFISSIONAL.get();
+        return profissionalRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
     }
 
     public <R extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<R> clazz) {
@@ -103,7 +105,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {
-        return getContext().getBean(clazz);
+        return ContextImpl.getBean(clazz);
     }
 
     public static <E extends AbstractEntity> List<E> reverseEntityList(List<E> list) {
@@ -112,6 +114,5 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
                 .sorted(Comparator.comparing(E::getId).reversed())
                 .collect(Collectors.toList());
     }
-
 
 }

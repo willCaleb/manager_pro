@@ -12,6 +12,7 @@ import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -99,14 +100,16 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
 
     public Class<E> getEntityClass() {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        return (Class) genericTypes[0];
+        return (Class<E>) genericTypes[0];
     }
 
     public List<DTO> toDtoList(List<E> entityList) {
         List dtoList = new ArrayList();
         if (Utils.isEmpty(entityList)) return dtoList;
         for (E item : entityList) {
-            dtoList.add(((AbstractEntity) item).toDto());
+            Hibernate.initialize(item);
+            DTO dto = item.toDto();
+            dtoList.add(dto);
         }
         return dtoList;
     }

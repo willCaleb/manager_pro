@@ -27,4 +27,6 @@ public class PedidoDTO extends AbstractDTO<Integer, Pedido> {
 
     private double distancia;
 
+    private Boolean orcamento;
+
 }

@@ -19,7 +19,7 @@ public interface IProfissionalService extends IAbstractService<Profissional, Pro
 
     void editar(Integer idProfissional, Profissional profissional);
 
-    Profissional incluirServico(Integer idServico, Integer idProfissional);
+    Profissional incluirServico(Integer idServico);
 
     List<Profissional> findAllByNome(String nome);
 
@@ -30,4 +30,6 @@ public interface IProfissionalService extends IAbstractService<Profissional, Pro
     List<AgendaBean> listarAgendas(Integer idProfissional);
 
     ResponseEntity<?> login(LoginRequest loginRequest);
+
+    Profissional findByEmail(String email);
 }

@@ -8,16 +8,19 @@ import com.project.pro.model.entity.*;
 import com.project.pro.repository.PedidoRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
+import com.project.pro.utils.PDFUtils;
 import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorPedido;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
@@ -43,10 +46,6 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         pedido.setDataInclusao(DateUtils.getDate());
         pedido.setCliente(getCliente());
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Object principal = authentication.getPrincipal();
-
         onPrepareInsert(pedido);
         validadorPedido.validarInsert(pedido);
         final Pedido pedidoRetorno = getRepository().save(pedido);
@@ -55,7 +54,7 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
         pedidoItemService.incluir(pedido.getItens());
 
-        return pedido;
+        return pedidoRetorno;
     }
 
     private void resolverStatus(Pedido pedido) {
@@ -66,10 +65,13 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
     private void onPrepareInsert(Pedido pedido) {
 
-        Profissional profissional = profissionalService.findAndValidate(pedido.getProfissional().getId());
-        Cliente cliente = clienteService.findAndValidate(pedido.getCliente().getId());
+        Profissional profissional = getProfissional();
 
-        pedido.setCliente(cliente);
+        if (Utils.isNotEmpty(pedido.getCliente())) {
+            Cliente cliente = clienteService.findAndValidate(pedido.getCliente().getId());
+
+            pedido.setCliente(cliente);
+        }
         pedido.setProfissional(profissional);
 
 //        Pessoa pessoaCliente = cliente.getPessoa();
@@ -120,5 +122,10 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         }
         pedido.setStatusPedido(EnumStatusPedido.FINALIZADO);
         getRepository().save(pedido);
+    }
+
+    @Override
+    public ResponseEntity<byte[]> gerarOrcamento() {
+        return PDFUtils.generatePdf();
     }
 }
