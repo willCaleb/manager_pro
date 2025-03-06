@@ -22,14 +22,14 @@ public class ServicoProfissionalServiceImpl
     @Override
     public ServicoProfissional incluir(ServicoProfissional servicoProfissional) {
         validadorServicoProfissional.validarInsert(servicoProfissional);
-        return getRepository().save(servicoProfissional);
+        return save(servicoProfissional);
     }
 
     @Override
     public void excluir(Integer idServicoProfissional) {
 
         ServicoProfissional servicoProfissional = findAndValidate(idServicoProfissional);
-        getRepository().delete(servicoProfissional);
+        delete(servicoProfissional);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
             imagem.setFilename(file.getFilename());
             imagem.setCloud(Constants.IMGUR_CLOUD);
 
-            return imagemRepository.save(imagem);
+            return save(imagem);
         }
         throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD);
     }
@@ -90,7 +90,7 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
         imagem.setEntityName(clazz.getSimpleName());
         imagem.setCloud(Constants.CLOUDINARY_CLOUD);
 
-        return imagemRepository.save(imagem);
+        return save(imagem);
     }
 
     @Override
@@ -117,10 +117,10 @@ public class ImagemServiceImpl extends AbstractService<Imagem, ImagemDTO, Imagem
 
         if (response.isSuccessful() && !excluir) {
             imagem.setDeleted(Boolean.TRUE);
-            imagemRepository.save(imagem);
+            save(imagem);
             return;
         }
-        imagemRepository.delete(imagem);
+        delete(imagem);
     }
 
     @Override

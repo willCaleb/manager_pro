@@ -21,7 +21,7 @@ public class ServicoService extends AbstractService<Servico, ServicoDTO, Servico
     @Override
     public Servico incluir(Servico servico) {
         onPrepareInsert(servico);
-        return getRepository().save(servico);
+        return save(servico);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ServicoService extends AbstractService<Servico, ServicoDTO, Servico
         servico.setDataAlteracao(DateUtils.getDate());
         servico.setId(idProduto);
 
-        getRepository().save(servico);
+        save(servico);
     }
 
     private void onPrepareInsert(Servico servico) {

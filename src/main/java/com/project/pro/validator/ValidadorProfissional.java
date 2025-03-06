@@ -31,7 +31,7 @@ public class ValidadorProfissional implements IValidador<Profissional> {
     public void validarInsert(Profissional profissional) {
         validarCamposObrigatorios(profissional);
         validarCpfJaCadastrado(profissional);
-        validarPessoaJaCadastradaEmProfissional(profissional);
+//        validarPessoaJaCadastradaEmProfissional(profissional);
     }
 
     public void validarCpfJaCadastrado(Profissional profissional) {
@@ -48,6 +48,8 @@ public class ValidadorProfissional implements IValidador<Profissional> {
 //        validate.add(profissional.getPessoa(), "Pessoa");
         validate.add(profissional.getCpf(), "CPF");
         validate.add(profissional.getEmail(), "E-mail");
+        validate.add(profissional.getPessoa().getNome(), "Nome");
+        validate.add(profissional.getPessoa().getTelefone(), "Telefone");
         validate.validate();
     }
 

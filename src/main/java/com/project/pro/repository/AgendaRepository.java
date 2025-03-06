@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface AgendaRepository extends JpaRepository<Agenda, Integer>, JpaSpecificationExecutor<Agenda>{
 
-    @Query(value = "" +
+    @Query(value = " " +
             "select ag.* from pro_agenda ag" +
             "   where (ag.data_inicio between :dataInicio and :dataFim " +
             "       or ag.data_fim between :dataInicio and :dataFim) " +

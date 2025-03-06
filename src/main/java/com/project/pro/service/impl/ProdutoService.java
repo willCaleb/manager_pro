@@ -22,7 +22,7 @@ public class ProdutoService extends AbstractService<Produto,ProdutoDTO, ProdutoR
     @Override
     public Produto incluir(Produto produto) {
         produto.setDataInclusao(DateUtils.getDate());
-        return produtoRepository.save(produto);
+        return save(produto);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ProdutoService extends AbstractService<Produto,ProdutoDTO, ProdutoR
         produtoManaged.setPreco(Utils.nvl(produto.getPreco(), produtoManaged.getPreco()));
         produtoManaged.setDataAlteracao(DateUtils.getDate());
 
-        produtoRepository.save(produtoManaged);
+        save(produtoManaged);
     }
 
 }

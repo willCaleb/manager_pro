@@ -11,8 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Audited
-@Table(name = "usuario")
+@Table(name = "pro_usuario")
 public class Usuario extends AbstractEntity<Integer, UsuarioDTO> {
 
     @Id

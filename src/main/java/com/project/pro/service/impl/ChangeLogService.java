@@ -19,8 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChangeLogService extends AbstractService<ChangeLog, ChangeLogDTO, ChangeLogRepository> implements IChangeLogService{
 
-    private final ChangeLogRepository changeLogRepository;
-
     @Override
     public <T extends AbstractEntity> List<ChangeLog> incluir(T originalObject, T changedObject) {
 
@@ -41,6 +39,6 @@ public class ChangeLogService extends AbstractService<ChangeLog, ChangeLogDTO, C
             changeLogList.add(changeLog);
         });
 
-        return changeLogRepository.saveAll(changeLogList);
+        return saveAll(changeLogList);
     }
 }

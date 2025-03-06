@@ -52,7 +52,7 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
 
         cliente.setUsuario(usuario);
 
-        return clienteRepository.save(cliente);
+        return save(cliente);
     }
 
     private Usuario incluirUsuario(Cliente cliente) {

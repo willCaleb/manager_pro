@@ -34,7 +34,7 @@ public class Profissional extends AbstractEntity<Integer, ProfissionalDTO> {
 
     @OneToOne
     @JoinColumn(name = "id_pessoa", referencedColumnName = "id")
-    private Pessoa pessoa;
+    private Pessoa pessoa = new Pessoa();
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")

@@ -1,7 +1,12 @@
 package com.project.pro.validator;
 
+import com.project.pro.enums.EnumCustomException;
+import com.project.pro.exception.CustomException;
 import com.project.pro.model.entity.Agenda;
 import com.project.pro.repository.AgendaRepository;
+import com.project.pro.utils.ListUtils;
+
+import java.util.List;
 
 public class ValidadorAgenda implements IValidador<Agenda>{
 
@@ -25,5 +30,17 @@ public class ValidadorAgenda implements IValidador<Agenda>{
     @Override
     public void validarInsert(Agenda agenda) {
         validarCamposObrigatorios(agenda);
+        validarHorarioDisponivel(agenda);
+    }
+
+
+    public void validarHorarioDisponivel(Agenda agenda) {
+
+        if(agenda.getProfissional().isMultiploAgendamento()) return;
+        List<Agenda> agendasNoMesmoHorario = agendaRepository.buscarAgendaEntreHorarios(agenda.getDataInicio(), agenda.getDataFim(), agenda.getProfissional().getId());
+
+        if (ListUtils.isNotNullOrEmpty(agendasNoMesmoHorario)) {
+            throw new CustomException(EnumCustomException.AGENDA_HORARIO_INDISPONIVEL, agenda.getProfissional().getPessoa().getNome());
+        }
     }
 }

@@ -80,7 +80,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     public void editar(E abstractEntity, Integer idEntityManaged) {
         E entityManaged = findAndValidate(idEntityManaged);
         ObjectUtils.copyAllValuesWithoutId(abstractEntity, entityManaged);
-        getRepository().save(entityManaged);
+        save(entityManaged);
     }
 
     public <E extends AbstractEntity<?, ?>>JpaSpecificationExecutor<E> getSpecificationRepository(Class<E> clazz) {
@@ -93,6 +93,30 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     public <E extends AbstractEntity<?,?>> JpaSpecificationExecutor<E> getSpecificationRepository() {
         Class<E> entityClass = (Class) genericTypes[0];
         return getSpecificationRepository(entityClass);
+    }
+
+    public List<E> saveAll(List<E> entityList) {
+        try {
+            return getRepository().saveAll(entityList);
+        }catch (Exception e) {
+            throw new CustomException(EnumCustomException.ERRO_AO_SALVAR);
+        }
+    }
+
+    public void delete(E entity) {
+        try {
+            getRepository().delete(entity);
+        }catch (Exception e) {
+            throw new CustomException("Erro ao excluir dados.");
+        }
+    }
+
+    public E save(E entity) {
+        try {
+            return getRepository().save(entity);
+        }catch (Exception e) {
+            throw new CustomException(EnumCustomException.ERRO_AO_SALVAR);
+        }
     }
 
     public <E extends AbstractEntity<?, ?>, ID extends Object> JpaRepository<E, ID> getRepository() {

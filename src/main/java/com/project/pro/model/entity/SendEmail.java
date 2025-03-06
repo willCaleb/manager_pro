@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "send_email")
+@Table(name = "pro_send_email")
 public class SendEmail {
 
     @Id

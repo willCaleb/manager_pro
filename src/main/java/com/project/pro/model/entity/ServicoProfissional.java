@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
-@Table(name = "servico_profissional")
+@Table(name = "pro_servico_profissional")
 public class ServicoProfissional extends AbstractEntity<Integer, ServicoProfissionalDTO> {
 
     @Id

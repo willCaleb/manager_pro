@@ -4,6 +4,7 @@ import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
+import com.project.pro.model.entity.Profissional;
 import com.project.pro.repository.PessoaRepository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,4 +21,6 @@ public interface IPessoaService extends IAbstractService<Pessoa, PessoaDTO, Pess
     Endereco getEnderecoPrincipal(Pessoa pessoa);
 
     Pessoa incluirImagem(Integer idPessoa, FileUploadDTO file);
+
+    Pessoa incluir(Profissional profissional);
 }

@@ -33,10 +33,6 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
     private final IClienteService clienteService;
 
-    private final IEnderecoService enderecoService;
-
-    private final IProfissionalService profissionalService;
-
     private final IChangeLogService changeLogService;
 
     @Override
@@ -48,7 +44,7 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
 
         onPrepareInsert(pedido);
         validadorPedido.validarInsert(pedido);
-        final Pedido pedidoRetorno = getRepository().save(pedido);
+        final Pedido pedidoRetorno = save(pedido);
 
         pedido.getItens().forEach(item -> item.setPedido(pedidoRetorno));
 
@@ -103,7 +99,7 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
             //TODO implementar edição de pedido confirmado ou aberto
         }
 
-        getRepository().save(pedidoManaged);
+        save(pedidoManaged);
     }
 
     @Override
@@ -121,7 +117,7 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
             }
         }
         pedido.setStatusPedido(EnumStatusPedido.FINALIZADO);
-        getRepository().save(pedido);
+        save(pedido);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class ProfissionalAvaliacaoService
 
         avaliacao.setDataInclusao(DateUtils.getDate());
 
-        ProfissionalAvaliacao avaliacaoSalva = profissionalAvaliacaoRepository.save(avaliacao);
+        ProfissionalAvaliacao avaliacaoSalva = save(avaliacao);
 
         incluirImagens(avaliacaoSalva);
 

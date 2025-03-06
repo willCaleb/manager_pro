@@ -56,6 +56,42 @@ public class Teste {
         }
     }
 
+    public static void main(String[] args) {
+        fizzBuzz(15);
+    }
+
+
+    static void fizzBuzz(int n) {
+
+        for (int i = 1; i <= n; i ++) {
+
+            if ((i % 3 == 0) && (i % 5 == 0)) {
+                System.out.println("FizzBuzz");
+                continue;
+            }else if (i % 3 == 0) {
+                System.out.println("Fizz");
+                continue;
+            }else if (i % 5 == 0) {
+                System.out.println("Buzz");
+                continue;
+            }
+            System.out.println(i);
+        }
+
+    }
+
+    /*
+        deve retornar o valor do tamanho da maior sequência ditônica
+        ex: 7, 2, 4, 6, 9, 7, 5, 3, 1 a sequência ditônica é 2, 4, 6, 9, 7, 5, 3, 1 e o tamanho da sequencia é 8
+
+     */
+    public static int longestBitonicSubarray(List<Integer> arr) {
+        // Write your code here
+        return 0;
+    }
+
+
+
     public static void desenharTrianguloInvertido() {
         int inicio = 0;
         int fim = 13;

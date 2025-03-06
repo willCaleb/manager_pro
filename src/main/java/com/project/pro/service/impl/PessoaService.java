@@ -5,6 +5,7 @@ import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
+import com.project.pro.model.entity.Profissional;
 import com.project.pro.repository.PessoaRepository;
 import com.project.pro.service.IChangeLogService;
 import com.project.pro.service.IEnderecoService;
@@ -59,13 +60,24 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
         pessoa.setEnderecos(new ArrayList<>());
 
-        pessoaRepository.save(pessoa);
+        save(pessoa);
 
         resolverEnderecoPrincipal(pessoa);
 
         pessoa.setEnderecos(enderecoService.incluir(enderecos, pessoa));
 
         return pessoa;
+    }
+
+    @Override
+    public Pessoa incluir(Profissional profissional) {
+
+        Pessoa pessoa = profissional.getPessoa();
+
+        pessoa.setCpfCnpj(profissional.getCpf());
+        pessoa.setEmail(profissional.getEmail());
+
+        return save(pessoa);
     }
 
     @Override
@@ -79,7 +91,7 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
         pessoaManaged.setTelefone(Utils.nvl(pessoa.getTelefone(), pessoaManaged.getTelefone()));
         pessoaManaged.setClassificacao(pessoa.getClassificacao());
 
-        pessoaRepository.save(pessoaManaged);
+        save(pessoaManaged);
     }
 
     private void resolverEnderecoPrincipal(Pessoa pessoa) {
@@ -119,9 +131,9 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
     @Transactional
     @Modifying
     public void excluir(Integer idPessoa) {
-        Pessoa pessoa = pessoaRepository.getById(idPessoa);
+        Pessoa pessoa = findAndValidate(idPessoa);
 
-        pessoaRepository.delete(pessoa);
+        delete(pessoa);
     }
 
     @Override
@@ -145,7 +157,7 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
         ImgurReturn imgurReturn = imgurService.upload(file);
         String link = imgurReturn.getData().getLink();
         pessoa.setImagemPerfil(link);
-        return pessoaRepository.save(pessoa);
+        return save(pessoa);
     }
 
 }

@@ -31,4 +31,8 @@ public enum EnumStatusAgenda implements IEnum<String>{
     @Converter
     public static class EnumConverter extends AbstractEnumConverter<EnumFormaPagamento, String> {
     }
+
+    public boolean permiteEditar() {
+        return (this.equals(AGUARDANDO_CONFIRMACAO) || this.equals(FINALIZADO));
+    }
 }

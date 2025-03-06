@@ -27,13 +27,13 @@ public class ObservacaoService extends AbstractService<Observacao, ObservacaoDTO
 
         validadorObservacao.validarCamposObrigatorios(observacao);
 
-        return observacaoRepository.save(observacao);
+        return save(observacao);
     }
 
     @Override
     public void excluir(Integer idObservacao) {
         Observacao observacao = findAndValidate(idObservacao);
-        observacaoRepository.delete(observacao);
+        delete(observacao);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ObservacaoService extends AbstractService<Observacao, ObservacaoDTO
         obervacaoManaged.setObservacao(observacao.getObservacao());
         validadorObservacao.validarCamposObrigatorios(obervacaoManaged);
 
-        observacaoRepository.save(obervacaoManaged);
+        save(obervacaoManaged);
     }
 
     @Override

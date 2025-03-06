@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "comentarios")
+@Table(name = "pro_comentarios")
 public class Comentario extends AbstractEntity<Integer, ComentarioDTO> {
 
     @Id

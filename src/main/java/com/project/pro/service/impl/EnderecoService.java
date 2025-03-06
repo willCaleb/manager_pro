@@ -59,7 +59,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
         definirPrincipal(endereco);
 
         if (endereco.getPessoa().hasId()) {
-            return enderecoRepository.save(endereco);
+            return save(endereco);
         }
 
         return endereco;
@@ -94,7 +94,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
             GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endereco);
             endereco.setLatitude(geometria.getLatitude());
             endereco.setLongitude(geometria.getLongitude());
-            getRepository().save(endereco);
+            save(endereco);
         } else {
             throw new CustomException("O endereço não possui CEP e não é possível localizar as coordenadas");
         }
@@ -137,7 +137,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
                     .findFirst()
                     .ifPresent(end -> end.setPrincipal(Boolean.FALSE));
         }
-        enderecoRepository.saveAll(enderecos);
+        saveAll(enderecos);
     }
 
 //    @Scheduled(fixedDelay = 1000 * 3600 * 24)
@@ -160,6 +160,6 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
                 e.printStackTrace();
             }
         });
-        getRepository().saveAll(enderecosSemCoordenada);
+        saveAll(enderecosSemCoordenada);
     }
 }

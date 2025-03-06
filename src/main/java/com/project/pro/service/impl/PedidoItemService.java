@@ -24,13 +24,13 @@ public class PedidoItemService extends AbstractService<PedidoItem, PedidoItemDTO
 
         itens.forEach(item -> validadorPedidoItem.validarCamposObrigatorios(item));
 
-         return getRepository().saveAll(itens);
+         return saveAll(itens);
     }
 
     @Override
     public PedidoItem incluir(PedidoItem item) {
         validadorPedidoItem.validarCamposObrigatorios(item);
-        return getRepository().save(item);
+        return save(item);
     }
 
     @Override

@@ -38,7 +38,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class ProfissionalService extends AbstractService<Profissional, ProfissionalDTO, ProfissionalRepository> implements IProfissionalService{
+public class ProfissionalService extends AbstractService<Profissional, ProfissionalDTO, ProfissionalRepository> implements IProfissionalService {
 
     private final IPessoaService pessoaService;
     private final IServicoService servicoService;
@@ -71,25 +71,32 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         profissional.setCpf(profissionalBean.getCpfCnpj());
         profissional.setEmail(profissionalBean.getEmail());
+        profissional.getPessoa().setTelefone(profissionalBean.getTelefone());
+        profissional.getPessoa().setNome(profissionalBean.getNome());
+
+        validadorProfissional.validarInsert(profissional);
+
         profissional.setMultiploAgendamento(Boolean.FALSE);
 
         Usuario usuario = usuarioService.findByUsername(profissionalBean.getEmail());
 
         if (Utils.isNotEmpty(usuario)) {
-            profissional.setUsuario(usuario);
-        }else {
-            Usuario newUsuario = new Usuario();
-            newUsuario.setUsername(profissionalBean.getEmail().toLowerCase());
-            newUsuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
-            Usuario incluir = usuarioService.incluir(newUsuario);
-            profissional.setUsuario(incluir);
+            throw new CustomException(EnumCustomException.USUARIO_JA_CADASTRADO_EMAIL);
         }
+        Usuario newUsuario = new Usuario();
+        newUsuario.setUsername(profissionalBean.getEmail().toLowerCase());
+        newUsuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
 
-        validadorProfissional.validarInsert(profissional);
+        Usuario incluir = usuarioService.incluir(newUsuario);
+        Pessoa pessoa = pessoaService.incluir(profissional);
+
+        profissional.setPessoa(pessoa);
+        profissional.setUsuario(incluir);
+
 
 //        enviarEmail(profissional);
 
-        return profissionalRepository.save(profissional);
+        return save(profissional);
     }
 
     private void enviarEmail(Profissional profissional) {
@@ -131,7 +138,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
             validadorProfissional.validarCpfJaCadastrado(profissional);
         }
 
-        profissionalRepository.save(profissional);
+        save(profissional);
 
     }
 
@@ -145,7 +152,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         ServicoProfissional servicoJaCadastrado = servicoProfissionalService.findByProfissionalAndServico(profissional, servico);
 
-        if(Utils.isNotEmpty(servicoJaCadastrado)) {
+        if (Utils.isNotEmpty(servicoJaCadastrado)) {
             throw new CustomException("O profissional " + profissional.getPessoa().getNome() + " já possui esse serviço");
         }
 
@@ -159,7 +166,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         profissional.getServicos().add(servicoProfissional);
 
-        return profissionalRepository.save(profissional);
+        return save(profissional);
     }
 
     @Override
@@ -200,7 +207,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenProvider.generateToken(authentication, Role.PROFISSIONAL, Constants.LOGIN_TYPE_PROFESSIONAL);
-            if(Utils.isNotEmpty(profissional)) {
+            if (Utils.isNotEmpty(profissional)) {
                 Context.setCurrentProfissional(profissional);
             }
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));

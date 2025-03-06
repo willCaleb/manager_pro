@@ -32,7 +32,7 @@ public class CategoriaService extends AbstractService<Categoria, CategoriaDTO, C
         verificarDuplicidadeNome(categoria);
         validadorCategoria.validarInsert(categoria);
         validadorCategoria.validarInsertOuUpdate(categoria);
-        return categoriaRepository.save(categoria);
+        return save(categoria);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CategoriaService extends AbstractService<Categoria, CategoriaDTO, C
 
         categoria.setId(categoriaManaged.getId());
 
-        categoriaRepository.save(categoria);
+        save(categoria);
     }
 
     private void verificarDuplicidadeNome(Categoria categoria) {

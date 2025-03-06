@@ -4,6 +4,7 @@ import com.project.pro.enums.EnumStatusPedido;
 import com.project.pro.model.dto.PedidoDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "pedido")
+@Table(name = "pro_pedido")
 public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
 
     @Id

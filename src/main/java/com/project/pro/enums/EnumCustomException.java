@@ -24,7 +24,12 @@ public enum EnumCustomException {
     EMAIL_JA_CADASTRADO("Já existe um registro de usuário com esse email."),
     EMAIL_INVALIDO("O e-mail informado não é válido."),
     PROFISSIONAL_NAO_ENCONTRADO("Não foi encontrado profissional com o e-mail informado."),
-    CLIENTE_NAO_CADASTRADO("Não foi possível localizar registro de cliente com o e-mail informado.");
+    CLIENTE_NAO_CADASTRADO("Não foi possível localizar registro de cliente com o e-mail informado."),
+    AGENDA_HORARIO_INDISPONIVEL("O profissional {0} não está disponível no horário informado."),
+    USUARIO_JA_CADASTRADO_EMAIL("Já existe um usuário cadastrado com o e-mail informado."),
+    ERRO_AO_SALVAR("Ocorreu um erro ao salvar os dados."),
+    AGENDA_STATUS_NAO_PERMITE_AGENDAR("O status da agenda {0} não permite editar."),
+    CONFIGURACAO_JA_CADASTRADA_PARA_PROFISSIONAL("Essa configuração já foi cadastrada para esse profissional.");
 
     private final String message;
 

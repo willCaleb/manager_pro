@@ -13,20 +13,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ComentarioService extends AbstractService<Comentario, ComentarioDTO, ComentarioRepository> implements IComentarioService{
 
-    private final ComentarioRepository comentarioRepository;
-
     private ValidadorComentario validadorComentario = new ValidadorComentario();
 
     public Comentario incluir(Comentario comentario) {
         comentario.setDataInclusao(DateUtils.getDate());
         validadorComentario.validarInsert(comentario);
-        return comentarioRepository.save(comentario);
+        return save(comentario);
     }
 
     public void excluir(Integer idComentario) {
-
         Comentario comentario = findAndValidate(idComentario);
 
-        comentarioRepository.delete(comentario);
+        delete(comentario);
     }
 }

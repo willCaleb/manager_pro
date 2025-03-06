@@ -1,5 +1,6 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumStatusAgenda;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.AgendaBean;
@@ -37,7 +38,7 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
         validadorAgenda.validarInsert(agenda);
 
         onPrepareInsert(agenda);
-        return agendaRepository.save(agenda);
+        return save(agenda);
     }
 
     private void onPrepareInsert(Agenda agenda) {
@@ -55,10 +56,14 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
 
         Agenda agendaManaged = findAndValidate(idAgenda);
 
+        if (!agendaManaged.getStatus().permiteEditar()) {
+            throw new CustomException(EnumCustomException.AGENDA_STATUS_NAO_PERMITE_AGENDAR);
+        }
+
         if (!Utils.equals(agendaManaged.getDataInicio(), agenda.getDataInicio()) || !Utils.equals(agendaManaged.getDataFim(), agenda.getDataFim())) {
 
         }
-        return null;
+        return save(agenda);
     }
 
     @Override

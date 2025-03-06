@@ -32,7 +32,7 @@ public class TituloService extends AbstractService<Titulo, TituloDTO, TituloRepo
     public Titulo incluir(Titulo titulo) {
 
         onPrepareInsert(titulo);
-        Titulo tituloSalvo = tituloRepository.save(titulo);
+        Titulo tituloSalvo = save(titulo);
         incluirObservacoes(tituloSalvo);
 
         return tituloSalvo;
@@ -85,7 +85,7 @@ public class TituloService extends AbstractService<Titulo, TituloDTO, TituloRepo
             tituloManaged.setParcelas(titulo.getParcelas());
             recalcularParcelas(tituloManaged);
         }
-        tituloRepository.save(tituloManaged);
+        save(tituloManaged);
     }
 
     private void onPrepareUpdate(Titulo titulo) {

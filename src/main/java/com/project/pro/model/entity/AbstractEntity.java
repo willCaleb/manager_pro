@@ -1,5 +1,6 @@
 package com.project.pro.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.pro.annotation.DtoFieldIgnore;
 import com.project.pro.annotation.OnlyField;
 import com.project.pro.exception.CustomException;
@@ -49,7 +50,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
             DTO dtoReturn = dtoType.newInstance();
 
             allFieldsFromDto.forEach(field -> {
-                if (!field.isAnnotationPresent(DtoFieldIgnore.class)) {
+                if (!field.isAnnotationPresent(DtoFieldIgnore.class) && !field.isAnnotationPresent(JsonIgnore.class)) {
                     if (Utils.isEmpty(onlyFields) || onlyFields.contains(field.getName())) {
                         try {
                             Method getterMethod = ClassUtils.getGetterMethod(field.getName(), entity.getClass());
@@ -67,7 +68,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                                 AbstractEntity invokeEntity = (AbstractEntity) invoke;
                                 setterMethod.invoke(dtoReturn, invokeEntity.toDto(fieldsToFilter));
 
-                            } else if (field.getType().isAssignableFrom(List.class)) {
+                            } else if (List.class.isAssignableFrom(field.getType())) {
                                 ParameterizedType genericType = (ParameterizedType) field.getGenericType();
                                 Class<?> aClass = (Class<?>) genericType.getActualTypeArguments()[0];
                                 if (AbstractDTO.class.isAssignableFrom(aClass)) {
@@ -85,7 +86,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                                 setterMethod.invoke(dtoReturn, invoke);
                             }
                         } catch (Exception e ) {
-                            System.out.println(e.getMessage() + " " + entity.getClass().getSimpleName() + " " + field.getName());
+                            e.printStackTrace();
                         }
                     }
                 }

@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "pessoa")
+@Table(name = "pro_pessoa")
 public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
 
     @Id
