@@ -2,6 +2,7 @@ package com.project.pro.model.entity;
 
 import com.project.pro.enums.EnumEtapaServico;
 import com.project.pro.model.dto.ServicoDTO;
+import com.project.pro.utils.DateUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,9 +27,6 @@ public class Servico extends AbstractEntity<Integer, ServicoDTO> {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "tempo_execucao")
-    private Integer tempoExecucao;
-
     @Column(name = "servico")
     private boolean servico;
 
@@ -45,9 +43,5 @@ public class Servico extends AbstractEntity<Integer, ServicoDTO> {
     @ManyToOne
     @JoinColumn(name = "id_categoria", referencedColumnName = "id")
     private Categoria categoria;
-
-    @OneToMany
-    @JoinColumn(name = "id_servico", referencedColumnName = "id")
-    private List<ServicoProfissional> servicoProfissionais;
 
 }

@@ -15,4 +15,13 @@ public class Constants {
     public static final String DATA_ALTERACAO = "dataAlteracao";
 
     public static final String DATA_INCLUSAO = "dataInclusao";
+
+    public static final String IMGUR_CLOUD = "imgur";
+
+    public static final String CLOUDINARY_CLOUD = "cloudinary";
+
+    public static final String LOGIN_TYPE_CLIENT = "cliente";
+
+    public static final String LOGIN_TYPE_PROFESSIONAL = "profissional";
+
 }

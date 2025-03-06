@@ -1,11 +1,17 @@
 package com.project.pro.service.impl;
 
-//import com.project.pro.config.IContext;
-
-import com.project.pro.config.IContext;
+import com.project.pro.config.context.ContextImpl;
+import com.project.pro.config.context.IContext;
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
+import com.project.pro.model.entity.Cliente;
+import com.project.pro.model.entity.Profissional;
+import com.project.pro.model.entity.Usuario;
+import com.project.pro.repository.ClienteRepository;
+import com.project.pro.repository.ProfissionalRepository;
+import com.project.pro.repository.UsuarioRepository;
 import com.project.pro.service.IAbstractService;
 import com.project.pro.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.support.Repositories;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,22 +34,45 @@ import java.util.stream.Collectors;
 public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>, R extends JpaRepository> implements IAbstractService<E, DTO, R>{
 
     Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-    private Class<E> entityClass = (Class<E>) genericTypes[0];
+    private final Class<E> entityClass = (Class<E>) genericTypes[0];
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
+
+    private Repositories repositories;
 
     public IContext getContext() {
         return IContext.context();
     }
 
+    public Cliente getCliente() {
+        return clienteRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
+    }
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    public Usuario getUsuario() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return usuarioRepository.findByUsername(((UserDetails) principal).getUsername());
+        }
+        throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
+    }
 
-    private Repositories repositories;
+    public Profissional getProfissional() {
+        return profissionalRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
+    }
 
-
-    public <E extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<E> clazz) {
+    public <R extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<R> clazz) {
         repositories = new Repositories(applicationContext);
-        return (JpaRepository<E, ID>) repositories
+        return (JpaRepository<R, ID>) repositories
                 .getRepositoryFor(clazz)
                 .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
     }
@@ -70,21 +101,18 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
 
     public E findAndValidate(Integer id) {
         return (E) getRepository()
-                .findById(id).orElseGet(() -> {
-                    throw new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id);
-                });
+                .findById(id).orElseThrow(() -> new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id));
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {
-        return getContext().getBean(clazz);
+        return ContextImpl.getBean(clazz);
     }
 
     public static <E extends AbstractEntity> List<E> reverseEntityList(List<E> list) {
-        return list.stream().sorted(Comparator.comparing(E::getId).reversed()).collect(Collectors.toList());
+        return list
+                .stream()
+                .sorted(Comparator.comparing(E::getId).reversed())
+                .collect(Collectors.toList());
     }
-
-//    public <S extends AbstractService> S getService() {
-//        return ;
-//    }
 
 }

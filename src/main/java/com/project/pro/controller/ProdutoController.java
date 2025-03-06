@@ -1,15 +1,15 @@
 package com.project.pro.controller;
 
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.ImagemDTO;
 import com.project.pro.model.dto.ProdutoDTO;
 import com.project.pro.model.entity.Produto;
 import com.project.pro.pattern.OperationsParam;
 import com.project.pro.pattern.OperationsPath;
 import com.project.pro.service.IProdutoService;
-import com.project.pro.service.ImagemService;
+import com.project.pro.service.IImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ProdutoController extends AbstractController<Produto, ProdutoDTO>{
 
     public static final String PATH = "/produto";
 
-    private final ImagemService imagemService;
+    private final IImagemService imagemService;
 
     @PostMapping
     public ProdutoDTO incluir(@RequestBody ProdutoDTO produtoDTO) {
@@ -36,10 +36,10 @@ public class ProdutoController extends AbstractController<Produto, ProdutoDTO>{
     }
 
     @PostMapping(OperationsPath.ID + "/imagem")
-    public ImagemDTO incluirImagem(@RequestBody MultipartFile file,
+    public ImagemDTO incluirImagem(@RequestBody FileUploadDTO file,
                                    @PathVariable(OperationsParam.ID) Integer idProduto) {
         produtoService.findAndValidate(idProduto);
-        return imagemService.incluir(file, Produto.class, idProduto).toDto();
+        return imagemService.incluirImgur(file, Produto.class, idProduto).toDto();
     }
 
     @GetMapping(OperationsPath.ID + "/imagem")

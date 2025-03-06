@@ -1,4 +1,4 @@
-package com.project.pro.config;
+package com.project.pro.config.context;
 
 
 import org.springframework.data.repository.NoRepositoryBean;
@@ -7,8 +7,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface IContext {
 
     IContext context = new ContextImpl();
-
-    <T> T getBean(Class<T> clazz);
 
     static IContext context() {
         return context;

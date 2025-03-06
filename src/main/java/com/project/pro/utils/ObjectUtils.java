@@ -31,10 +31,9 @@ public class ObjectUtils {
             if (isRelevant(field)) {
                 try {
                     Map<String, Object> changedFields = new HashMap<>();
-                    Method getterMethod = ClassUtils.getGetterMethod(field.getName(), aClass);
 
-                    Object objRetornoOriginal = getterMethod.invoke(originalObject);
-                    Object objRetornoAlterado = getterMethod.invoke(changedObject);
+                    Object objRetornoOriginal = field.get(originalObject);
+                    Object objRetornoAlterado = field.get(changedObject);
 
                     if (Utils.isEmpty(objRetornoOriginal) && Utils.isEmpty(objRetornoAlterado)) {
                         continue;
@@ -67,6 +66,7 @@ public class ObjectUtils {
                     e.printStackTrace();
                 }
             }
+
         }
         return returnMap;
     }

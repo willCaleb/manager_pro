@@ -22,9 +22,11 @@ public class PedidoDTO extends AbstractDTO<Integer, Pedido> {
 
     private EnumStatusPedido statusPedido;
 
-//    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<PedidoItemDTO> itens;
 
     private double distancia;
+
+    private Boolean orcamento;
 
 }

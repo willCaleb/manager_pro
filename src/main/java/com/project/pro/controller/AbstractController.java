@@ -12,6 +12,7 @@ import com.project.pro.service.impl.AbstractService;
 import com.project.pro.service.impl.GenericRepository;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -26,10 +27,8 @@ import javax.persistence.criteria.Predicate;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RestController
@@ -63,8 +62,10 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     public <D extends AbstractDTO, T extends AbstractEntity> List<T> toEntityList(List<D> dtoList, Class<T> clazz) {
         List<T> entityList = new ArrayList<>();
 
+        ModelMapper modelMapper = new ModelMapper();
+
         for (D dto : dtoList) {
-            entityList.add(new ModelMapper().map(dto, clazz));
+            entityList.add(modelMapper.map(dto, clazz));
         }
         return entityList;
     }
@@ -99,16 +100,18 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
 
     public Class<E> getEntityClass() {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        return (Class) genericTypes[0];
+        return (Class<E>) genericTypes[0];
     }
 
     public List<DTO> toDtoList(List<E> entityList) {
-        List retorno = new ArrayList();
-        if (Utils.isEmpty(entityList)) return retorno;
+        List dtoList = new ArrayList();
+        if (Utils.isEmpty(entityList)) return dtoList;
         for (E item : entityList) {
-            retorno.add(((AbstractEntity) item).toDto());
+            Hibernate.initialize(item);
+            DTO dto = item.toDto();
+            dtoList.add(dto);
         }
-        return retorno;
+        return dtoList;
     }
 
     public <I extends AbstractEntity, T extends AbstractDTO> List<T> toDtoList(List<I> entityList, Class<?> clazz) {

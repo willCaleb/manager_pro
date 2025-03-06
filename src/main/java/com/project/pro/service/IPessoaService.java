@@ -1,5 +1,6 @@
 package com.project.pro.service;
 
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.model.entity.Pessoa;
@@ -18,5 +19,5 @@ public interface IPessoaService extends IAbstractService<Pessoa, PessoaDTO, Pess
 
     Endereco getEnderecoPrincipal(Pessoa pessoa);
 
-    Pessoa incluirImagem(Integer idPessoa, MultipartFile file);
+    Pessoa incluirImagem(Integer idPessoa, FileUploadDTO file);
 }

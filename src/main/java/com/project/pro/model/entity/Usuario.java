@@ -1,16 +1,19 @@
 package com.project.pro.model.entity;
 
-import com.project.pro.model.dto.UserDTO;
+import com.project.pro.model.dto.UsuarioDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
-public class User extends AbstractEntity<Integer, UserDTO> {
+@Audited
+@Table(name = "usuario")
+public class Usuario extends AbstractEntity<Integer, UsuarioDTO> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +24,8 @@ public class User extends AbstractEntity<Integer, UserDTO> {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "data_inclusao")
+    private Date dataInclusao;
 
 }

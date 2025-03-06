@@ -45,7 +45,14 @@ public class TituloService extends AbstractService<Titulo, TituloDTO, TituloRepo
         titulo.setCliente(cliente);
         titulo.setProfissional(profissional);
         titulo.setDataInclusao(DateUtils.getDate());
+        calcularValor(titulo);
         titulo.setParcelas(gerarParcelas(titulo));
+    }
+
+    private void calcularValor(Titulo titulo) {
+        titulo.setValor(titulo.getValor()
+                .subtract(Utils.isNotEmpty(titulo.getDescontos()) ? titulo.getDescontos() : BigDecimal.ZERO)
+                .add(Utils.isNotEmpty(titulo.getAcrescimos()) ? titulo.getAcrescimos() : BigDecimal.ZERO));
     }
 
     private void incluirObservacoes(Titulo titulo) {
