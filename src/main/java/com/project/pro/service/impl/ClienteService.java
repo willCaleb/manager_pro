@@ -2,7 +2,7 @@ package com.project.pro.service.impl;
 
 import com.project.pro.config.security.JwtTokenProvider;
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.enums.Role;
+import com.project.pro.enums.EnumRole;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.JwtAuthenticationResponse;
 import com.project.pro.model.beans.LoginRequest;
@@ -11,6 +11,7 @@ import com.project.pro.model.entity.Cliente;
 import com.project.pro.model.entity.Usuario;
 import com.project.pro.pattern.Constants;
 import com.project.pro.repository.ClienteRepository;
+import com.project.pro.repository.RoleRepository;
 import com.project.pro.service.IClienteService;
 import com.project.pro.service.IPessoaService;
 import com.project.pro.service.IUsuarioService;
@@ -40,6 +41,8 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
     private ValidadorCliente validadorCliente = new ValidadorCliente();
     private final PasswordEncoder passwordEncoder;
 
+    private final RoleRepository roleRepository;
+
     private final JwtTokenProvider tokenProvider;
 
     @Transactional
@@ -59,7 +62,12 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
         Usuario usuario = new Usuario();
         usuario.setUsername(cliente.getPessoa().getEmail());
         usuario.setPassword(passwordEncoder.encode(cliente.getPessoa().getSenha()));
+        incluirRole(usuario);
         return usuarioService.incluir(usuario);
+    }
+
+    private void incluirRole(Usuario usuario) {
+        usuario.setRole(roleRepository.findByEnumRole(EnumRole.USER));
     }
 
     @Override
@@ -75,7 +83,7 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication, Role.CLIENTE, Constants.LOGIN_TYPE_CLIENT);
+            String token = tokenProvider.generateToken(authentication, EnumRole.USER, Constants.LOGIN_TYPE_CLIENT);
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");

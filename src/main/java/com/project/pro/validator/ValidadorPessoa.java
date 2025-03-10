@@ -20,7 +20,7 @@ public class ValidadorPessoa implements IValidador<Pessoa>{
         ValidateFields validateFields = new ValidateFields();
 
         validateFields.add(pessoa.getNome(), "Nome");
-        validateFields.add(pessoa.getIdade(), "Idade");
+//        validateFields.add(pessoa.getIdade(), "Idade");
         validateFields.add(pessoa.getCpfCnpj(), "CPF");
 
         validateFields.validate();

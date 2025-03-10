@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "imagem")
+@Table(name = "pro_imagem")
 public class Imagem extends AbstractEntity<Integer, ImagemDTO> {
 
     @Id

@@ -3,7 +3,7 @@ package com.project.pro.service.impl;
 import com.project.pro.config.security.JwtTokenProvider;
 import com.project.pro.context.Context;
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.enums.Role;
+import com.project.pro.enums.EnumRole;
 import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.AgendaBean;
 import com.project.pro.model.beans.IncluirProfissionalBean;
@@ -14,6 +14,7 @@ import com.project.pro.model.dto.ProfissionalDTO;
 import com.project.pro.model.entity.*;
 import com.project.pro.pattern.Constants;
 import com.project.pro.repository.ProfissionalRepository;
+import com.project.pro.repository.RoleRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
 import com.project.pro.utils.Utils;
@@ -34,11 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class ProfissionalService extends AbstractService<Profissional, ProfissionalDTO, ProfissionalRepository> implements IProfissionalService{
+public class ProfissionalService extends AbstractService<Profissional, ProfissionalDTO, ProfissionalRepository> implements IProfissionalService {
 
     private final IPessoaService pessoaService;
     private final IServicoService servicoService;
@@ -51,6 +51,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     private final JwtTokenProvider tokenProvider;
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
 
     @PostConstruct
@@ -76,20 +77,35 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         Usuario usuario = usuarioService.findByUsername(profissionalBean.getEmail());
 
         if (Utils.isNotEmpty(usuario)) {
-            profissional.setUsuario(usuario);
-        }else {
-            Usuario newUsuario = new Usuario();
-            newUsuario.setUsername(profissionalBean.getEmail().toLowerCase());
-            newUsuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
-            Usuario incluir = usuarioService.incluir(newUsuario);
-            profissional.setUsuario(incluir);
+            throw new CustomException(EnumCustomException.USUARIO_EMAIL_JA_CADASTRADO, profissionalBean.getEmail());
         }
+
+        Usuario newUsuario = new Usuario();
+        newUsuario.setUsername(profissionalBean.getEmail().toLowerCase());
+        newUsuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
+        Usuario incluir = usuarioService.incluir(newUsuario);
+
+        profissional.setPessoa(criarPessoa(profissionalBean));
+
+        incluir.setRole(roleRepository.findByEnumRole(EnumRole.PROFESSIONAL));
+
+        profissional.setUsuario(incluir);
 
         validadorProfissional.validarInsert(profissional);
 
-//        enviarEmail(profissional);
+        enviarEmail(profissional);
 
         return profissionalRepository.save(profissional);
+    }
+
+    private Pessoa criarPessoa(IncluirProfissionalBean profissionalBean) {
+        Pessoa pessoa = new Pessoa();
+
+        pessoa.setNome(profissionalBean.getNome());
+        pessoa.setTelefone(profissionalBean.getTelefone());
+        pessoa.setCpfCnpj(profissionalBean.getCpfCnpj());
+
+        return pessoaService.incluir(pessoa);
     }
 
     private void enviarEmail(Profissional profissional) {
@@ -145,7 +161,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
         ServicoProfissional servicoJaCadastrado = servicoProfissionalService.findByProfissionalAndServico(profissional, servico);
 
-        if(Utils.isNotEmpty(servicoJaCadastrado)) {
+        if (Utils.isNotEmpty(servicoJaCadastrado)) {
             throw new CustomException("O profissional " + profissional.getPessoa().getNome() + " já possui esse serviço");
         }
 
@@ -199,8 +215,8 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = tokenProvider.generateToken(authentication, Role.PROFISSIONAL, Constants.LOGIN_TYPE_PROFESSIONAL);
-            if(Utils.isNotEmpty(profissional)) {
+            String token = tokenProvider.generateToken(authentication, EnumRole.PROFESSIONAL, Constants.LOGIN_TYPE_PROFESSIONAL);
+            if (Utils.isNotEmpty(profissional)) {
                 Context.setCurrentProfissional(profissional);
             }
             return ResponseEntity.ok(new JwtAuthenticationResponse(token));

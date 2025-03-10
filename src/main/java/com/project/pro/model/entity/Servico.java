@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "servico")
+@Table(name = "pro_servico")
 public class Servico extends AbstractEntity<Integer, ServicoDTO> {
 
     @Id

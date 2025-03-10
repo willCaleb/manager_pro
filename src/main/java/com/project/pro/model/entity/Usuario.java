@@ -7,12 +7,13 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Audited
-@Table(name = "usuario")
+@Table(name = "pro_usuario")
 public class Usuario extends AbstractEntity<Integer, UsuarioDTO> {
 
     @Id
@@ -27,5 +28,9 @@ public class Usuario extends AbstractEntity<Integer, UsuarioDTO> {
 
     @Column(name = "data_inclusao")
     private Date dataInclusao;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role", referencedColumnName = "id")
+    private Role role;
 
 }

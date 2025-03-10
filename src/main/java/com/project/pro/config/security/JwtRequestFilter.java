@@ -10,6 +10,8 @@ import com.project.pro.service.IProfissionalService;
 import com.project.pro.service.impl.ClienteService;
 import com.project.pro.service.impl.ProfissionalService;
 import com.project.pro.utils.Utils;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,13 +28,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+//    @Autowired
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+//    @Autowired
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
