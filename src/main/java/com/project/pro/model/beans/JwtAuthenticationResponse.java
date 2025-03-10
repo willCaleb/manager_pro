@@ -1,6 +1,5 @@
 package com.project.pro.model.beans;
 
-import com.project.pro.enums.Role;
 import lombok.Data;
 
 @Data

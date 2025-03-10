@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "produto")
+@Table(name = "pro_produto")
 public class Produto extends AbstractEntity<Integer, ProdutoDTO>{
 
     @Id

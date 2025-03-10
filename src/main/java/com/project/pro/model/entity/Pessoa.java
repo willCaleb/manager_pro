@@ -5,6 +5,7 @@ import com.project.pro.enums.EnumClassificacaoPessoa;
 import com.project.pro.enums.EnumTipoPessoa;
 import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
+import com.project.pro.utils.DateUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "pessoa")
+@Table(name = "pro_pessoa")
 public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
 
     @Id
@@ -71,12 +72,13 @@ public class Pessoa extends AbstractEntity<Integer, PessoaDTO> {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "remetente", fetch = FetchType.LAZY)
     private List<Comentario> comentarios;
 
-    public boolean hasId() {
-        return this.id != null;
-    }
-
     @PostLoad
     void setEndereco() {
 
+    }
+
+    @PrePersist
+    private void prePersist() {
+//        this.idade = DateUtils.
     }
 }

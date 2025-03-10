@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "profissional_avaliacao")
+@Table(name = "pro_profissional_avaliacao")
 public class ProfissionalAvaliacao extends AbstractEntity<Integer, ProfissionalAvaliacaoDTO>{
 
     @Id

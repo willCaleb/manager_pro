@@ -2,17 +2,18 @@ package com.project.pro.enums;
 
 import javax.persistence.Converter;
 
-public enum Role implements IEnum<String>{
+public enum EnumRole implements IEnum<String>{
 
-    PROFISSIONAL("PROFISSIONAL", "Profissional"),
-    CLIENTE("CLIENTE", "Cliente"),
-    ADMIN("ADMIN", "Admin")
+    PROFESSIONAL("PROFISSIONAL", "Profissional"),
+    USER("CLIENTE", "Cliente"),
+    ADMIN("ADMIN", "Admin"),
+    ANNONYMOUS("ANNONYMOUS", "Anônimo")
     ;
 
     private final String key;
     private final String value;
 
-    Role(String key, String value) {
+    EnumRole(String key, String value) {
         this.key = key;
         this.value = value;
     }
@@ -28,6 +29,6 @@ public enum Role implements IEnum<String>{
     }
 
     @Converter
-    public static class EnumConverter extends AbstractEnumConverter<Role, String> {
+    public static class EnumConverter extends AbstractEnumConverter<EnumRole, String> {
     }
 }
