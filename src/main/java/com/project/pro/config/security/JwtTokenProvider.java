@@ -1,6 +1,6 @@
 package com.project.pro.config.security;
 
-import com.project.pro.enums.Role;
+import com.project.pro.enums.EnumRole;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ public class JwtTokenProvider {
     private String jwtSecret;
     private int jwtExpirationInMs = 604800000; // 7 dias
 
-    public String generateToken(Authentication authentication, Role role, String userType) {
+    public String generateToken(Authentication authentication, EnumRole enumRole, String userType) {
         User userPrincipal = (User) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -26,7 +26,7 @@ public class JwtTokenProvider {
                 .claim("userType", userType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .setAudience(role.getKey())
+                .setAudience(enumRole.getKey())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

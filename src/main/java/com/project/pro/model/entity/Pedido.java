@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "pedido")
+@Table(name = "pro_pedido")
 public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
 
     @Id

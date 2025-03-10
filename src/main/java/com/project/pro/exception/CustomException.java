@@ -13,10 +13,12 @@ public class CustomException extends RuntimeException {
         super("Ocorreu um erro");
     }
 
+    @Deprecated
     public CustomException(String message) {
         super(message);
     }
 
+    @Deprecated
     public CustomException(String message, Throwable cause) {
         this(MessageExceptionHandler.getMessage(message, cause));
     }
@@ -29,6 +31,7 @@ public class CustomException extends RuntimeException {
         this(MessageExceptionHandler.getMessage(message, arguments));
     }
 
+    @Deprecated
     public CustomException(String message, String argument) {
         this(MessageExceptionHandler.getMessage(message, argument));
     }
@@ -37,6 +40,7 @@ public class CustomException extends RuntimeException {
         this(MessageExceptionHandler.getMessage(customMessage, arguments));
     }
 
+    @Deprecated
     public CustomException(String customMessage, Object... arguments) {
         this(MessageExceptionHandler.getMessage(customMessage, arguments));
     }

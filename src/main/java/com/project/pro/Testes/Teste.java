@@ -1,17 +1,121 @@
 package com.project.pro.Testes;
 
-import com.project.pro.utils.NumericUtils;
+import com.project.pro.model.entity.Role;
+import com.project.pro.model.entity.Usuario;
+import com.project.pro.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
+import javax.persistence.Table;
 import java.util.*;
+import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class Teste {
 
+    private final RoleRepository roleRepository;
 
+    private static void listarClassesNomeTabelaErrado() {
 
-    private static void gerarTabelas() {
+        String packageName = Usuario.class.getPackage().getName();
+
+        packageName = packageName.replace(".", "/");
+
+        Reflections reflections = new Reflections(packageName, Scanners.SubTypes);
+
+        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
+
+        classes.forEach(classe -> System.out.println(classe.getSimpleName()));
+
+        List<Class<?>> semPrefixo = classes.stream()
+                .filter(classe -> classe.isAnnotationPresent(Table.class))
+                .filter(classe -> !classe.getAnnotation(Table.class).name().startsWith("pro_"))
+                .collect(Collectors.toList());
+        semPrefixo.forEach(System.out::println);
+
 
     }
+
+//    public void gerarRoles() {
+//
+//        List<Role> roles = new ArrayList<>();
+//
+//        Role roleUser = new Role();
+//        Role rolePro = new Role();
+//        Role roleAnounymous = new Role();
+//        Role roleRoot = new Role();
+//
+//        roleUser.setEnumRole(EnumRole.USER);
+//        rolePro.setEnumRole(EnumRole.PROFESSIONAL);
+//        roleAnounymous.setEnumRole(EnumRole.ANONYMOUS);
+//        roleRoot.setEnumRole(EnumRole.ROOT);
+//
+//        roles.add(roleUser);
+//        roles.add(rolePro);
+//        roles.add(roleAnounymous);
+//        roles.add(roleRoot);
+//
+//        roleRepository.saveAll(roles);
+//
+//    }
+
+
+
+//    public static void main(String[] args) {
+//        listarClassesNomeTabelaErrado();
+//    }
+
+//    public static void main(String[] args) {
+//        String packageName = Usuario.class.getPackage().getName();
+//        String path = packageName.replace('.', '/');
+//
+//        URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
+//        if (resource == null) {
+//            System.out.println("Pacote não encontrado!");
+//            return;
+//        }
+//
+//        File directory = new File(resource.getFile());
+//        if (!directory.exists()) {
+//            System.out.println("Diretório não encontrado: " + directory.getAbsolutePath());
+//            return;
+//        }
+//
+//        for (String file : Objects.requireNonNull(directory.list())) {
+//            System.out.println(file);
+//        }
+//    }
+
+//    public static void main(String[] args) {
+//        List<Class<?>> classes = getClassesInSamePackage(Usuario.class);
+//
+//        if (classes.isEmpty()) {
+//            System.out.println("Nenhuma classe encontrada.");
+//        } else {
+//             classes.stream()
+//                    .filter(classe -> classe.isAnnotationPresent(Table.class))
+//                    .filter(classe -> !classe.getAnnotation(Table.class).name().startsWith("pro_"))
+//                    .forEach(System.out::println);
+//
+//        }
+//    }
+//
+//    public static List<Class<?>> getClassesInSamePackage(Class<?> baseClass) {
+//        Reflections reflections = new Reflections(
+//                baseClass.getPackage().getName(), Scanners.SubTypes
+//        );
+//
+//        Set<Class<? extends AbstractEntity>> classSet = reflections.getSubTypesOf(AbstractEntity.class);
+//
+//        return classSet.stream().collect(Collectors.toList());
+//    }
+//
+//    private static void gerarTabelas() {
+//
+//    }
 
 //    public static void desenharQuadrado(Integer width) {
 //

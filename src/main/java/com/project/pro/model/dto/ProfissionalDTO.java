@@ -36,6 +36,9 @@ public class ProfissionalDTO extends AbstractDTO<Integer, Profissional> {
     @OnlyField(fields = {"nota", "descricao", "files", "dataInclusao"})
     private List<ProfissionalAvaliacaoDTO> avaliacoes;
 
+    @OnlyField(fields = {"id", "username", "role"})
+    private UsuarioDTO usuario;
+
     List<ServicoProfissionalDTO> servicos;
 
 }
