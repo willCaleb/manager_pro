@@ -90,6 +90,6 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
             throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
         }
 
-        Cliente cliente = clienteRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));        return cliente;
+        return clienteRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
     }
 }
