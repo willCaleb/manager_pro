@@ -7,41 +7,41 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class CustomException extends RuntimeException {
+public class CustomRuntimeException extends RuntimeException {
 
-    public CustomException() {
+    public CustomRuntimeException() {
         super("Ocorreu um erro");
     }
 
     @Deprecated
-    public CustomException(String message) {
+    public CustomRuntimeException(String message) {
         super(message);
     }
 
     @Deprecated
-    public CustomException(String message, Throwable cause) {
+    public CustomRuntimeException(String message, Throwable cause) {
         this(MessageExceptionHandler.getMessage(message, cause));
     }
 
-    public CustomException(Throwable cause) {
+    public CustomRuntimeException(Throwable cause) {
         this(MessageExceptionHandler.getMessage(cause));
     }
 
-    public CustomException(String message, List<String> arguments) {
+    public CustomRuntimeException(String message, List<String> arguments) {
         this(MessageExceptionHandler.getMessage(message, arguments));
     }
 
     @Deprecated
-    public CustomException(String message, String argument) {
+    public CustomRuntimeException(String message, String argument) {
         this(MessageExceptionHandler.getMessage(message, argument));
     }
 
-    public CustomException(EnumCustomException customMessage, Object... arguments) {
+    public CustomRuntimeException(EnumCustomException customMessage, Object... arguments) {
         this(MessageExceptionHandler.getMessage(customMessage, arguments));
     }
 
     @Deprecated
-    public CustomException(String customMessage, Object... arguments) {
+    public CustomRuntimeException(String customMessage, Object... arguments) {
         this(MessageExceptionHandler.getMessage(customMessage, arguments));
     }
 }

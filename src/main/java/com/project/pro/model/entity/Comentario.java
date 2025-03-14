@@ -24,10 +24,10 @@ public class Comentario extends AbstractEntity<Integer, ComentarioDTO> {
     @Column(name = "titulo")
     private String titulo;
 
-    @Column(name = "dataInclusao")
+    @Column(name = "data_inclusao")
     private Date dataInclusao;
 
-    @Column(name = "dataAlteracao")
+    @Column(name = "data_alteracao")
     private Date dataAlteracao;
 
     @Column(name = "publico")

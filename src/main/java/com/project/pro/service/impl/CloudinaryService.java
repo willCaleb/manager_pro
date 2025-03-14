@@ -2,7 +2,7 @@ package com.project.pro.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.service.ICloudinaryService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CloudinaryService implements ICloudinaryService {
             return cloudinary.uploader().upload(decodedImage, ObjectUtils.asMap("folder", folder));
 
         }catch (Exception ex) {
-            throw new CustomException(ex.getMessage());
+            throw new CustomRuntimeException(ex.getMessage());
         }
     }
 }

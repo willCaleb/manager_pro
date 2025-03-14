@@ -6,7 +6,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
@@ -78,7 +78,7 @@ public class ImgurService implements IImgurService {
 
             return response;
         } catch (UnirestException e) {
-            throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_GERAR_TOKEN, e.getMessage());
+            throw new CustomRuntimeException(EnumCustomException.IMGUR_IMPOSSIVEL_GERAR_TOKEN, e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class ImgurService implements IImgurService {
             return objectMapper.readValue(request.getRawBody(), ImgurReturnList.class);
 
         } catch (Exception e) {
-            throw new CustomException("Não foi possível obter as imagens do usuario {0}", username);
+            throw new CustomRuntimeException("Não foi possível obter as imagens do usuario {0}", username);
         }
     }
 
@@ -118,7 +118,7 @@ public class ImgurService implements IImgurService {
                     .header("Authorization", "Client-ID " + clientId)
                     .asString();
         } catch (UnirestException e) {
-            throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_RECUPERAR_CONTA, e.getMessage());
+            throw new CustomRuntimeException(EnumCustomException.IMGUR_IMPOSSIVEL_RECUPERAR_CONTA, e.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class ImgurService implements IImgurService {
             return imgurReturn;
 
         } catch (IOException e) {
-            throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD, e.getMessage());
+            throw new CustomRuntimeException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD, e.getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ public class ImgurService implements IImgurService {
                     .build();
             return client.newCall(request).execute();
         } catch (IOException e) {
-            throw new CustomException(EnumCustomException.IMGUR_NAO_FOI_POSSIVEL_EXCUIR);
+            throw new CustomRuntimeException(EnumCustomException.IMGUR_NAO_FOI_POSSIVEL_EXCUIR);
         }
     }
 }

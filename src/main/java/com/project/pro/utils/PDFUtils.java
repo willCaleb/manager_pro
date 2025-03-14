@@ -3,9 +3,8 @@ package com.project.pro.utils;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.classes.PdfPageEvent;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -56,7 +55,7 @@ public class PDFUtils {
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 
         }catch (Exception e) {
-            throw new CustomException("Não foi possível gerar PDF");
+            throw new CustomRuntimeException("Não foi possível gerar PDF");
         }
 
     }

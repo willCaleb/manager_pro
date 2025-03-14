@@ -1,7 +1,7 @@
 package com.project.pro.validator;
 
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.Pessoa;
 import com.project.pro.repository.PessoaRepository;
 import com.project.pro.utils.ListUtils;
@@ -36,12 +36,12 @@ public class ValidadorPessoa implements IValidador<Pessoa>{
     public void validarCpf(Pessoa pessoa) {
         boolean isValidCpf = ValidadorCpf.isValidCpf(pessoa.getCpfCnpj());
         if (!isValidCpf) {
-            throw new CustomException(EnumCustomException.CPF_INVALIDO, pessoa.getCpfCnpj());
+            throw new CustomRuntimeException(EnumCustomException.CPF_INVALIDO, pessoa.getCpfCnpj());
         }
 
         Pessoa pessoaCad = pessoaRepository.findByCpfCnpj(pessoa.getCpfCnpj());
         if (Utils.isNotEmpty(pessoaCad)) {
-            throw new CustomException("Pessoa já cadastrada com o CPF ", pessoa.getCpfCnpj());
+            throw new CustomRuntimeException("Pessoa já cadastrada com o CPF ", pessoa.getCpfCnpj());
         }
     }
 
@@ -49,7 +49,7 @@ public class ValidadorPessoa implements IValidador<Pessoa>{
         List<Pessoa> pessoasDuplicadas = pessoaRepository.findAllByCpfCnpj(pessoa.getCpfCnpj());
 
         if (ListUtils.isNotNullOrEmpty(pessoasDuplicadas)) {
-            throw new CustomException(EnumCustomException.PESSOA_CPF_JA_CADASTRADO, pessoa.getCpfCnpj());
+            throw new CustomRuntimeException(EnumCustomException.PESSOA_CPF_JA_CADASTRADO, pessoa.getCpfCnpj());
         }
     }
 

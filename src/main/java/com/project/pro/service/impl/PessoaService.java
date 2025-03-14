@@ -49,11 +49,11 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pessoa incluir(Pessoa pessoa) {
+        validadorPessoa.validarInsert(pessoa);
+
         pessoa.setDataInclusao(DateUtils.getDate());
 
         incluirImagemPerfil(pessoa);
-
-        validadorPessoa.validarInsert(pessoa);
 
         List<Endereco> enderecos = pessoa.getEnderecos();
 
@@ -111,8 +111,8 @@ public class PessoaService extends AbstractService<Pessoa, PessoaDTO, PessoaRepo
 
     private void incluirImagemPerfil(Pessoa pessoa) {
         if (Utils.isNotEmpty(pessoa.getImagemPerfil())) {
-            ImgurReturn IReturn = imgurService.upload(pessoa.getFile());
-            pessoa.setImagemPerfil(IReturn.getData().getLink());
+            ImgurReturn imgurReturn = imgurService.upload(pessoa.getFile());
+            pessoa.setImagemPerfil(imgurReturn.getData().getLink());
         }
     }
 

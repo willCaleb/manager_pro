@@ -1,14 +1,12 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.dto.CategoriaDTO;
 import com.project.pro.model.entity.Categoria;
 import com.project.pro.repository.CategoriaRepository;
 import com.project.pro.service.ICategoriaService;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorCategoria;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +50,7 @@ public class CategoriaService extends AbstractService<Categoria, CategoriaDTO, C
 
             if (optcategoria.isPresent()) {
                 Categoria categoriaManaged = optcategoria.get();
-                throw new CustomException("Já existe uma categoria com o nome ", categoriaManaged.getNome());
+                throw new CustomRuntimeException("Já existe uma categoria com o nome ", categoriaManaged.getNome());
             }
         }
     }

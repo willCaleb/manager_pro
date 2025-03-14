@@ -1,7 +1,7 @@
 package com.project.pro.validator;
 
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.Usuario;
 import com.project.pro.repository.UsuarioRepository;
 import com.project.pro.utils.StringUtil;
@@ -31,7 +31,7 @@ public class ValidadorUsuario implements IValidador<Usuario>{
     }
     private void validarEmail(Usuario usuario) {
         if(!StringUtil.isValidEmail(usuario.getUsername())) {
-            throw new CustomException(EnumCustomException.EMAIL_INVALIDO);
+            throw new CustomRuntimeException(EnumCustomException.EMAIL_INVALIDO);
         }
     }
 
@@ -39,7 +39,7 @@ public class ValidadorUsuario implements IValidador<Usuario>{
         Usuario usuarioManaged = usuarioRepository.findByUsername(usuario.getUsername());
 
         if(Utils.isNotEmpty(usuarioManaged)) {
-            throw new CustomException(EnumCustomException.EMAIL_JA_CADASTRADO);
+            throw new CustomRuntimeException(EnumCustomException.EMAIL_JA_CADASTRADO);
         }
     }
 }

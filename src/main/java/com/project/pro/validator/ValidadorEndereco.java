@@ -1,12 +1,11 @@
 package com.project.pro.validator;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.NumericUtils;
 import com.project.pro.utils.StringUtil;
-import com.project.pro.utils.Utils;
 
 import java.util.List;
 
@@ -45,13 +44,13 @@ public class ValidadorEndereco implements IValidador<Endereco>{
         Integer numero = endereco.getNumero();
         List<Endereco> enderecos = enderecoRepository.findAllByPessoaAndLogradouroAndNumero(endereco.getPessoa(), logradouro, numero);
         if (ListUtils.isNotNullOrEmpty(enderecos)) {
-            throw new CustomException("Esse endereço já está cadastrado para ", endereco.getPessoa().getNome());
+            throw new CustomRuntimeException("Esse endereço já está cadastrado para ", endereco.getPessoa().getNome());
         }
     }
 
     public void validarUnicoPrincipal(List<Endereco> enderecos) {
         if (NumericUtils.isGreater(enderecos.size(), 1)) {
-            throw new CustomException("Apenas um endereço deve ser marcado como principal.");
+            throw new CustomRuntimeException("Apenas um endereço deve ser marcado como principal.");
         }
     }
 }

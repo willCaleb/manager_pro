@@ -1,6 +1,6 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.IGoogleMapsService;
@@ -49,7 +49,7 @@ public class GoogleMapsService implements IGoogleMapsService{
             return map.getGeometria();
         }
 
-        throw new CustomException("Não foi possível encontrar coordenadas");
+        throw new CustomRuntimeException("Não foi possível encontrar coordenadas");
     }
 
     private String enderecoToGeocode(Endereco endereco) {

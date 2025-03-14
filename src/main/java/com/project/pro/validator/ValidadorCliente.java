@@ -1,9 +1,6 @@
 package com.project.pro.validator;
 
-import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
 import com.project.pro.model.entity.Cliente;
-import com.project.pro.utils.Utils;
 
 public class ValidadorCliente implements IValidador<Cliente>{
     @Override

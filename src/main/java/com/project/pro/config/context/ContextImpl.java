@@ -1,12 +1,10 @@
 package com.project.pro.config.context;
 
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +26,7 @@ public class ContextImpl implements ApplicationContextAware, IContext{
             S bean = context.getAutowireCapableBeanFactory().getBean(clazz);
             return bean;
         }catch (Exception e) {
-            throw new CustomException(e.getMessage());
+            throw new CustomRuntimeException(e.getMessage());
         }
     }
 }

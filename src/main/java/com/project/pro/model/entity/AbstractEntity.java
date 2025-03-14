@@ -2,7 +2,7 @@ package com.project.pro.model.entity;
 
 import com.project.pro.annotation.DtoFieldIgnore;
 import com.project.pro.annotation.OnlyField;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.IIdentificador;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.utils.ClassUtils;
@@ -54,7 +54,7 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                         try {
                             Method getterMethod = ClassUtils.getGetterMethod(field.getName(), entity.getClass());
                             if (Utils.isEmpty(getterMethod)) {
-                                throw new CustomException("O campo não reconhecido: " + field.getName() + entity.getClass().getSimpleName());
+                                throw new CustomRuntimeException("O campo não reconhecido: " + field.getName() + entity.getClass().getSimpleName());
                             }
                             Method setterMethod = ClassUtils.getSetterMethod(field.getName(), dtoReturn.getClass());
                             Object invoke = getterMethod.invoke(entity);

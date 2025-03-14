@@ -1,6 +1,6 @@
 package com.project.pro.utils;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.ICepService;
@@ -35,7 +35,7 @@ public class DistanceUtil {
                     endereco.setBairro(Utils.nvl(enderecoByCep.getBairro(), "Sem bairro"));
                 }
             } catch (Exception e) {
-                throw new CustomException("Não foi possível encontrar o CEP ", endereco.getCep());
+                throw new CustomRuntimeException("Não foi possível encontrar o CEP ", endereco.getCep());
             }
         }
     }
@@ -48,7 +48,7 @@ public class DistanceUtil {
                 endereco.setLatitude(geometria.getLatitude());
                 endereco.setLongitude(geometria.getLongitude());
             } else {
-                throw new CustomException("Por favor atualize as informações de endereço");
+                throw new CustomRuntimeException("Por favor atualize as informações de endereço");
             }
         }
     }

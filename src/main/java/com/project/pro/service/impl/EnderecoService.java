@@ -1,6 +1,6 @@
 package com.project.pro.service.impl;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.GoogleMaps;
 import com.project.pro.model.dto.EnderecoDTO;
 import com.project.pro.model.entity.Endereco;
@@ -9,11 +9,9 @@ import com.project.pro.repository.EnderecoRepository;
 import com.project.pro.service.IEnderecoService;
 import com.project.pro.utils.DistanceUtil;
 import com.project.pro.utils.ListUtils;
-import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorEndereco;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +94,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
             endereco.setLongitude(geometria.getLongitude());
             getRepository().save(endereco);
         } else {
-            throw new CustomException("O endereço não possui CEP e não é possível localizar as coordenadas");
+            throw new CustomRuntimeException("O endereço não possui CEP e não é possível localizar as coordenadas");
         }
     }
 

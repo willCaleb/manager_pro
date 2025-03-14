@@ -1,7 +1,7 @@
 package com.project.pro.validator;
 
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.ProfissionalAvaliacao;
 import com.project.pro.repository.ProfissionalAvaliacaoRepository;
 import com.project.pro.utils.Utils;
@@ -36,7 +36,7 @@ public class ValidadorProfissionalAvaliacao implements IValidador<ProfissionalAv
         );
 
         if (Utils.isNotEmpty(byProfissionalAndCliente)) {
-            throw new CustomException(EnumCustomException.AVALIACAO_PROFISSIONAL_JA_AVALIADO);
+            throw new CustomRuntimeException(EnumCustomException.AVALIACAO_PROFISSIONAL_JA_AVALIADO);
         }
 
     }

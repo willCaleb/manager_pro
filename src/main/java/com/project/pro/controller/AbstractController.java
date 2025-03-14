@@ -1,6 +1,6 @@
 package com.project.pro.controller;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.exception.ErrorResponse;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
@@ -43,9 +43,9 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
         genericRepository.setEntityClass(getEntityClass());
     }
 
-    @ExceptionHandler(value = CustomException.class)
+    @ExceptionHandler(value = CustomRuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleCustomException(CustomException ex) {
+    public ErrorResponse handleCustomException(CustomRuntimeException ex) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     public DTO findById(@PathVariable("id") Integer id) {
 
         E retorno = (E) getRepository(getEntityClass()).findById(id).orElseGet(() -> {
-            throw new CustomException("Não foi encontrado " + getEntityClass().getSimpleName() + " com o id " + id);
+            throw new CustomRuntimeException("Não foi encontrado " + getEntityClass().getSimpleName() + " com o id " + id);
         });
         return retorno.toDto();
     }

@@ -1,7 +1,8 @@
 package com.project.pro.service.impl;
 
+import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumStatusAgenda;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.AgendaBean;
 import com.project.pro.model.dto.AgendaDTO;
 import com.project.pro.model.entity.Agenda;
@@ -56,9 +57,13 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
         Agenda agendaManaged = findAndValidate(idAgenda);
 
         if (!Utils.equals(agendaManaged.getDataInicio(), agenda.getDataInicio()) || !Utils.equals(agendaManaged.getDataFim(), agenda.getDataFim())) {
+            verificarDisponibilidadeHorario(agenda);
 
+            agendaManaged.setDataInicio(agenda.getDataInicio());
+            agendaManaged.setDataFim(agenda.getDataFim());
+            agendaManaged.setStatus(agenda.getStatus());
         }
-        return null;
+        return agendaRepository.save(agendaManaged);
     }
 
     @Override
@@ -69,7 +74,7 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
         List<Agenda> agenda = agendaRepository.buscarAgendaEntreHorarios(horaInicio, horaFim, profissional.getId());
 
         if (Utils.isNotEmpty(agenda)) {
-            throw new CustomException("Horário indisponível para o profissional {0}.", profissional.getPessoa().getNome());
+            throw new CustomRuntimeException(EnumCustomException.AGENDA_HORARIO_INDISPONIVEL, profissional.getPessoa().getNome());
         }
     }
 

@@ -3,7 +3,7 @@ package com.project.pro.service.impl;
 import com.project.pro.config.security.JwtTokenProvider;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumRole;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.JwtAuthenticationResponse;
 import com.project.pro.model.beans.LoginRequest;
 import com.project.pro.model.dto.ClienteDTO;
@@ -95,9 +95,9 @@ public class ClienteService extends AbstractService<Cliente, ClienteDTO, Cliente
         Usuario usuario = usuarioService.findByUsername(username);
 
         if (Utils.isEmpty(usuario)) {
-            throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
+            throw new CustomRuntimeException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
         }
 
-        return clienteRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
+        return clienteRepository.findByUsuario(usuario).orElseThrow(() -> new CustomRuntimeException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
     }
 }

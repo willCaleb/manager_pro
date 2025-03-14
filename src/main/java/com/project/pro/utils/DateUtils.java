@@ -2,9 +2,8 @@ package com.project.pro.utils;
 
 import com.project.pro.enums.DatePattern;
 import com.project.pro.enums.EnumDateFormat;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -87,7 +86,7 @@ public class DateUtils {
 
             return dateFormat.parse(format);
         } catch (ParseException e) {
-            throw new CustomException(e);
+            throw new CustomRuntimeException(e);
         }
     }
 

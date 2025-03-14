@@ -2,25 +2,21 @@ package com.project.pro.service.impl;
 
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumStatusPedido;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.dto.PedidoDTO;
 import com.project.pro.model.entity.*;
 import com.project.pro.repository.PedidoRepository;
 import com.project.pro.service.*;
 import com.project.pro.utils.DateUtils;
 import com.project.pro.utils.PDFUtils;
-import com.project.pro.utils.StringUtil;
 import com.project.pro.utils.Utils;
 import com.project.pro.validator.ValidadorPedido;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
@@ -112,12 +108,12 @@ public class PedidoService extends AbstractService<Pedido, PedidoDTO, PedidoRepo
         List<PedidoItem> allByPedido = pedidoItemService.findAllByPedido(pedido);
 
         if (EnumStatusPedido.FINALIZADO.equals(pedido.getStatusPedido())) {
-            throw new CustomException(EnumCustomException.PEDIDO_FINALIZADO);
+            throw new CustomRuntimeException(EnumCustomException.PEDIDO_FINALIZADO);
         }
 
         for (PedidoItem pedidoItem : allByPedido) {
             if (!Utils.equals(EnumStatusPedido.FINALIZADO, pedidoItem.getStatus())) {
-                throw new CustomException(EnumCustomException.PEDIDO_NAO_E_POSSIVEL_FINALIZAR);
+                throw new CustomRuntimeException(EnumCustomException.PEDIDO_NAO_E_POSSIVEL_FINALIZAR);
             }
         }
         pedido.setStatusPedido(EnumStatusPedido.FINALIZADO);

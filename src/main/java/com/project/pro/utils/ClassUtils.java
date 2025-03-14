@@ -1,15 +1,11 @@
 package com.project.pro.utils;
 
-import com.project.pro.exception.CustomException;
-import com.project.pro.model.entity.Profissional;
+import com.project.pro.exception.CustomRuntimeException;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.*;
-import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,7 +48,7 @@ public class ClassUtils {
             return clazz.cast(newInstance);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomException("Não foi possível copiar o objeto.");
+            throw new CustomRuntimeException("Não foi possível copiar o objeto.");
         }
     }
 
@@ -68,13 +64,13 @@ public class ClassUtils {
             if (Utils.isNotEmpty(constructor)) {
                 return constructor.newInstance();
             } else {
-                throw new CustomException("Não foi possível criar nova instância de " + clazz.getName());
+                throw new CustomRuntimeException("Não foi possível criar nova instância de " + clazz.getName());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        throw new CustomException("Não foi possível criar nova instância de ", clazz.getName());
+        throw new CustomRuntimeException("Não foi possível criar nova instância de ", clazz.getName());
     }
 
     public static List<Field> getFieldsAsList(Class<?> clazz) {

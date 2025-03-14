@@ -1,12 +1,11 @@
 package com.project.pro.validator;
 
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.Pessoa;
 import com.project.pro.model.entity.Profissional;
 import com.project.pro.repository.ProfissionalRepository;
 import com.project.pro.service.IPessoaService;
-import com.project.pro.service.impl.PessoaService;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.Utils;
 
@@ -38,7 +37,7 @@ public class ValidadorProfissional implements IValidador<Profissional> {
         validarCpf(profissional);
         Profissional byCpf = profissionalRepository.findByCpf(profissional.getCpf());
         if (Utils.isNotEmpty(byCpf)) {
-            throw new CustomException(EnumCustomException.PROFISSIONAL_CPF_JA_CADASTRADO, profissional.getCpf());
+            throw new CustomRuntimeException(EnumCustomException.PROFISSIONAL_CPF_JA_CADASTRADO, profissional.getCpf());
         }
     }
 
@@ -57,14 +56,14 @@ public class ValidadorProfissional implements IValidador<Profissional> {
             List<Profissional> validateList = profissionalRepository.findAllByPessoa(pessoa);
 
             if (ListUtils.isNotNullOrEmpty(validateList)) {
-                throw new CustomException(EnumCustomException.PROFISSIONAL_JA_CADASTRADO_PESSOA, pessoa.getNome());
+                throw new CustomRuntimeException(EnumCustomException.PROFISSIONAL_JA_CADASTRADO_PESSOA, pessoa.getNome());
             }
         }
     }
 
     public void validarCpf(Profissional profissional) {
         if (!ValidadorCpf.isValidCpf(profissional.getCpf())) {
-            throw new CustomException(EnumCustomException.CPF_INVALIDO);
+            throw new CustomRuntimeException(EnumCustomException.CPF_INVALIDO);
         }
     }
 }

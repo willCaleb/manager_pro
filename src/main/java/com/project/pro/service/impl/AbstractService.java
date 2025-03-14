@@ -3,7 +3,7 @@ package com.project.pro.service.impl;
 import com.project.pro.config.context.ContextImpl;
 import com.project.pro.config.context.IContext;
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.model.entity.Cliente;
@@ -55,7 +55,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
     }
 
     public Cliente getCliente() {
-        return clienteRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
+        return clienteRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomRuntimeException(EnumCustomException.CLIENTE_NAO_CADASTRADO));
     }
 
     public Usuario getUsuario() {
@@ -63,18 +63,18 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
         if (principal instanceof UserDetails) {
             return usuarioRepository.findByUsername(((UserDetails) principal).getUsername());
         }
-        throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
+        throw new CustomRuntimeException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
     }
 
     public Profissional getProfissional() {
-        return profissionalRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
+        return profissionalRepository.findByUsuario(getUsuario()).orElseThrow(() -> new CustomRuntimeException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
     }
 
     public <R extends AbstractEntity<?, ?>, ID>JpaRepository getRepository(Class<R> clazz) {
         repositories = new Repositories(applicationContext);
         return (JpaRepository<R, ID>) repositories
                 .getRepositoryFor(clazz)
-                .orElseThrow(() -> new CustomException("Repositório não encontrado {0} ", clazz.getSimpleName()));
+                .orElseThrow(() -> new CustomRuntimeException("Repositório não encontrado {0} ", clazz.getSimpleName()));
     }
 
     public void editar(E abstractEntity, Integer idEntityManaged) {
@@ -87,7 +87,7 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
         repositories = new Repositories(applicationContext);
         return (JpaSpecificationExecutor<E>) repositories
                 .getRepositoryFor(clazz)
-                .orElseThrow(() -> new CustomException("Specification repository não encontrado."));
+                .orElseThrow(() -> new CustomRuntimeException("Specification repository não encontrado."));
     }
 
     public <E extends AbstractEntity<?,?>> JpaSpecificationExecutor<E> getSpecificationRepository() {
@@ -99,9 +99,17 @@ public abstract class AbstractService<E extends AbstractEntity<?, DTO>, DTO exte
         return getRepository(entityClass);
     }
 
+    public E save(E entity) {
+        return getRepository().save(entity);
+    }
+
+    public void delete(E entity) {
+        getRepository().delete(entity);
+    }
+
     public E findAndValidate(Integer id) {
         return (E) getRepository()
-                .findById(id).orElseThrow(() -> new CustomException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id));
+                .findById(id).orElseThrow(() -> new CustomRuntimeException("Não foi encontrado " + entityClass.getSimpleName() + " com o id " + id));
     }
 
     public <S extends AbstractService> S getService(Class<S> clazz) {

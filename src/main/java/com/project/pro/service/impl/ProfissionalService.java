@@ -4,7 +4,7 @@ import com.project.pro.config.security.JwtTokenProvider;
 import com.project.pro.context.Context;
 import com.project.pro.enums.EnumCustomException;
 import com.project.pro.enums.EnumRole;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.AgendaBean;
 import com.project.pro.model.beans.IncluirProfissionalBean;
 import com.project.pro.model.beans.JwtAuthenticationResponse;
@@ -68,34 +68,47 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Profissional incluir(IncluirProfissionalBean profissionalBean) {
 
+        Usuario usuarioCadastrado = usuarioService.findByUsername(profissionalBean.getEmail());
+
+        validarUsuarioJaCadastrado(profissionalBean, usuarioCadastrado);
+
+        Profissional profissional = getProfissional(profissionalBean);
+
+        profissional.setUsuario(criarUsuario(profissionalBean));
+
+        profissional.setPessoa(criarPessoa(profissionalBean));
+
+        validadorProfissional.validarInsert(profissional);
+
+        Profissional profissionalSalvo = profissionalRepository.save(profissional);
+
+        enviarEmail(profissional);
+
+        return profissionalSalvo;
+
+    }
+
+    private static Profissional getProfissional(IncluirProfissionalBean profissionalBean) {
         Profissional profissional = new Profissional();
 
         profissional.setCpf(profissionalBean.getCpfCnpj());
         profissional.setEmail(profissionalBean.getEmail());
         profissional.setMultiploAgendamento(Boolean.FALSE);
+        return profissional;
+    }
 
-        Usuario usuario = usuarioService.findByUsername(profissionalBean.getEmail());
+    private Usuario criarUsuario(IncluirProfissionalBean profissionalBean) {
+        Usuario usuario = new Usuario();
+        usuario.setUsername(profissionalBean.getEmail().toLowerCase());
+        usuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
+        usuario.setRole(roleRepository.findByEnumRole(EnumRole.PROFESSIONAL));
+        return usuarioService.incluir(usuario);
+    }
 
+    private static void validarUsuarioJaCadastrado(IncluirProfissionalBean profissionalBean, Usuario usuario) {
         if (Utils.isNotEmpty(usuario)) {
-            throw new CustomException(EnumCustomException.USUARIO_EMAIL_JA_CADASTRADO, profissionalBean.getEmail());
+            throw new CustomRuntimeException(EnumCustomException.USUARIO_EMAIL_JA_CADASTRADO, profissionalBean.getEmail());
         }
-
-        Usuario newUsuario = new Usuario();
-        newUsuario.setUsername(profissionalBean.getEmail().toLowerCase());
-        newUsuario.setPassword(passwordEncoder.encode(profissionalBean.getSenha()));
-        Usuario incluir = usuarioService.incluir(newUsuario);
-
-        profissional.setPessoa(criarPessoa(profissionalBean));
-
-        incluir.setRole(roleRepository.findByEnumRole(EnumRole.PROFESSIONAL));
-
-        profissional.setUsuario(incluir);
-
-        validadorProfissional.validarInsert(profissional);
-
-        enviarEmail(profissional);
-
-        return profissionalRepository.save(profissional);
     }
 
     private Pessoa criarPessoa(IncluirProfissionalBean profissionalBean) {
@@ -162,7 +175,7 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         ServicoProfissional servicoJaCadastrado = servicoProfissionalService.findByProfissionalAndServico(profissional, servico);
 
         if (Utils.isNotEmpty(servicoJaCadastrado)) {
-            throw new CustomException("O profissional " + profissional.getPessoa().getNome() + " já possui esse serviço");
+            throw new CustomRuntimeException("O profissional " + profissional.getPessoa().getNome() + " já possui esse serviço");
         }
 
         ServicoProfissional servicoProfissional = new ServicoProfissional();
@@ -229,12 +242,12 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
         Usuario usuario = usuarioService.findByUsername(username);
 
         if (Utils.isEmpty(usuario)) {
-            throw new CustomException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
+            throw new CustomRuntimeException(EnumCustomException.USUARIO_NAO_ENCONTRADO);
         }
-        return profissionalRepository.findByUsuario(usuario).orElseThrow(() -> new CustomException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
+        return profissionalRepository.findByUsuario(usuario).orElseThrow(() -> new CustomRuntimeException(EnumCustomException.PROFISSIONAL_NAO_ENCONTRADO));
     }
 
     public Profissional findByEmail(String email) {
-        return profissionalRepository.findByEmail(email).orElseThrow(() -> new CustomException("Profissional com o email {0} não encontrado!", email));
+        return profissionalRepository.findByEmail(email).orElseThrow(() -> new CustomRuntimeException("Profissional com o email {0} não encontrado!", email));
     }
 }

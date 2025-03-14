@@ -1,11 +1,10 @@
 package com.project.pro.service.impl;
 
 import com.google.gson.Gson;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.beans.EnderecoByCepBean;
 import com.project.pro.model.entity.Endereco;
 import com.project.pro.service.ICepService;
-import com.project.pro.utils.CepUtil;
 import com.project.pro.utils.JsonUtil;
 import com.project.pro.utils.Utils;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class CepService implements ICepService{
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
             if (!Utils.equals(HttpStatus.OK.value(), conexao.getResponseCode()))
-                throw new CustomException("HTTP error code : " + conexao.getResponseCode());
+                throw new CustomRuntimeException("HTTP error code : " + conexao.getResponseCode());
 
             BufferedReader resposta = new BufferedReader(new InputStreamReader((conexao.getInputStream())));
             String jsonEmString = JsonUtil.converteJsonEmString(resposta);
@@ -40,7 +39,7 @@ public class CepService implements ICepService{
 
             return getEndereco(cep, enderecoByCep);
         } catch (Exception e) {
-            throw new CustomException("ERRO: " + e);
+            throw new CustomRuntimeException("ERRO: " + e);
         }
     }
 

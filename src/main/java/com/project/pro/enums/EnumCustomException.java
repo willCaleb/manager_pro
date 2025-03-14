@@ -25,7 +25,8 @@ public enum EnumCustomException {
     EMAIL_INVALIDO("O e-mail informado não é válido."),
     PROFISSIONAL_NAO_ENCONTRADO("Não foi encontrado profissional com o e-mail informado."),
     CLIENTE_NAO_CADASTRADO("Não foi possível localizar registro de cliente com o e-mail informado."),
-    USUARIO_EMAIL_JA_CADASTRADO("Já existe um usuário com o e-mail {0} cadastrado.");
+    USUARIO_EMAIL_JA_CADASTRADO("Já existe um usuário com o e-mail {0} cadastrado."),
+    AGENDA_HORARIO_INDISPONIVEL("Horário indisponível para o profissional {0}.");
 
     private final String message;
 

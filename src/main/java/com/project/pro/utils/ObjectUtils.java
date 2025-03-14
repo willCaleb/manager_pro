@@ -1,7 +1,7 @@
 package com.project.pro.utils;
 
 import com.project.pro.enums.EnumCustomException;
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.AbstractEntity;
 import com.project.pro.pattern.Constants;
 import com.project.pro.pattern.OperationsParam;
@@ -19,7 +19,7 @@ public class ObjectUtils {
     public static <T> Map<String, Map<String, Object>> getDifferences(T originalObject, T changedObject) {
 
         if (!ClassUtils.isSameClass(originalObject, changedObject)) {
-            throw new CustomException(EnumCustomException.OBJETOS_CLASSES_DIFERENTES);
+            throw new CustomRuntimeException(EnumCustomException.OBJETOS_CLASSES_DIFERENTES);
         }
 
         Class<?> aClass = originalObject.getClass();

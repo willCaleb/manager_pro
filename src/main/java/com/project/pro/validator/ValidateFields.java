@@ -1,6 +1,6 @@
 package com.project.pro.validator;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.utils.ListUtils;
 import com.project.pro.utils.NumericUtils;
 import com.project.pro.utils.StringUtil;
@@ -43,7 +43,7 @@ public class ValidateFields {
 
     public void validate() {
         if (ListUtils.isNotNullOrEmpty(mandatoryFields)) {
-            throw new CustomException("Os seguintes campos são obrigatórios : [ " , mandatoryFields);
+            throw new CustomRuntimeException("Os seguintes campos são obrigatórios : [ " , mandatoryFields);
         }
     }
 

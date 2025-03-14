@@ -1,6 +1,6 @@
 package com.project.pro.model.dto;
 
-import com.project.pro.exception.CustomException;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.utils.StringUtil;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ public class FileUploadDTO implements Serializable {
             try {
                 return Base64.getDecoder().decode(content.getBytes());
             } catch (Exception e) {
-                throw new CustomException(e);
+                throw new CustomRuntimeException(e);
             }
         }
         return null;
@@ -44,7 +44,7 @@ public class FileUploadDTO implements Serializable {
         try {
             content = Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
-            throw new CustomException(e);
+            throw new CustomRuntimeException(e);
         }
     }
 }
