@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "categoria")
+@Table(name = "pro_categoria")
 public class Categoria extends AbstractEntity<Integer, CategoriaDTO> {
 
     @Id

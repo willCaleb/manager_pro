@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "pedido")
+@Table(name = "pro_pedido")
 public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
 
     @Id
@@ -42,6 +42,9 @@ public class Pedido extends AbstractEntity<Integer, PedidoDTO> {
 
     @OneToMany(mappedBy = "pedido", orphanRemoval = true)
     private List<PedidoItem> itens;
+
+    @Column(name = "orcamento")
+    private boolean orcamento;
 
     @Transient
     private double distancia;

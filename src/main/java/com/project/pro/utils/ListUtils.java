@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 public class ListUtils {
 
     public static boolean isNullOrEmpty (Collection<?> list) {
-        return Utils.isEmpty(list) || list.size() == 0;
+        return Utils.isEmpty(list) || list.isEmpty();
     }
 
     public static boolean isNotNullOrEmpty(Collection<?> list) {
@@ -19,6 +19,10 @@ public class ListUtils {
 
     public static <T> List<T> toList(T... args) {
         return Arrays.asList(args);
+    }
+
+    public static <T> List<T> ofNullable(List<T> list) {
+        return isNotNullOrEmpty(list) ? list : new ArrayList<>();
     }
 
     public static int size(Collection<?> list) {

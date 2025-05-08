@@ -6,7 +6,10 @@ import com.project.pro.pattern.OperationsParam;
 import com.project.pro.pattern.OperationsPath;
 import com.project.pro.service.IPedidoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +28,10 @@ public class PedidoController extends AbstractController<Pedido, PedidoDTO>{
     @PutMapping(OperationsPath.ID + "/finalizar")
     public void finalizar(@PathVariable(OperationsParam.ID) Integer idPedido) {
         pedidoService.finalizarPedido(idPedido);
+    }
+
+    @GetMapping("/orcamento")
+    public ResponseEntity<byte[]> gerarOrcamento() {
+        return pedidoService.gerarOrcamento();
     }
 }

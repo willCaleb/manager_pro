@@ -11,18 +11,18 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
-@Table(name = "servico_profissional")
+@Table(name = "pro_servico_profissional")
 public class ServicoProfissional extends AbstractEntity<Integer, ServicoProfissionalDTO> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profissional", referencedColumnName = "id")
     private Profissional profissional;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_servico", referencedColumnName = "id")
     private Servico servico;
 
@@ -32,5 +32,8 @@ public class ServicoProfissional extends AbstractEntity<Integer, ServicoProfissi
     @Column(name = "tipo_cobranca")
     @Convert(converter = EnumTipoCobranca.EnumConverter.class)
     private EnumTipoCobranca tipoCobranca;
+
+    @Column(name = "tempo_execucao")
+    private Integer tempoExecucao;
 
 }

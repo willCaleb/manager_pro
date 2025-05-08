@@ -2,6 +2,7 @@ package com.project.pro.model.entity;
 
 import com.project.pro.annotation.DtoFieldIgnore;
 import com.project.pro.annotation.OnlyField;
+import com.project.pro.exception.CustomException;
 import com.project.pro.model.IIdentificador;
 import com.project.pro.model.dto.AbstractDTO;
 import com.project.pro.utils.ClassUtils;
@@ -20,21 +21,26 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> implements IIdentificador, Serializable {
 
-    public DTO toDto() {
+    private Class<DTO> getDtoClass() {
         Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<DTO> dtoClass = (Class) genericTypes[1];
-        return filter(this, dtoClass, null);
+        return  (Class<DTO>) genericTypes[1];
     }
 
-    public DTO toDto(AbstractEntity entity, Class<DTO> clazz) {
+    public DTO toDto() {
+        return filter(this, getDtoClass(), null);
+    }
+
+    public DTO toDto(AbstractEntity<Integer, DTO> entity, Class<DTO> clazz) {
         return filter(entity, clazz, null);
     }
 
     private DTO toDto(List<String> onlyFields) {
-        Type[] genericTypes = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments();
-        Class<DTO> dtoClass = (Class) genericTypes[1];
-        return filter(this, dtoClass, onlyFields);
+        return filter(this, getDtoClass(), onlyFields);
     }
+//    TODO implementar toDto para listas
+//    public List<DTO> toDtoList() {
+//
+//    }
 
     private DTO filter(AbstractEntity entity, Class<DTO> dtoType, List<String> onlyFields) {
         try {
@@ -47,6 +53,9 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                     if (Utils.isEmpty(onlyFields) || onlyFields.contains(field.getName())) {
                         try {
                             Method getterMethod = ClassUtils.getGetterMethod(field.getName(), entity.getClass());
+                            if (Utils.isEmpty(getterMethod)) {
+                                throw new CustomException("O campo não reconhecido: " + field.getName() + entity.getClass().getSimpleName());
+                            }
                             Method setterMethod = ClassUtils.getSetterMethod(field.getName(), dtoReturn.getClass());
                             Object invoke = getterMethod.invoke(entity);
 
@@ -75,8 +84,8 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
                             } else {
                                 setterMethod.invoke(dtoReturn, invoke);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (Exception e ) {
+                            System.out.println(e.getMessage() + " " + entity.getClass().getSimpleName() + " " + field.getName());
                         }
                     }
                 }
@@ -95,6 +104,10 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
             fieldsToFilter = ListUtils.toList(onlyField.fields());
         }
         return fieldsToFilter;
+    }
+
+    public boolean hasId() {
+        return this.getId() != null;
     }
 
     @Override

@@ -76,7 +76,7 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
     public List<Endereco> incluir(List<Endereco> enderecos, Pessoa pessoa) {
 
         List<Endereco> enderecosWithGeolocation = new ArrayList<>();
-
+//    TODO remover comentários
 //        enderecos.forEach(endereco -> {
 //            try {
 //                endereco.setPessoa(pessoa);

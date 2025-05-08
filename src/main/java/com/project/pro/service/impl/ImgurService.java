@@ -10,28 +10,24 @@ import com.project.pro.exception.CustomException;
 import com.project.pro.model.beans.ImgurDataBean;
 import com.project.pro.model.beans.ImgurReturn;
 import com.project.pro.model.beans.ImgurReturnList;
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.service.IImgurService;
 import com.project.pro.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,47 +106,45 @@ public class ImgurService implements IImgurService {
             return objectMapper.readValue(request.getRawBody(), ImgurReturnList.class);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException("Não foi possível obter as imagens do usuario {0}", username);
         }
-        throw new CustomException("Não foi possível obter as imagens do usuario {0}", username);
     }
 
     public HttpResponse<String> getAccountBase() {
 
         Unirest.setTimeouts(0, 0);
         try {
-            HttpResponse<String> response = Unirest.get("https://api.imgur.com/3/account/" + username)
+            return Unirest.get("https://api.imgur.com/3/account/" + username)
                     .header("Authorization", "Client-ID " + clientId)
                     .asString();
-            return response;
         } catch (UnirestException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_RECUPERAR_CONTA, e.getMessage());
         }
     }
 
-    public ImgurReturn upload(MultipartFile file) {
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-        entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        entityBuilder.addPart("image", new FileBody(convertToFile(file)));
-
-        ImgurReturn imgurReturn;
-
-        HttpPost httpPost = getHttpPost(entityBuilder);
-
-        CloseableHttpClient closeable = getCloseableHttpClient();
-
-        String responseString;
+    public ImgurReturn upload(FileUploadDTO file) {
         try {
+            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+            entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+            entityBuilder.addPart("image", new FileBody(convertToFile(file)));
+
+            ImgurReturn imgurReturn;
+
+            HttpPost httpPost = getHttpPost(entityBuilder);
+
+            CloseableHttpClient closeable = getCloseableHttpClient();
+
+            String responseString;
             org.apache.http.HttpResponse response = closeable.execute(httpPost);
 
             responseString = EntityUtils.toString(response.getEntity());
             imgurReturn = new Gson().fromJson(responseString, ImgurReturn.class);
+            return imgurReturn;
 
         } catch (IOException e) {
             throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_FAZER_UPLOAD, e.getMessage());
         }
-        return imgurReturn;
     }
 
     private CloseableHttpClient getCloseableHttpClient() {
@@ -165,16 +159,17 @@ public class ImgurService implements IImgurService {
         return httpPost;
     }
 
-    private File convertToFile(MultipartFile multipartFile) {
+    public File convertToFile(FileUploadDTO fileUploadDTO) throws IOException {
+        byte[] fileBytes = fileUploadDTO.getBytes();
 
-        try {
-            multipartFile = new MockMultipartFile("sourceFile.tmp", multipartFile.getBytes());
-            File file = new File("src/main/resources/targetFile.tmp");
-            multipartFile.transferTo(file);
-            return file;
-        } catch (IOException e) {
-            throw new CustomException(EnumCustomException.IMGUR_IMPOSSIVEL_CONVERTER_ARQUIVO, e.getMessage());
-        }
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "sourceFile.tmp",
+                fileBytes
+        );
+
+        File file = new File("src/main/resources/targetFile.tmp");
+        multipartFile.transferTo(file);
+        return file;
     }
 
     @Override
@@ -186,13 +181,13 @@ public class ImgurService implements IImgurService {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody body = RequestBody.create(JSON, "{}");
             Request request = new Request.Builder()
-                    .url( uploadUrl + "/" + hash)
+                    .url(uploadUrl + "/" + hash)
                     .method("DELETE", body)
                     .addHeader("Authorization", "Bearer " + getToken())
                     .build();
             return client.newCall(request).execute();
         } catch (IOException e) {
-            throw new CustomException("Não foi possível excluir a imagem");
+            throw new CustomException(EnumCustomException.IMGUR_NAO_FOI_POSSIVEL_EXCUIR);
         }
     }
 }

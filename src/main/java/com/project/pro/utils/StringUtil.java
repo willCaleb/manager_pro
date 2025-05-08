@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntBiFunction;
+import java.util.regex.Pattern;
 
 
 public class StringUtil {
@@ -52,6 +53,11 @@ public class StringUtil {
             capitalizedPhrase = capitalizedPhrase.concat(words[i]).concat(" ");
         }
         return capitalizedPhrase;
+    }
+
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "[A-Za-z0-9_%+-]+@[A-Za-z.-]+\\.[A-Za-z]{2,}";
+        return Pattern.matches(emailRegex, email);
     }
 
 

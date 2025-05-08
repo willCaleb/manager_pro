@@ -1,5 +1,6 @@
 package com.project.pro.controller;
 
+import com.project.pro.model.dto.FileUploadDTO;
 import com.project.pro.model.dto.PessoaDTO;
 import com.project.pro.model.entity.Pessoa;
 import com.project.pro.pattern.OperationsParam;
@@ -30,7 +31,7 @@ public class PessoaController extends AbstractController<Pessoa, PessoaDTO>{
 
     @PutMapping(OperationsPath.ID + "/imagem")
     public PessoaDTO incluirImagem(@PathVariable(OperationsParam.ID) Integer idPessoa,
-                                   @RequestBody MultipartFile file){
+                                   @RequestBody FileUploadDTO file){
         return pessoaService.incluirImagem(idPessoa, file).toDto();
     }
 

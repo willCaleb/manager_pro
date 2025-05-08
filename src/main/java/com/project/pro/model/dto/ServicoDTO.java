@@ -20,10 +20,6 @@ public class ServicoDTO extends AbstractDTO<Integer, Servico>{
 
     private String descricao;
 
-    private Integer tempoExecucao;
-
-    private BigDecimal valor;
-
     private Boolean servico;
 
     private EnumEtapaServico etapaServico;

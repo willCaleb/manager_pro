@@ -4,6 +4,7 @@ import com.project.pro.enums.EnumStatusTituloParcela;
 import com.project.pro.model.dto.TituloParcelaDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Audited
 @Table(name = "pro_titulo_parcela")
 public class TituloParcela extends AbstractEntity<Integer, TituloParcelaDTO>{
 
