@@ -1,5 +1,8 @@
 package com.project.pro.validator;
 
+import com.project.pro.enums.EnumCustomException;
+import com.project.pro.enums.EnumStatusAgenda;
+import com.project.pro.exception.CustomRuntimeException;
 import com.project.pro.model.entity.Agenda;
 import com.project.pro.repository.AgendaRepository;
 
@@ -25,5 +28,11 @@ public class ValidadorAgenda implements IValidador<Agenda>{
     @Override
     public void validarInsert(Agenda agenda) {
         validarCamposObrigatorios(agenda);
+    }
+
+    public void validarStatusEdicao(Agenda agenda) {
+        if (EnumStatusAgenda.CANCELADO.equals(agenda.getStatus()) || EnumStatusAgenda.FINALIZADO.equals(agenda.getStatus())) {
+            throw new CustomRuntimeException(EnumCustomException.AGENDA_STATUS_NAO_PERMITE_ALTERAR);
+        }
     }
 }

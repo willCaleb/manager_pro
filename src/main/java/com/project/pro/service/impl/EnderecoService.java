@@ -49,10 +49,10 @@ public class EnderecoService extends AbstractService<Endereco, EnderecoDTO, Ende
         endereco.setUf(endByCep.getUf());
         endereco.setLocalidade(endByCep.getLocalidade());
 
-        GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endereco);
-
-        endereco.setLatitude(geometria.getLatitude());
-        endereco.setLongitude(geometria.getLongitude());
+//        GoogleMaps.Geometria geometria = googleMapsService.geolocatioFromAddress(endereco);
+//
+//        endereco.setLatitude(geometria.getLatitude());
+//        endereco.setLongitude(geometria.getLongitude());
         validadorEndereco.validarEnderecoJaPertenceAPessoa(endereco);
         definirPrincipal(endereco);
 

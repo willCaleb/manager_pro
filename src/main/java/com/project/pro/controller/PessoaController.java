@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(PessoaController.PATH)
 @AllArgsConstructor
+@RequestMapping(PessoaController.PATH)
 public class PessoaController extends AbstractController<Pessoa, PessoaDTO>{
 
     public static final String PATH = "/pessoa";

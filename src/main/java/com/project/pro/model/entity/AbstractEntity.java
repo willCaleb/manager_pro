@@ -115,4 +115,6 @@ public abstract class AbstractEntity<I extends Number, DTO extends AbstractDTO> 
         return this.getClass().getSimpleName() + "(id=" + getId() + ")";
     }
 
+
+
 }

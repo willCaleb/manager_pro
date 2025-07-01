@@ -229,6 +229,9 @@ public class ProfissionalService extends AbstractService<Profissional, Profissio
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = tokenProvider.generateToken(authentication, EnumRole.PROFESSIONAL, Constants.LOGIN_TYPE_PROFESSIONAL);
+
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
             if (Utils.isNotEmpty(profissional)) {
                 Context.setCurrentProfissional(profissional);
             }

@@ -22,6 +22,7 @@ import org.springframework.data.repository.support.Repositories;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

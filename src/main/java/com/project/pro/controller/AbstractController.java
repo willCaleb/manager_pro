@@ -33,7 +33,7 @@ import java.util.Map;
 @Component
 @RestController
 @SuppressWarnings("unchecked")
-public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>> extends AbstractService<E, DTO, JpaRepository> {
+public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO extends AbstractDTO<?, E>> extends AbstractService<E, DTO, JpaRepository>{
 
     @Autowired
     private GenericRepository<E> genericRepository;
@@ -161,7 +161,7 @@ public abstract class AbstractController<E extends AbstractEntity<?, DTO>, DTO e
     @GetMapping("/filter")
     public Page<DTO> getFiltered(@RequestParam(required = false) Map<String, Object> filters, Pageable pageable) {
         if (onlyPageableFilters(filters)) {
-            Sort sort = sortById(Utils.nvl(filters.get(Constants.SORT).toString(), null));
+            Sort sort = sortById(Utils.isNotEmpty(filters.get(Constants.SORT)) ? filters.get(Constants.SORT).toString() : null);
 
             Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
             return fromPagedEntityToPagedDTO(getAllPaged(pageableWithSort), pageableWithSort);

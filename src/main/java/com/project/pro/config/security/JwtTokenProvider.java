@@ -14,12 +14,12 @@ public class JwtTokenProvider {
 
     @Value("${jwt-secret}")
     private String jwtSecret;
-    private int jwtExpirationInMs = 604800000; // 7 dias
+    private static final Integer JWT_EXPIRATION_IN_MS = 604800000; // 7 dias
 
     public String generateToken(Authentication authentication, EnumRole enumRole, String userType) {
         User userPrincipal = (User) authentication.getPrincipal();
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_IN_MS);
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())

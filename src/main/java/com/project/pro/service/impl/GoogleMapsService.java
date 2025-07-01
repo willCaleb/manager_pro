@@ -38,7 +38,7 @@ public class GoogleMapsService implements IGoogleMapsService{
 
         final ResponseEntity<Endereco> responseEntity = restTemplate.getForEntity(googleUri, Endereco.class);
 
-        if (isNotNullOrNotEmpty(responseEntity)) {
+        if (isNotNullOrNotEmpty(responseEntity) && Utils.isNotEmpty(responseEntity.getBody()) && ListUtils.isNotNullOrEmpty(responseEntity.getBody().getGoogleMaps())) {
 
             final List<GoogleMaps> maps = responseEntity.getBody().getGoogleMaps();
 

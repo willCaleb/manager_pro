@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,13 +25,10 @@ import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
 
 @RestController
+@RequiredArgsConstructor
 public class FirebasePublisherController {
     
     private final FirebaseMessaging fcm;
-    
-    public FirebasePublisherController(FirebaseMessaging fcm) {
-        this.fcm = fcm;        
-    }
 
     @PostMapping("/topics/{topic}")
     public ResponseEntity<String> postToTopic(@RequestBody String message, @PathVariable("topic") String topic) throws FirebaseMessagingException {

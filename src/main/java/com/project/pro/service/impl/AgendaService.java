@@ -56,6 +56,8 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
 
         Agenda agendaManaged = findAndValidate(idAgenda);
 
+        validadorAgenda.validarStatusEdicao(agendaManaged);
+
         if (!Utils.equals(agendaManaged.getDataInicio(), agenda.getDataInicio()) || !Utils.equals(agendaManaged.getDataFim(), agenda.getDataFim())) {
             verificarDisponibilidadeHorario(agenda);
 
@@ -63,6 +65,7 @@ public class AgendaService extends AbstractService<Agenda, AgendaDTO, AgendaRepo
             agendaManaged.setDataFim(agenda.getDataFim());
             agendaManaged.setStatus(agenda.getStatus());
         }
+        agendaManaged.setItens(agenda.getItens());
         return agendaRepository.save(agendaManaged);
     }
 

@@ -17,7 +17,7 @@ public class ClienteController extends AbstractController<Cliente, ClienteDTO>{
 
     private final IClienteService clienteService;
 
-    @PostMapping("/incluir")
+    @PostMapping
     public ClienteDTO incluir(@RequestBody ClienteDTO clienteDTO) {
         return clienteService.incluir(clienteDTO.toEntity()).toDto();
     }
